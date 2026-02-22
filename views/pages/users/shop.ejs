@@ -1,14 +1,52 @@
 <section class="user-page page-shop">
   <%
+    const filters = shopFilters || {};
+    const selectedCategory = String(filters.category || "");
+    const selectedSort = String(filters.sort || "popular");
+    const selectedSize = String(filters.size || "");
+    const selectedPrice = String(filters.price || "");
+    const promoOnly = Boolean(filters.promo);
+
+    const products = Array.isArray(shopProducts) ? shopProducts : [];
+    const categoriesFromDb = Array.isArray(shopCategories) ? shopCategories : [];
+    const featuredCategories = Array.isArray(shopFeaturedCategories) ? shopFeaturedCategories : [];
+
+    const totalProducts = Number(shopMeta?.totalProducts || 0);
+    const filteredProducts = Number(shopMeta?.filteredProducts || products.length);
+    const totalCategories = Number(shopMeta?.totalCategories || categoriesFromDb.length);
+
+    const buildShopHref = (overrides = {}) => {
+      const params = new URLSearchParams();
+
+      const nextCategory = overrides.category !== undefined ? String(overrides.category || "") : selectedCategory;
+      const nextSort = overrides.sort !== undefined ? String(overrides.sort || "") : selectedSort;
+      const nextPromo = overrides.promo !== undefined ? Boolean(overrides.promo) : promoOnly;
+      const nextSize = overrides.size !== undefined ? String(overrides.size || "") : selectedSize;
+      const nextPrice = overrides.price !== undefined ? String(overrides.price || "") : selectedPrice;
+
+      if (nextCategory) params.set("category", nextCategory);
+      if (nextSort && nextSort !== "popular") params.set("sort", nextSort);
+      if (nextPromo) params.set("promo", "true");
+      if (nextSize) params.set("size", nextSize);
+      if (nextPrice) params.set("price", nextPrice);
+
+      const queryString = params.toString();
+      return queryString ? `/shop?${queryString}` : "/shop";
+    };
+
     const quickFilters = [
-      { label: "Tout le catalogue", href: "/shop", active: true },
-      { label: "Nouveautes", href: "/shop?sort=new" },
-      { label: "Bebes", href: "/shop?category=bebes" },
-      { label: "Filles", href: "/shop?category=filles" },
-      { label: "Garcons", href: "/shop?category=garcons" },
-      { label: "Chaussures", href: "/shop?category=chaussures" },
-      { label: "Accessoires", href: "/shop?category=accessoires" },
-      { label: "Promotions", href: "/shop?promo=true" },
+      {
+        label: "Tout le catalogue",
+        href: buildShopHref({ category: "", sort: "popular", promo: false, size: "", price: "" }),
+        active: !selectedCategory && !promoOnly && !selectedSize && !selectedPrice && selectedSort === "popular",
+      },
+      { label: "Nouveautes", href: buildShopHref({ sort: "new" }), active: selectedSort === "new" },
+      { label: "Bebes", href: buildShopHref({ category: "bebes", promo: false }), active: selectedCategory === "bebes" },
+      { label: "Filles", href: buildShopHref({ category: "filles", promo: false }), active: selectedCategory === "filles" },
+      { label: "Garcons", href: buildShopHref({ category: "garcons", promo: false }), active: selectedCategory === "garcons" },
+      { label: "Chaussures", href: buildShopHref({ category: "chaussures", promo: false }), active: selectedCategory === "chaussures" },
+      { label: "Accessoires", href: buildShopHref({ category: "accessoires", promo: false }), active: selectedCategory === "accessoires" },
+      { label: "Promotions", href: buildShopHref({ promo: true }), active: promoOnly },
     ];
 
     const serviceHighlights = [
@@ -35,187 +73,18 @@
     ];
 
     const categories = [
-      { label: "Tout", count: 132, href: "/shop" },
-      { label: "Bebes", count: 22, href: "/shop?category=bebes" },
-      { label: "Filles", count: 26, href: "/shop?category=filles" },
-      { label: "Garcons", count: 24, href: "/shop?category=garcons" },
-      { label: "Chaussures", count: 18, href: "/shop?category=chaussures" },
-      { label: "Accessoires", count: 20, href: "/shop?category=accessoires" },
-      { label: "Mixte", count: 22, href: "/shop?category=mixte" },
-    ];
-
-    const products = [
       {
-        name: "Robe Petales Soft",
-        category: "Filles",
-        age: "3-8 ans",
-        price: "29,90 EUR",
-        oldPrice: "39,90 EUR",
-        rating: "4.8",
-        tag: "-25%",
-        status: "Stock limite",
-        statusTone: "limited",
-        palette: "rose",
+        label: "Tout",
+        slug: "",
+        count: totalProducts,
+        href: buildShopHref({ category: "", promo: false }),
       },
-      {
-        name: "Ensemble Mini Club",
-        category: "Garcons",
-        age: "4-10 ans",
-        price: "33,50 EUR",
-        oldPrice: "42,00 EUR",
-        rating: "4.7",
-        tag: "Top vente",
-        status: "Disponible",
-        statusTone: "ok",
-        palette: "blue",
-      },
-      {
-        name: "Pyjama Nuage Bio",
-        category: "Bebes",
-        age: "6-24 mois",
-        price: "22,50 EUR",
-        oldPrice: "29,00 EUR",
-        rating: "4.9",
-        tag: "New",
-        status: "Stock limite",
-        statusTone: "limited",
-        palette: "sky",
-      },
-      {
-        name: "Sneakers Pop Run",
-        category: "Chaussures",
-        age: "25-33",
-        price: "38,00 EUR",
-        oldPrice: "49,00 EUR",
-        rating: "4.6",
-        tag: "Best",
-        status: "Disponible",
-        statusTone: "ok",
-        palette: "mint",
-      },
-      {
-        name: "Sac Mini School",
-        category: "Accessoires",
-        age: "Taille unique",
-        price: "19,90 EUR",
-        oldPrice: "26,00 EUR",
-        rating: "4.7",
-        tag: "Nouveau",
-        status: "Bientot rupture",
-        statusTone: "warn",
-        palette: "violet",
-      },
-      {
-        name: "Cardigan Lune Coton",
-        category: "Mixte",
-        age: "2-9 ans",
-        price: "27,90 EUR",
-        oldPrice: "36,00 EUR",
-        rating: "4.8",
-        tag: "Confort",
-        status: "Disponible",
-        statusTone: "ok",
-        palette: "sand",
-      },
-      {
-        name: "Jean Flex Motion",
-        category: "Garcons",
-        age: "5-12 ans",
-        price: "31,90 EUR",
-        oldPrice: "40,00 EUR",
-        rating: "4.7",
-        tag: "Promo",
-        status: "Stock limite",
-        statusTone: "limited",
-        palette: "peach",
-      },
-      {
-        name: "Blouse Etoile Fine",
-        category: "Filles",
-        age: "4-9 ans",
-        price: "24,90 EUR",
-        oldPrice: "31,00 EUR",
-        rating: "4.8",
-        tag: "New",
-        status: "Disponible",
-        statusTone: "ok",
-        palette: "aqua",
-      },
-      {
-        name: "Body Cocon Pack x3",
-        category: "Bebes",
-        age: "Naissance-12 mois",
-        price: "20,90 EUR",
-        oldPrice: "27,90 EUR",
-        rating: "4.9",
-        tag: "Essentiel",
-        status: "Disponible",
-        statusTone: "ok",
-        palette: "sky",
-      },
-      {
-        name: "Sandales Sunny Star",
-        category: "Chaussures",
-        age: "24-32",
-        price: "23,50 EUR",
-        oldPrice: "31,00 EUR",
-        rating: "4.6",
-        tag: "Ete",
-        status: "Bientot rupture",
-        statusTone: "warn",
-        palette: "rose",
-      },
-      {
-        name: "Casquette Color Joy",
-        category: "Accessoires",
-        age: "3-12 ans",
-        price: "14,90 EUR",
-        oldPrice: "19,00 EUR",
-        rating: "4.7",
-        tag: "Mini prix",
-        status: "Disponible",
-        statusTone: "ok",
-        palette: "mint",
-      },
-      {
-        name: "Manteau Cloud Warm",
-        category: "Mixte",
-        age: "3-10 ans",
-        price: "39,90 EUR",
-        oldPrice: "52,00 EUR",
-        rating: "4.8",
-        tag: "Saison",
-        status: "Stock limite",
-        statusTone: "limited",
-        palette: "blue",
-      },
-    ];
-
-    const featuredCategories = [
-      {
-        title: "Bebes",
-        text: "Bodies, pyjamas et pieces douces du quotidien.",
-        href: "/shop?category=bebes",
-        tone: "baby",
-      },
-      {
-        title: "Filles",
-        text: "Looks joyeux et faciles a associer toute la semaine.",
-        href: "/shop?category=filles",
-        tone: "girls",
-      },
-      {
-        title: "Garcons",
-        text: "Pieces resistantes pour bouger, jouer et explorer.",
-        href: "/shop?category=garcons",
-        tone: "boys",
-      },
-      {
-        title: "Accessoires",
-        text: "Sacs, chaussures et essentiels pour completer les tenues.",
-        href: "/shop?category=accessoires",
-        tone: "accessories",
-      },
+      ...categoriesFromDb.map((category) => ({
+        label: category.name,
+        slug: category.slug,
+        count: Number(category.count || 0),
+        href: buildShopHref({ category: category.slug, promo: false }),
+      })),
     ];
 
     const getCategoryIcon = (categoryName = "") => {
@@ -239,7 +108,7 @@
         Des pieces pensees pour le confort, la qualite et un style ludique au quotidien.
       </p>
       <div class="shop-hero__actions">
-        <a class="btn btn-primary" href="/shop?promo=true">Voir les promotions</a>
+        <a class="btn btn-primary" href="<%= buildShopHref({ promo: true }) %>">Voir les promotions</a>
         <a class="btn btn-outline" href="/favoris">Mes favoris</a>
       </div>
       <div class="shop-hero__chips" aria-label="Filtres rapides">
@@ -253,11 +122,11 @@
 
     <aside class="shop-hero__panel" aria-label="Resume catalogue">
       <article class="shop-hero__stat">
-        <p class="shop-hero__value">132</p>
+        <p class="shop-hero__value"><%= totalProducts %></p>
         <p class="shop-hero__label">references actives</p>
       </article>
       <article class="shop-hero__stat">
-        <p class="shop-hero__value">6</p>
+        <p class="shop-hero__value"><%= totalCategories %></p>
         <p class="shop-hero__label">categories principales</p>
       </article>
       <article class="shop-hero__stat">
@@ -308,9 +177,12 @@
       <div class="shop-filter-block">
         <h3>Categories</h3>
         <ul class="shop-filter-list">
-          <% categories.forEach((category, index) => { %>
+          <% categories.forEach((category) => { %>
           <li>
-            <a class="shop-filter-link <%= index === 0 ? 'is-active' : '' %>" href="<%= category.href %>">
+            <a
+              class="shop-filter-link <%= category.slug === selectedCategory || (!selectedCategory && !category.slug) ? 'is-active' : '' %>"
+              href="<%= category.href %>"
+            >
               <span><%= category.label %></span>
               <strong><%= category.count %></strong>
             </a>
@@ -322,22 +194,22 @@
       <div class="shop-filter-block">
         <h3>Tailles</h3>
         <div class="shop-size-grid" aria-label="Tailles disponibles">
-          <a href="/shop?size=1-2" class="shop-size-chip">1-2A</a>
-          <a href="/shop?size=3-4" class="shop-size-chip">3-4A</a>
-          <a href="/shop?size=5-6" class="shop-size-chip">5-6A</a>
-          <a href="/shop?size=7-8" class="shop-size-chip">7-8A</a>
-          <a href="/shop?size=9-10" class="shop-size-chip">9-10A</a>
-          <a href="/shop?size=11-12" class="shop-size-chip">11-12A</a>
+          <a href="<%= buildShopHref({ size: '1-2' }) %>" class="shop-size-chip <%= selectedSize === '1-2' ? 'is-active' : '' %>">1-2A</a>
+          <a href="<%= buildShopHref({ size: '3-4' }) %>" class="shop-size-chip <%= selectedSize === '3-4' ? 'is-active' : '' %>">3-4A</a>
+          <a href="<%= buildShopHref({ size: '5-6' }) %>" class="shop-size-chip <%= selectedSize === '5-6' ? 'is-active' : '' %>">5-6A</a>
+          <a href="<%= buildShopHref({ size: '7-8' }) %>" class="shop-size-chip <%= selectedSize === '7-8' ? 'is-active' : '' %>">7-8A</a>
+          <a href="<%= buildShopHref({ size: '9-10' }) %>" class="shop-size-chip <%= selectedSize === '9-10' ? 'is-active' : '' %>">9-10A</a>
+          <a href="<%= buildShopHref({ size: '11-12' }) %>" class="shop-size-chip <%= selectedSize === '11-12' ? 'is-active' : '' %>">11-12A</a>
         </div>
       </div>
 
       <div class="shop-filter-block">
         <h3>Budget</h3>
         <div class="shop-budget-list" aria-label="Tranches de prix">
-          <a href="/shop?price=0-15">Moins de 15 EUR</a>
-          <a href="/shop?price=15-30">15 a 30 EUR</a>
-          <a href="/shop?price=30-45">30 a 45 EUR</a>
-          <a href="/shop?price=45+">45 EUR et plus</a>
+          <a class="<%= selectedPrice === '0-15' ? 'is-active' : '' %>" href="<%= buildShopHref({ price: '0-15' }) %>">Moins de 15 EUR</a>
+          <a class="<%= selectedPrice === '15-30' ? 'is-active' : '' %>" href="<%= buildShopHref({ price: '15-30' }) %>">15 a 30 EUR</a>
+          <a class="<%= selectedPrice === '30-45' ? 'is-active' : '' %>" href="<%= buildShopHref({ price: '30-45' }) %>">30 a 45 EUR</a>
+          <a class="<%= selectedPrice === '45+' ? 'is-active' : '' %>" href="<%= buildShopHref({ price: '45+' }) %>">45 EUR et plus</a>
         </div>
       </div>
 
@@ -351,7 +223,7 @@
         </ul>
       </div>
 
-      <a class="shop-filter-cta" href="/shop">Reinitialiser les filtres</a>
+      <a class="shop-filter-cta" href="<%= buildShopHref({ category: '', sort: 'popular', promo: false, size: '', price: '' }) %>">Reinitialiser les filtres</a>
     </aside>
 
     <div class="shop-results">
@@ -359,7 +231,7 @@
         <div>
           <p class="shop-results__kicker">Listing produits</p>
           <h2 class="shop-results__title">Selection complete toutes categories</h2>
-          <p class="shop-results__count"><strong><%= products.length %></strong> produits visibles sur <strong>132</strong> references.</p>
+          <p class="shop-results__count"><strong><%= filteredProducts %></strong> produits visibles sur <strong><%= totalProducts %></strong> references.</p>
         </div>
 
         <div class="shop-results__controls">
@@ -376,22 +248,29 @@
 
           <div class="shop-sort-overlay">
             <div class="shop-sort" aria-label="Tri rapide">
-              <a class="shop-sort__item is-active" href="/shop?sort=popular">Populaire</a>
-              <a class="shop-sort__item" href="/shop?sort=new">Nouveautes</a>
-              <a class="shop-sort__item" href="/shop?sort=price-low">Prix croissant</a>
-              <a class="shop-sort__item" href="/shop?sort=price-high">Prix decroissant</a>
+              <a class="shop-sort__item <%= selectedSort === 'popular' ? 'is-active' : '' %>" href="<%= buildShopHref({ sort: 'popular' }) %>">Populaire</a>
+              <a class="shop-sort__item <%= selectedSort === 'new' ? 'is-active' : '' %>" href="<%= buildShopHref({ sort: 'new' }) %>">Nouveautes</a>
+              <a class="shop-sort__item <%= selectedSort === 'price-low' ? 'is-active' : '' %>" href="<%= buildShopHref({ sort: 'price-low' }) %>">Prix croissant</a>
+              <a class="shop-sort__item <%= selectedSort === 'price-high' ? 'is-active' : '' %>" href="<%= buildShopHref({ sort: 'price-high' }) %>">Prix decroissant</a>
             </div>
           </div>
         </div>
       </header>
 
       <div class="shop-grid">
+        <% if (!products.length) { %>
+        <article class="shop-grid__empty">
+          <p>Aucun produit ne correspond aux filtres actuels.</p>
+          <a href="<%= buildShopHref({ category: '', sort: 'popular', promo: false, size: '', price: '' }) %>">Voir tout le catalogue</a>
+        </article>
+        <% } %>
+
         <% products.forEach((product, index) => { %>
         <% const categoryIcon = getCategoryIcon(product.category); %>
         <article class="shop-product">
           <a
             class="shop-product__media shop-product__media--<%= product.palette %><%= product.image ? ' has-image' : '' %>"
-            href="/details"
+            href="<%= product.href %>"
             aria-label="Voir <%= product.name %>"
           >
             <% if (product.image) { %>
@@ -405,11 +284,18 @@
             <% } %>
             <span class="shop-product__tag"><%= product.tag %></span>
             <span class="shop-product__status shop-product__status--<%= product.statusTone %>"><%= product.status %></span>
-            <span class="shop-product__sku">RB-SH-<%= 400 + index %></span>
+            <span class="shop-product__sku"><%= product.sku %></span>
           </a>
 
-          <button class="shop-product__wish" type="button" data-favorite-btn aria-pressed="false" aria-label="Ajouter <%= product.name %> aux favoris">
-            <i class="bx bx-heart"></i>
+          <button
+            class="shop-product__wish"
+            type="button"
+            data-favorite-btn
+            data-product-slug="<%= product.slug || '' %>"
+            aria-pressed="<%= product.isFavorite ? 'true' : 'false' %>"
+            aria-label="Ajouter <%= product.name %> aux favoris"
+          >
+            <i class="bx <%= product.isFavorite ? 'bxs-heart' : 'bx-heart' %>"></i>
           </button>
 
           <div class="shop-product__body">
@@ -421,13 +307,15 @@
               <span class="shop-product__age"><%= product.age %></span>
             </div>
 
-            <a class="shop-product__details" href="/details">
+            <a class="shop-product__details" href="<%= product.href %>">
               <h3 class="shop-product__name"><%= product.name %></h3>
             </a>
 
             <div class="shop-product__prices">
               <span class="shop-product__price-current"><%= product.price %></span>
+              <% if (product.oldPrice) { %>
               <span class="shop-product__price-old"><%= product.oldPrice %></span>
+              <% } %>
             </div>
 
             <div class="shop-product__foot">
@@ -436,8 +324,8 @@
                 <span><%= product.rating %></span>
               </p>
               <div class="shop-product__actions">
-                <a class="shop-product__btn shop-product__btn--ghost" href="/details">Details</a>
-                <a class="shop-product__btn shop-product__btn--primary" data-add-to-cart href="/cart">
+                <a class="shop-product__btn shop-product__btn--ghost" href="<%= product.href %>">Details</a>
+                <a class="shop-product__btn shop-product__btn--primary" data-add-to-cart data-product-slug="<%= product.slug || '' %>" href="/cart">
                   <i class="bx bx-cart-add"></i>
                   <span>Panier</span>
                 </a>
@@ -447,20 +335,16 @@
         </article>
         <% }) %>
       </div>
-
-      <div class="shop-pagination" aria-label="Pagination visuelle">
-        <a class="shop-pagination__link is-active" href="/shop?page=1">1</a>
-        <a class="shop-pagination__link" href="/shop?page=2">2</a>
-        <a class="shop-pagination__link" href="/shop?page=3">3</a>
-        <a class="shop-pagination__next" href="/shop?page=2">
-          <span>Suivant</span>
-          <i class="bx bx-chevron-right"></i>
-        </a>
-      </div>
     </div>
   </section>
 
   <section class="shop-category-spotlight" aria-label="Categories en avant">
+    <% if (!featuredCategories.length) { %>
+    <article class="shop-grid__empty">
+      <p>Les categories seront visibles apres ajout des premiers produits.</p>
+    </article>
+    <% } %>
+
     <% featuredCategories.forEach((category) => { %>
     <a class="shop-category-card shop-category-card--<%= category.tone %>" href="<%= category.href %>">
       <span class="shop-category-card__kicker">Categorie</span>

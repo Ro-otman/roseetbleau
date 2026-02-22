@@ -1,102 +1,17 @@
-<section class="user-page page-cart">
+<section class="user-page page-cart" data-cart-page>
   <%
-    const cartItems = [
-      {
-        name: "Robe Petales Soft",
-        category: "Filles",
-        size: "6A",
-        color: "Rose",
-        qty: 1,
-        unitPrice: "29,90 EUR",
-        oldPrice: "39,90 EUR",
-        total: "29,90 EUR",
-        badge: "-25%",
-        stock: "Stock limite",
-        palette: "rose",
-      },
-      {
-        name: "Sneakers Pop Run",
-        category: "Chaussures",
-        size: "30",
-        color: "Bleu ciel",
-        qty: 1,
-        unitPrice: "38,00 EUR",
-        oldPrice: "49,00 EUR",
-        total: "38,00 EUR",
-        badge: "Top vente",
-        stock: "Disponible",
-        palette: "blue",
-      },
-      {
-        name: "Sac Mini School",
-        category: "Accessoires",
-        size: "Unique",
-        color: "Violet",
-        qty: 1,
-        unitPrice: "19,90 EUR",
-        oldPrice: "26,00 EUR",
-        total: "19,90 EUR",
-        badge: "Nouveau",
-        stock: "Disponible",
-        palette: "violet",
-      },
-    ];
-
-    const summary = {
-      subtotal: "87,80 EUR",
-      discount: "-12,00 EUR",
-      shipping: "4,90 EUR",
-      total: "80,70 EUR",
+    const items = Array.isArray(cartItems) ? cartItems : [];
+    const summary = cartSummary || {
+      subtotal: "0,00 EUR",
+      discount: "0,00 EUR",
+      shipping: "Offerte",
+      total: "0,00 EUR",
     };
-
-    const trustPoints = [
-      {
-        icon: "bx-check-shield",
-        title: "Paiement securise",
-        text: "Transactions protegees et verification anti-fraude.",
-      },
-      {
-        icon: "bx-time-five",
-        title: "Preparation rapide",
-        text: "Commandes preparees sous 24-48h.",
-      },
-      {
-        icon: "bx-refresh",
-        title: "Retours faciles",
-        text: "14 jours pour changer d avis sans stress.",
-      },
-    ];
-
-    const suggestions = [
-      {
-        name: "Body Cocon Pack x3",
-        category: "Bebes",
-        price: "20,90 EUR",
-        oldPrice: "27,90 EUR",
-        palette: "sky",
-      },
-      {
-        name: "Jean Flex Motion",
-        category: "Garcons",
-        price: "31,90 EUR",
-        oldPrice: "40,00 EUR",
-        palette: "peach",
-      },
-      {
-        name: "Blouse Etoile Fine",
-        category: "Filles",
-        price: "24,90 EUR",
-        oldPrice: "31,00 EUR",
-        palette: "rose",
-      },
-      {
-        name: "Casquette Color Joy",
-        category: "Accessoires",
-        price: "14,90 EUR",
-        oldPrice: "19,00 EUR",
-        palette: "mint",
-      },
-    ];
+    const trustPoints = Array.isArray(cartTrustPoints) ? cartTrustPoints : [];
+    const suggestions = Array.isArray(cartSuggestions) ? cartSuggestions : [];
+    const totalQuantity = Number.isFinite(Number(cartTotalQuantity))
+      ? Number(cartTotalQuantity)
+      : items.reduce((acc, item) => acc + Number(item.qty || 0), 0);
   %>
 
   <section class="cart-hero" aria-label="Presentation panier">
@@ -115,11 +30,11 @@
 
     <div class="cart-hero__stats" aria-label="Resume panier">
       <article class="cart-hero__stat">
-        <p class="cart-hero__value"><%= cartItems.length %></p>
+        <p class="cart-hero__value" data-cart-total-qty><%= totalQuantity %></p>
         <p class="cart-hero__label">articles dans le panier</p>
       </article>
       <article class="cart-hero__stat">
-        <p class="cart-hero__value"><%= summary.total %></p>
+        <p class="cart-hero__value" data-cart-total-amount><%= summary.total %></p>
         <p class="cart-hero__label">montant estime</p>
       </article>
       <article class="cart-hero__stat">
@@ -136,12 +51,39 @@
         <h2 class="cart-items-panel__title">Verification avant paiement</h2>
       </header>
 
-      <div class="cart-items-list">
-        <% cartItems.forEach((item, idx) => { %>
-        <article class="cart-item">
+      <div class="cart-items-list" data-cart-list>
+        <% if (!items.length) { %>
+        <article class="cart-items-empty" data-cart-empty>
+          <p>Ton panier est vide pour le moment.</p>
+          <a href="/shop">Explorer le catalogue</a>
+        </article>
+        <% } %>
+
+        <% items.forEach((item, idx) => { %>
+        <article
+          class="cart-item"
+          data-cart-item
+          data-item-id="<%= item.id %>"
+          data-product-id="<%= item.productId %>"
+          data-product-slug="<%= item.slug || '' %>"
+          data-name="<%= item.name %>"
+          data-category="<%= item.category %>"
+          data-size="<%= item.size %>"
+          data-color="<%= item.color %>"
+          data-qty="<%= item.qty %>"
+          data-unit-price-value="<%= item.unitPriceValue %>"
+          data-old-price-value="<%= item.oldPrice ? item.lineCompareValue / Math.max(1, item.qty) : '' %>"
+          data-max-qty="<%= item.maxQty %>"
+          data-stock="<%= item.stock %>"
+          data-badge="<%= item.badge %>"
+          data-sku="<%= item.sku || `RB-CART-${500 + idx}` %>"
+          data-href="<%= item.href || '/details' %>"
+          data-image="<%= item.image || '' %>"
+          data-palette="<%= item.palette %>"
+        >
           <a
             class="cart-item__media cart-item__media--<%= item.palette %><%= item.image ? ' has-image' : '' %>"
-            href="/details"
+            href="<%= item.href || '/details' %>"
           >
             <% if (item.image) { %>
             <img
@@ -153,13 +95,13 @@
             />
             <% } %>
             <span class="cart-item__badge"><%= item.badge %></span>
-            <span class="cart-item__sku">RB-CART-<%= 500 + idx %></span>
+            <span class="cart-item__sku"><%= item.sku || `RB-CART-${500 + idx}` %></span>
           </a>
 
           <div class="cart-item__body">
             <div class="cart-item__top">
               <p class="cart-item__category"><%= item.category %></p>
-              <a class="cart-item__name" href="/details"><%= item.name %></a>
+              <a class="cart-item__name" href="<%= item.href || '/details' %>"><%= item.name %></a>
             </div>
 
             <ul class="cart-item__meta">
@@ -170,9 +112,14 @@
 
             <div class="cart-item__controls">
               <div class="cart-qty" aria-label="Quantite <%= item.name %>">
-                <button type="button" aria-label="Diminuer la quantite">-</button>
-                <span><%= item.qty %></span>
-                <button type="button" aria-label="Augmenter la quantite">+</button>
+                <button type="button" data-cart-dec aria-label="Diminuer la quantite">-</button>
+                <span data-cart-qty><%= item.qty %></span>
+                <button
+                  type="button"
+                  data-cart-inc
+                  aria-label="Augmenter la quantite"
+                  <%= item.canIncrease ? '' : 'disabled' %>
+                >+</button>
               </div>
 
               <div class="cart-item__links">
@@ -180,7 +127,7 @@
                   <i class="bx bx-heart"></i>
                   <span>Mettre en favoris</span>
                 </a>
-                <button type="button">
+                <button type="button" data-cart-remove>
                   <i class="bx bx-trash"></i>
                   <span>Supprimer</span>
                 </button>
@@ -189,9 +136,11 @@
           </div>
 
           <div class="cart-item__pricing">
-            <p class="cart-item__unit">Prix: <strong><%= item.unitPrice %></strong></p>
-            <p class="cart-item__old"><%= item.oldPrice %></p>
-            <p class="cart-item__total">Total: <strong><%= item.total %></strong></p>
+            <p class="cart-item__unit">Prix: <strong data-cart-unit-price><%= item.unitPrice %></strong></p>
+            <% if (item.oldPrice) { %>
+            <p class="cart-item__old" data-cart-old-price><%= item.oldPrice %></p>
+            <% } %>
+            <p class="cart-item__total">Total: <strong data-cart-line-total><%= item.total %></strong></p>
           </div>
         </article>
         <% }) %>
@@ -202,7 +151,12 @@
           <i class="bx bx-left-arrow-alt"></i>
           <span>Retour au catalogue</span>
         </a>
-        <a class="cart-items-panel__clear" href="/cart">Vider le panier</a>
+        <button
+          class="cart-items-panel__clear"
+          type="button"
+          data-cart-clear
+          <%= items.length ? '' : 'hidden' %>
+        >Vider le panier</button>
       </footer>
     </section>
 
@@ -212,14 +166,14 @@
         <h2 class="cart-summary__title">Commande</h2>
 
         <div class="cart-summary__rows">
-          <p><span>Sous-total</span><strong><%= summary.subtotal %></strong></p>
-          <p><span>Reduction</span><strong><%= summary.discount %></strong></p>
-          <p><span>Livraison</span><strong><%= summary.shipping %></strong></p>
+          <p><span>Sous-total</span><strong data-cart-summary-subtotal><%= summary.subtotal %></strong></p>
+          <p><span>Reduction</span><strong data-cart-summary-discount><%= summary.discount %></strong></p>
+          <p><span>Livraison</span><strong data-cart-summary-shipping><%= summary.shipping %></strong></p>
         </div>
 
         <p class="cart-summary__grand-total">
           <span>Total estime</span>
-          <strong><%= summary.total %></strong>
+          <strong data-cart-summary-total><%= summary.total %></strong>
         </p>
 
         <form class="cart-coupon" action="/cart" method="get">
@@ -270,11 +224,17 @@
     </div>
 
     <div class="cart-suggestions__grid">
+      <% if (!suggestions.length) { %>
+      <article class="cart-items-empty">
+        <p>Aucune suggestion disponible pour le moment.</p>
+      </article>
+      <% } %>
+
       <% suggestions.forEach((item, idx) => { %>
       <article class="cart-product">
         <a
           class="cart-product__media cart-product__media--<%= item.palette %><%= item.image ? ' has-image' : '' %>"
-          href="/details"
+          href="<%= item.href || '/details' %>"
         >
           <% if (item.image) { %>
           <img
@@ -285,16 +245,23 @@
             decoding="async"
           />
           <% } %>
-          <span class="cart-product__sku">RB-ADD-<%= 700 + idx %></span>
+          <span class="cart-product__sku"><%= item.sku || `RB-ADD-${700 + idx}` %></span>
         </a>
         <div class="cart-product__body">
           <p class="cart-product__category"><%= item.category %></p>
-          <a class="cart-product__name" href="/details"><%= item.name %></a>
+          <a class="cart-product__name" href="<%= item.href || '/details' %>"><%= item.name %></a>
           <div class="cart-product__prices">
             <span class="cart-product__current"><%= item.price %></span>
+            <% if (item.oldPrice) { %>
             <span class="cart-product__old"><%= item.oldPrice %></span>
+            <% } %>
           </div>
-          <a class="cart-product__cta" data-add-to-cart href="/cart">
+          <a
+            class="cart-product__cta"
+            data-add-to-cart
+            data-product-slug="<%= item.slug || '' %>"
+            href="/cart"
+          >
             <i class="bx bx-cart-add"></i>
             <span>Ajouter</span>
           </a>

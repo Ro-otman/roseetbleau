@@ -102,6 +102,54 @@
   gap: 8px;
 }
 
+.favoris-alert {
+  border: 1px solid transparent;
+  border-radius: 14px;
+  padding: 12px;
+  display: grid;
+  gap: 6px;
+}
+
+.favoris-alert__title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.favoris-alert__text {
+  margin: 0;
+  font-size: 0.84rem;
+  line-height: 1.52;
+}
+
+.favoris-alert__cta {
+  margin-top: 4px;
+  min-height: 34px;
+  width: fit-content;
+  padding: 0 12px;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  background: #fff;
+  color: #325170;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.favoris-alert--info {
+  border-color: rgba(54, 128, 194, 0.34);
+  background: rgba(218, 237, 252, 0.84);
+  color: #1f4f77;
+}
+
+.favoris-alert--error {
+  border-color: rgba(206, 74, 102, 0.3);
+  background: rgba(255, 229, 236, 0.9);
+  color: #83243d;
+}
+
 .favoris-pill {
   min-height: 34px;
   padding: 0 12px;
@@ -294,6 +342,9 @@
   color: #24364d;
   font-size: 1rem;
   line-height: 1.34;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .fav-card__prices {

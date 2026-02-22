@@ -204,14 +204,20 @@ const authControllers = {
       const payload = parseSignupBody(req.body);
       const formData = asSignupFormData(payload);
 
-      if (!payload.firstName || !payload.lastName || !payload.email || !payload.phone) {
+      if (
+        !payload.firstName ||
+        !payload.lastName ||
+        !payload.email ||
+        !payload.phone
+      ) {
         return renderSignupPage({
           res,
           status: 400,
           feedback: {
             tone: "error",
             title: "Inscription impossible",
-            message: "Prenom, nom, email et numero de telephone sont obligatoires.",
+            message:
+              "Prenom, nom, email et numero de telephone sont obligatoires.",
           },
           formData,
         });

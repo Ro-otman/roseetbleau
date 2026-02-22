@@ -1,170 +1,22 @@
 <section class="user-page page-index">
   <%
-    const newArrivals = [
-      {
-        name: "Robe Petales",
-        category: "Filles 3-8 ans",
-        price: "29,90 EUR",
-        oldPrice: "39,90 EUR",
-        rating: "4.8",
-        palette: "rose",
-      },
-      {
-        name: "Set Cool Denim",
-        category: "Garcons 4-10 ans",
-        price: "34,90 EUR",
-        oldPrice: "44,90 EUR",
-        rating: "4.7",
-        palette: "blue",
-      },
-      {
-        name: "Pyjama Nuage",
-        category: "Bebes 6-24 mois",
-        price: "22,50 EUR",
-        oldPrice: "29,00 EUR",
-        rating: "4.9",
-        palette: "sky",
-      },
-      {
-        name: "Sneakers Mini Move",
-        category: "Chaussures 25-33",
-        price: "38,00 EUR",
-        oldPrice: "49,00 EUR",
-        rating: "4.6",
-        palette: "mint",
-      },
-      {
-        name: "Cardigan Lune",
-        category: "Mixte 2-9 ans",
-        price: "27,90 EUR",
-        oldPrice: "36,00 EUR",
-        rating: "4.8",
-        palette: "sand",
-      },
-      {
-        name: "Sac Mini School",
-        category: "Accessoires",
-        price: "19,90 EUR",
-        oldPrice: "26,00 EUR",
-        rating: "4.7",
-        palette: "violet",
-      },
-      {
-        name: "Ensemble Sporty",
-        category: "Garcons 5-12 ans",
-        price: "31,90 EUR",
-        oldPrice: "40,00 EUR",
-        rating: "4.7",
-        palette: "peach",
-      },
-      {
-        name: "Bottes Rain Pop",
-        category: "Chaussures pluie",
-        price: "24,90 EUR",
-        oldPrice: "32,00 EUR",
-        rating: "4.8",
-        palette: "aqua",
-      },
-    ];
+    const paletteSequence = ["rose", "blue", "sky", "mint", "sand", "violet", "peach", "aqua"];
+    const toCard = (product, index) => ({
+      ...product,
+      palette: product?.palette || paletteSequence[index % paletteSequence.length],
+      href: product?.href || "/details",
+      sku: product?.sku || `RB-${100 + index}`,
+      rating: product?.rating || "4.8",
+      oldPrice: product?.oldPrice || null,
+    });
 
-    const spotlightProducts = [
-      {
-        name: "Pack Nid Coton",
-        category: "Bebes",
-        price: "26,90 EUR",
-        oldPrice: "34,90 EUR",
-        rating: "4.8",
-        palette: "sky",
-      },
-      {
-        name: "Robe Fleurie Soft",
-        category: "Filles",
-        price: "28,50 EUR",
-        oldPrice: "36,00 EUR",
-        rating: "4.7",
-        palette: "rose",
-      },
-      {
-        name: "Jogging Mini Club",
-        category: "Garcons",
-        price: "30,90 EUR",
-        oldPrice: "39,00 EUR",
-        rating: "4.8",
-        palette: "blue",
-      },
-      {
-        name: "Sandales Sunny Pop",
-        category: "Chaussures",
-        price: "23,50 EUR",
-        oldPrice: "31,00 EUR",
-        rating: "4.6",
-        palette: "mint",
-      },
-      {
-        name: "Gilet Doux Lune",
-        category: "Mixte",
-        price: "24,90 EUR",
-        oldPrice: "32,90 EUR",
-        rating: "4.7",
-        palette: "sand",
-      },
-      {
-        name: "Sac Smart Kids",
-        category: "Accessoires",
-        price: "18,90 EUR",
-        oldPrice: "25,90 EUR",
-        rating: "4.8",
-        palette: "violet",
-      },
-      {
-        name: "Set Sport Street",
-        category: "Garcons",
-        price: "32,90 EUR",
-        oldPrice: "41,00 EUR",
-        rating: "4.7",
-        palette: "peach",
-      },
-      {
-        name: "Manteau Nuage",
-        category: "Bebes",
-        price: "34,90 EUR",
-        oldPrice: "45,00 EUR",
-        rating: "4.9",
-        palette: "aqua",
-      },
-      {
-        name: "Top Weekend Joy",
-        category: "Filles",
-        price: "21,50 EUR",
-        oldPrice: "29,00 EUR",
-        rating: "4.6",
-        palette: "rose",
-      },
-      {
-        name: "Pantalon Flex Denim",
-        category: "Garcons",
-        price: "27,90 EUR",
-        oldPrice: "35,50 EUR",
-        rating: "4.7",
-        palette: "blue",
-      },
-      {
-        name: "Lot Chaussettes Fun",
-        category: "Accessoires",
-        price: "12,90 EUR",
-        oldPrice: "16,50 EUR",
-        rating: "4.8",
-        palette: "mint",
-      },
-      {
-        name: "Basket Color Rush",
-        category: "Chaussures",
-        price: "35,90 EUR",
-        oldPrice: "44,90 EUR",
-        rating: "4.7",
-        palette: "peach",
-      },
-    ];
+    const newArrivals = (Array.isArray(marketplaceNewArrivals) ? marketplaceNewArrivals : []).map((item, index) =>
+      toCard(item, index),
+    );
+
+    const spotlightProducts = (
+      Array.isArray(marketplaceSpotlightProducts) ? marketplaceSpotlightProducts : []
+    ).map((item, index) => toCard(item, index + newArrivals.length));
 
     const spotlightGroups = [];
     for (let i = 0; i < spotlightProducts.length; i += 4) {
@@ -283,11 +135,17 @@
     </div>
 
     <div class="arrivals-grid">
+      <% if (!newArrivals.length) { %>
+      <article class="arrivals-grid__empty">
+        <p>Aucun produit disponible pour le moment.</p>
+      </article>
+      <% } %>
+
       <% newArrivals.forEach((product, index) => { %>
       <article class="arrival-card">
         <a
           class="arrival-card__media arrival-card__media--<%= product.palette %><%= product.image ? ' has-image' : '' %>"
-          href="/details"
+          href="<%= product.href %>"
           aria-label="Voir <%= product.name %>"
         >
           <% if (product.image) { %>
@@ -300,26 +158,29 @@
           />
           <% } %>
           <span class="arrival-card__badge">New</span>
-          <span class="arrival-card__sku">RB-<%= 100 + index %></span>
+          <span class="arrival-card__sku"><%= product.sku %></span>
         </a>
         <button
           class="arrival-card__wish"
           type="button"
           data-favorite-btn
-          aria-pressed="false"
+          data-product-slug="<%= product.slug || '' %>"
+          aria-pressed="<%= product.isFavorite ? 'true' : 'false' %>"
           aria-label="Ajouter <%= product.name %> aux favoris"
         >
-          <i class="bx bx-heart"></i>
+          <i class="bx <%= product.isFavorite ? 'bxs-heart' : 'bx-heart' %>"></i>
         </button>
 
         <div class="arrival-card__body">
-          <a class="arrival-card__details" href="/details" aria-label="Voir <%= product.name %>">
+          <a class="arrival-card__details" href="<%= product.href %>" aria-label="Voir <%= product.name %>">
             <p class="arrival-card__category"><%= product.category %></p>
             <h3 class="arrival-card__name"><%= product.name %></h3>
 
             <div class="arrival-card__pricing">
               <span class="arrival-card__price-current"><%= product.price %></span>
+              <% if (product.oldPrice) { %>
               <span class="arrival-card__price-old"><%= product.oldPrice %></span>
+              <% } %>
             </div>
           </a>
 
@@ -328,7 +189,7 @@
               <i class="bx bxs-star"></i>
               <span><%= product.rating %></span>
             </p>
-            <a class="arrival-card__action" data-add-to-cart href="/cart" aria-label="Ajouter <%= product.name %> au panier">
+            <a class="arrival-card__action" data-add-to-cart data-product-slug="<%= product.slug || '' %>" href="/cart" aria-label="Ajouter <%= product.name %> au panier">
               <i class="bx bx-cart-add"></i>
               <span>Panier</span>
             </a>
@@ -400,6 +261,14 @@
     >
       <div class="spotlight-carousel__viewport">
         <div class="spotlight-carousel__track" data-carousel-track>
+          <% if (!spotlightGroups.length) { %>
+          <article class="spotlight-slide is-active" data-carousel-slide>
+            <div class="arrivals-grid__empty">
+              <p>Aucun produit en vedette pour le moment.</p>
+            </div>
+          </article>
+          <% } %>
+
           <% spotlightGroups.forEach((group, groupIndex) => { %>
           <article class="spotlight-slide <%= groupIndex === 0 ? 'is-active' : '' %>" data-carousel-slide>
             <div class="spotlight-grid">
@@ -408,7 +277,7 @@
               <article class="arrival-card spotlight-card">
                 <a
                   class="arrival-card__media arrival-card__media--<%= product.palette %><%= product.image ? ' has-image' : '' %>"
-                  href="/details"
+                  href="<%= product.href %>"
                   aria-label="Voir <%= product.name %>"
                 >
                   <% if (product.image) { %>
@@ -425,26 +294,29 @@
                     <i class="bx <%= categoryIcon %>" aria-hidden="true"></i>
                     <span><%= product.category %></span>
                   </span>
-                  <span class="arrival-card__sku">RB-<%= 300 + (groupIndex * 4) + productIndex %></span>
+                  <span class="arrival-card__sku"><%= product.sku %></span>
                 </a>
                 <button
                   class="arrival-card__wish"
                   type="button"
                   data-favorite-btn
-                  aria-pressed="false"
+                  data-product-slug="<%= product.slug || '' %>"
+                  aria-pressed="<%= product.isFavorite ? 'true' : 'false' %>"
                   aria-label="Ajouter <%= product.name %> aux favoris"
                 >
-                  <i class="bx bx-heart"></i>
+                  <i class="bx <%= product.isFavorite ? 'bxs-heart' : 'bx-heart' %>"></i>
                 </button>
 
                 <div class="arrival-card__body">
-                  <a class="arrival-card__details" href="/details" aria-label="Voir <%= product.name %>">
+                  <a class="arrival-card__details" href="<%= product.href %>" aria-label="Voir <%= product.name %>">
                     <p class="arrival-card__category"><%= product.category %></p>
                     <h3 class="arrival-card__name"><%= product.name %></h3>
 
                     <div class="arrival-card__pricing">
                       <span class="arrival-card__price-current"><%= product.price %></span>
+                      <% if (product.oldPrice) { %>
                       <span class="arrival-card__price-old"><%= product.oldPrice %></span>
+                      <% } %>
                     </div>
                   </a>
 
@@ -453,7 +325,7 @@
                       <i class="bx bxs-star"></i>
                       <span><%= product.rating %></span>
                     </p>
-                    <a class="arrival-card__action" data-add-to-cart href="/cart" aria-label="Ajouter <%= product.name %> au panier">
+                    <a class="arrival-card__action" data-add-to-cart data-product-slug="<%= product.slug || '' %>" href="/cart" aria-label="Ajouter <%= product.name %> au panier">
                       <i class="bx bx-cart-add"></i>
                       <span>Panier</span>
                     </a>

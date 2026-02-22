@@ -1,20 +1,47 @@
 <section class="admin-page admin-add-product">
   <section class="admin-panel">
+    <%
+      const values = formData || {};
+      const feedback = productFeedback || null;
+      const selectedCategory = values.category || "";
+    %>
+
     <header class="admin-panel__head">
       <h2>Nouvelle fiche produit</h2>
       <a href="/admin/produits">Retour catalogue</a>
     </header>
 
-    <form class="admin-form" action="/admin/ajoutproduit" method="get">
+    <% if (feedback) { %>
+    <div class="admin-feedback admin-feedback--<%= feedback.tone || "info" %>" role="status">
+      <p class="admin-feedback__title"><%= feedback.title %></p>
+      <p class="admin-feedback__message"><%= feedback.message %></p>
+    </div>
+    <% } %>
+
+    <form class="admin-form" action="/admin/ajoutproduit" method="post" enctype="multipart/form-data">
       <div class="admin-form-grid admin-form-grid--two">
         <div class="admin-field">
           <label for="product-name">Nom produit</label>
-          <input id="product-name" name="name" type="text" placeholder="Ex: Robe Petales Soft" required />
+          <input
+            id="product-name"
+            name="name"
+            type="text"
+            placeholder="Ex: Robe Petales Soft"
+            value="<%= values.name || "" %>"
+            required
+          />
         </div>
 
         <div class="admin-field">
           <label for="product-sku">Reference SKU</label>
-          <input id="product-sku" name="sku" type="text" placeholder="RB-NEW-001" required />
+          <input
+            id="product-sku"
+            name="sku"
+            type="text"
+            placeholder="RB-NEW-001"
+            value="<%= values.sku || "" %>"
+            required
+          />
         </div>
       </div>
 
@@ -23,34 +50,61 @@
           <label for="product-category">Categorie</label>
           <select id="product-category" name="category" required>
             <option value="">Selectionner</option>
-            <option value="bebes">Bebes</option>
-            <option value="filles">Filles</option>
-            <option value="garcons">Garcons</option>
-            <option value="chaussures">Chaussures</option>
-            <option value="accessoires">Accessoires</option>
+            <option value="bebes" <%= selectedCategory === "bebes" ? "selected" : "" %>>Bebes</option>
+            <option value="filles" <%= selectedCategory === "filles" ? "selected" : "" %>>Filles</option>
+            <option value="garcons" <%= selectedCategory === "garcons" ? "selected" : "" %>>Garcons</option>
+            <option value="chaussures" <%= selectedCategory === "chaussures" ? "selected" : "" %>>Chaussures</option>
+            <option value="accessoires" <%= selectedCategory === "accessoires" ? "selected" : "" %>>Accessoires</option>
           </select>
         </div>
 
         <div class="admin-field">
           <label for="product-price">Prix</label>
-          <input id="product-price" name="price" type="number" step="0.01" placeholder="29.90" required />
+          <input
+            id="product-price"
+            name="price"
+            type="number"
+            step="0.01"
+            placeholder="29.90"
+            value="<%= values.price || "" %>"
+            required
+          />
         </div>
 
         <div class="admin-field">
           <label for="product-stock">Stock initial</label>
-          <input id="product-stock" name="stock" type="number" placeholder="10" required />
+          <input
+            id="product-stock"
+            name="stock"
+            type="number"
+            placeholder="10"
+            value="<%= values.stock || "" %>"
+            required
+          />
         </div>
       </div>
 
       <div class="admin-form-grid admin-form-grid--two">
         <div class="admin-field">
           <label for="product-size">Tailles disponibles</label>
-          <input id="product-size" name="sizes" type="text" placeholder="3A,4A,5A,6A" />
+          <input
+            id="product-size"
+            name="sizes"
+            type="text"
+            placeholder="3A,4A,5A,6A"
+            value="<%= values.sizes || "" %>"
+          />
         </div>
 
         <div class="admin-field">
           <label for="product-color">Couleurs disponibles</label>
-          <input id="product-color" name="colors" type="text" placeholder="Rose,Bleu,Ciel" />
+          <input
+            id="product-color"
+            name="colors"
+            type="text"
+            placeholder="Rose,Bleu,Ciel"
+            value="<%= values.colors || "" %>"
+          />
         </div>
       </div>
 
@@ -61,15 +115,27 @@
           name="description"
           rows="5"
           placeholder="Description courte et benefices produit..."
-        ></textarea>
+        ><%= values.description || "" %></textarea>
       </div>
 
       <div class="admin-upload">
         <p class="admin-upload__label">Media produit</p>
-        <div class="admin-upload__zone">
+        <label class="admin-upload__zone" for="product-images">
           <i class="bx bx-image-add"></i>
-          <p>Depose les visuels du produit ou clique pour importer.</p>
-        </div>
+          <p>Depose les visuels du produit ou clique pour importer (max 6 images).</p>
+        </label>
+        <input
+          id="product-images"
+          class="admin-upload__input"
+          name="images"
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/avif"
+          multiple
+          required
+        />
+        <p class="admin-upload__hint">
+          Les images seront redimensionnees, compressees et converties en WebP automatiquement.
+        </p>
       </div>
 
       <div class="admin-form-actions">

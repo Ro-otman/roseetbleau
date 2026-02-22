@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
   <%- include("../partials/head", { pageTitle, pageStylesheet }) %>
-  <body class="is-loading">
+  <body class="is-loading" data-auth-user="<%= authUser ? 'true' : 'false' %>">
     <div class="site-loader" data-site-loader role="status" aria-live="polite" aria-label="Chargement du site">
       <div class="site-loader__panel">
         <div class="site-loader__brand" aria-hidden="true">

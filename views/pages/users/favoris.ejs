@@ -1,52 +1,11 @@
 <section class="user-page page-favoris">
   <%
-    const favoriteProducts = [
-      {
-        name: "Robe Petales Soft",
-        category: "Filles 3-8 ans",
-        price: "29,90 EUR",
-        oldPrice: "39,90 EUR",
-        tag: "-25%",
-        rating: "4.8",
-        palette: "rose",
-      },
-      {
-        name: "Ensemble Mini Club",
-        category: "Garcons 4-10 ans",
-        price: "33,50 EUR",
-        oldPrice: "42,00 EUR",
-        tag: "Top vente",
-        rating: "4.7",
-        palette: "blue",
-      },
-      {
-        name: "Pyjama Nuage",
-        category: "Bebes 6-24 mois",
-        price: "22,50 EUR",
-        oldPrice: "29,00 EUR",
-        tag: "Stock limite",
-        rating: "4.9",
-        palette: "sky",
-      },
-      {
-        name: "Sac Mini School",
-        category: "Accessoires",
-        price: "19,90 EUR",
-        oldPrice: "26,00 EUR",
-        tag: "Nouveau",
-        rating: "4.7",
-        palette: "violet",
-      },
-    ];
-
-    const quickFilters = [
-      "Tous",
-      "Bebes",
-      "Filles",
-      "Garcons",
-      "Accessoires",
-      "Promotions",
-    ];
+    const products = Array.isArray(favoriteProducts) ? favoriteProducts : [];
+    const quickFilters = Array.isArray(favoriteQuickFilters) ? favoriteQuickFilters : [];
+    const summary = favoriteSummary || { totalSaved: 0, discountedCount: 0 };
+    const message = favoriteMessage || null;
+    const isAuthenticated = Boolean(favoriteIsAuthenticated);
+    const hasProducts = products.length > 0;
   %>
 
   <section class="favoris-hero" aria-label="Mes favoris">
@@ -65,11 +24,11 @@
 
     <div class="favoris-hero__stats" aria-label="Chiffres favoris">
       <article class="favoris-stat">
-        <p class="favoris-stat__value"><%= favoriteProducts.length %></p>
+        <p class="favoris-stat__value"><%= summary.totalSaved || 0 %></p>
         <p class="favoris-stat__label">Articles sauvegardes</p>
       </article>
       <article class="favoris-stat">
-        <p class="favoris-stat__value">3</p>
+        <p class="favoris-stat__value"><%= summary.discountedCount || 0 %></p>
         <p class="favoris-stat__label">Articles en reduction</p>
       </article>
       <article class="favoris-stat">
@@ -80,20 +39,37 @@
   </section>
 
   <section class="favoris-filters" aria-label="Filtres favoris">
-    <% quickFilters.forEach((filter, idx) => { %>
-    <a class="favoris-pill <%= idx === 0 ? 'is-active' : '' %>" href="/favoris">
-      <span><%= filter %></span>
+    <% if (!quickFilters.length) { %>
+    <a class="favoris-pill is-active" href="/favoris">
+      <span>Tous</span>
+    </a>
+    <% } %>
+
+    <% quickFilters.forEach((filter) => { %>
+    <a class="favoris-pill <%= filter.active ? 'is-active' : '' %>" href="<%= filter.href %>">
+      <span><%= filter.label %></span>
     </a>
     <% }) %>
   </section>
 
+  <% if (message) { %>
+  <section class="favoris-alert favoris-alert--<%= message.tone || 'info' %>">
+    <p class="favoris-alert__title"><%= message.title %></p>
+    <p class="favoris-alert__text"><%= message.text %></p>
+    <% if (!isAuthenticated) { %>
+    <a class="favoris-alert__cta" href="/login">Se connecter</a>
+    <% } %>
+  </section>
+  <% } %>
+
+  <% if (hasProducts) { %>
   <section class="favoris-grid-wrap" aria-label="Produits favoris">
     <div class="favoris-grid">
-      <% favoriteProducts.forEach((product, index) => { %>
+      <% products.forEach((product, index) => { %>
       <article class="fav-card">
         <a
           class="fav-card__media fav-card__media--<%= product.palette %><%= product.image ? ' has-image' : '' %>"
-          href="/details"
+          href="<%= product.href || '/details' %>"
           aria-label="Voir <%= product.name %>"
         >
           <% if (product.image) { %>
@@ -106,22 +82,32 @@
           />
           <% } %>
           <span class="fav-card__tag"><%= product.tag %></span>
-          <span class="fav-card__sku">RB-FAV-<%= 200 + index %></span>
+          <span class="fav-card__sku"><%= product.sku || `RB-FAV-${200 + index}` %></span>
         </a>
 
-        <button class="fav-card__wish" type="button" aria-pressed="true" aria-label="Retirer <%= product.name %> des favoris">
+        <button
+          class="fav-card__wish"
+          type="button"
+          data-favorite-btn
+          data-favorite-context="favoris"
+          data-product-slug="<%= product.slug || '' %>"
+          aria-pressed="true"
+          aria-label="Retirer <%= product.name %> des favoris"
+        >
           <i class="bx bxs-heart"></i>
         </button>
 
         <div class="fav-card__body">
-          <a class="fav-card__details" href="/details">
+          <a class="fav-card__details" href="<%= product.href || '/details' %>">
             <p class="fav-card__category"><%= product.category %></p>
             <h3 class="fav-card__name"><%= product.name %></h3>
           </a>
 
           <div class="fav-card__prices">
             <span class="fav-card__price-current"><%= product.price %></span>
+            <% if (product.oldPrice) { %>
             <span class="fav-card__price-old"><%= product.oldPrice %></span>
+            <% } %>
           </div>
 
           <div class="fav-card__footer">
@@ -130,8 +116,8 @@
               <span><%= product.rating %></span>
             </p>
             <div class="fav-card__actions">
-              <a class="fav-card__btn fav-card__btn--ghost" href="/details">Details</a>
-              <a class="fav-card__btn fav-card__btn--primary" data-add-to-cart href="/cart">
+              <a class="fav-card__btn fav-card__btn--ghost" href="<%= product.href || '/details' %>">Details</a>
+              <a class="fav-card__btn fav-card__btn--primary" data-add-to-cart data-product-slug="<%= product.slug || '' %>" href="/cart">
                 <i class="bx bx-cart-add"></i>
                 <span>Panier</span>
               </a>
@@ -142,7 +128,9 @@
       <% }) %>
     </div>
   </section>
+  <% } %>
 
+  <% if (hasProducts) { %>
   <section class="favoris-helper" aria-label="Actions rapides wishlist">
     <div class="favoris-helper__content">
       <h2>Optimise ta wishlist</h2>
@@ -157,7 +145,9 @@
       <a class="favoris-helper__secondary" href="/shop">Retour au catalogue</a>
     </div>
   </section>
+  <% } %>
 
+  <% if (!hasProducts) { %>
   <section class="favoris-empty" aria-label="Si aucun favori">
     <div>
       <p class="favoris-empty__kicker">Pas encore de coup de coeur ?</p>
@@ -166,6 +156,7 @@
         Tu peux ajouter des favoris depuis chaque fiche produit puis les retrouver ici en un clic.
       </p>
     </div>
-    <a class="btn btn-primary" href="/shop">Explorer le shop</a>
+    <a class="btn btn-primary" href="<%= isAuthenticated ? '/shop' : '/login' %>"><%= isAuthenticated ? 'Explorer le shop' : 'Se connecter' %></a>
   </section>
+  <% } %>
 </section>

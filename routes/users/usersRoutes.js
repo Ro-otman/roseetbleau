@@ -13,7 +13,14 @@ usersRouter.get("/details", usersControllers.showDetailsPage);
 usersRouter.get("/login", usersControllers.showLoginPage);
 usersRouter.get("/signup", usersControllers.showSignupPage);
 usersRouter.get("/cart", usersControllers.showCartPage);
+usersRouter.get("/cart/data", usersControllers.getCartData);
+usersRouter.get("/cart/count", usersControllers.getCartCount);
 
+usersRouter.post("/favoris/toggle", usersControllers.toggleFavorite);
+usersRouter.post("/cart/add", usersControllers.addToCart);
+usersRouter.post("/cart/item/update", usersControllers.updateCartItemQuantity);
+usersRouter.post("/cart/item/remove", usersControllers.removeCartItem);
+usersRouter.post("/cart/clear", usersControllers.clearCart);
 usersRouter.post("/signup", authControllers.signup);
 usersRouter.post("/login", authControllers.login);
 usersRouter.post("/logout", authControllers.logout);

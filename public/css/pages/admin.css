@@ -872,6 +872,44 @@ a {
   gap: 7px;
 }
 
+.admin-feedback {
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: grid;
+  gap: 3px;
+}
+
+.admin-feedback__title {
+  margin: 0;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.admin-feedback__message {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.admin-feedback--success {
+  border-color: rgba(60, 170, 115, 0.32);
+  background: rgba(224, 249, 236, 0.88);
+  color: #1e6744;
+}
+
+.admin-feedback--error {
+  border-color: rgba(206, 74, 102, 0.28);
+  background: rgba(255, 223, 231, 0.88);
+  color: #8b2440;
+}
+
+.admin-feedback--info {
+  border-color: rgba(47, 120, 181, 0.28);
+  background: rgba(223, 239, 253, 0.9);
+  color: #225781;
+}
+
 .admin-upload__label {
   margin: 0;
   color: #3e5774;
@@ -889,6 +927,7 @@ a {
   text-align: center;
   gap: 6px;
   padding: 12px;
+  cursor: pointer;
 }
 
 .admin-upload__zone .bx {
@@ -900,6 +939,22 @@ a {
   margin: 0;
   color: #59708c;
   font-size: 0.84rem;
+}
+
+.admin-upload__input {
+  width: 100%;
+  border: 1px solid #d6e1ee;
+  border-radius: 10px;
+  background: #fff;
+  color: #233850;
+  font-size: 0.82rem;
+  padding: 8px 10px;
+}
+
+.admin-upload__hint {
+  margin: 0;
+  color: #647c96;
+  font-size: 0.77rem;
 }
 
 .admin-form-actions {
