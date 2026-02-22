@@ -28,7 +28,7 @@ temp/
 
 # Runtime/generated assets
 #public/uploads/
-uploads/
+#uploads/
 storage/
 
 # Local databases
