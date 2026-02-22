@@ -27,7 +27,7 @@ temp/
 *.tsbuildinfo
 
 # Runtime/generated assets
-public/uploads/
+#public/uploads/
 uploads/
 storage/
 
