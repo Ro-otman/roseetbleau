@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <%- include("../partials/adminHead", { pageTitle, pageStylesheet }) %>
+  <body class="admin-body">
+    <%
+      const adminLinks = [
+        { href: "/admin/dashboard", label: "Dashboard", icon: "bx-grid-alt" },
+        { href: "/admin/produits", label: "Produits", icon: "bx-package" },
+        { href: "/admin/ajoutproduit", label: "Ajout produit", icon: "bx-plus-circle" },
+        { href: "/admin/users", label: "Users", icon: "bx-user" },
+        { href: "/admin/orders", label: "Orders", icon: "bx-receipt" },
+      ];
+
+      const path = currentAdminPath || "/admin";
+      const isDashboardActive = path === "/admin" || path === "/admin/dashboard";
+      const isActive = (href) => (href === "/admin/dashboard" ? isDashboardActive : path === href);
+    %>
+
+    <div class="admin-shell">
+      <aside class="admin-sidebar" aria-label="Navigation administrateur">
+        <a class="admin-brand" href="/admin/dashboard" aria-label="Dashboard Rose et Bleu">
+          <span class="admin-brand__rose">Rose</span>
+          <span class="admin-brand__amp">&amp;</span>
+          <span class="admin-brand__bleu">Bleu</span>
+        </a>
+
+        <p class="admin-sidebar__kicker">Espace administrateur</p>
+
+        <nav class="admin-nav">
+          <% adminLinks.forEach((item) => { %>
+          <a class="admin-nav__link <%= isActive(item.href) ? "is-active" : "" %>" href="<%= item.href %>">
+            <i class="bx <%= item.icon %>"></i>
+            <span><%= item.label %></span>
+          </a>
+          <% }) %>
+        </nav>
+
+        <div class="admin-sidebar__foot">
+          <a class="admin-side-btn" href="/">Voir la boutique</a>
+          <a class="admin-side-btn admin-side-btn--ghost" href="/admin/login">Se deconnecter</a>
+        </div>
+      </aside>
+
+      <div class="admin-content">
+        <header class="admin-topbar">
+          <div>
+            <p class="admin-topbar__kicker">Backoffice Rose&amp;Bleu</p>
+            <h1 class="admin-topbar__title">
+              <span><%= adminPageTitle || "Administration" %></span>
+              <% if (adminIdentity && adminIdentity.showBadge) { %>
+              <i class="bx bxs-badge-check admin-topbar__verified-icon" aria-label="Badge"></i>
+              <% } %>
+            </h1>
+            <% if (adminPageLead) { %>
+            <p class="admin-topbar__lead"><%= adminPageLead %></p>
+            <% } %>
+          </div>
+
+          <div class="admin-topbar__actions">
+            <a href="/admin/orders"><i class="bx bx-bell"></i><span>Commandes</span></a>
+            <a href="/admin/users"><i class="bx bx-user-circle"></i><span>Admin</span></a>
+          </div>
+        </header>
+
+        <main class="admin-main">
+          <%- body %>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

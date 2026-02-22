@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="t d">
+  <title id="t">Rose et Bleu favicon</title>
+  <desc id="d">Deux empreintes de pas rose et bleu</desc>
+
+  <rect width="64" height="64" rx="14" fill="#f7f7f7" />
+
+  <g transform="translate(7 7)">
+    <ellipse cx="14" cy="30" rx="8.5" ry="14" transform="rotate(-16 14 30)" fill="#3da8e2" />
+    <circle cx="8" cy="12" r="3.5" fill="#3da8e2" />
+    <circle cx="13" cy="9" r="3.2" fill="#3da8e2" />
+    <circle cx="18" cy="8.5" r="2.8" fill="#3da8e2" />
+    <circle cx="22.5" cy="10.5" r="2.5" fill="#3da8e2" />
+    <circle cx="25.2" cy="14.3" r="2.1" fill="#3da8e2" />
+  </g>
+
+  <g transform="translate(28 5)">
+    <ellipse cx="17" cy="27" rx="8.5" ry="14" transform="rotate(16 17 27)" fill="#ec2e8a" />
+    <circle cx="23" cy="9.5" r="3.5" fill="#ec2e8a" />
+    <circle cx="18" cy="7" r="3.2" fill="#ec2e8a" />
+    <circle cx="13" cy="7.5" r="2.8" fill="#ec2e8a" />
+    <circle cx="8.8" cy="10.5" r="2.5" fill="#ec2e8a" />
+    <circle cx="6.2" cy="14.3" r="2.1" fill="#ec2e8a" />
+  </g>
+</svg>

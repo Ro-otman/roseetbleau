@@ -1,0 +1,84 @@
+<section class="admin-page admin-add-product">
+  <section class="admin-panel">
+    <header class="admin-panel__head">
+      <h2>Nouvelle fiche produit</h2>
+      <a href="/admin/produits">Retour catalogue</a>
+    </header>
+
+    <form class="admin-form" action="/admin/ajoutproduit" method="get">
+      <div class="admin-form-grid admin-form-grid--two">
+        <div class="admin-field">
+          <label for="product-name">Nom produit</label>
+          <input id="product-name" name="name" type="text" placeholder="Ex: Robe Petales Soft" required />
+        </div>
+
+        <div class="admin-field">
+          <label for="product-sku">Reference SKU</label>
+          <input id="product-sku" name="sku" type="text" placeholder="RB-NEW-001" required />
+        </div>
+      </div>
+
+      <div class="admin-form-grid admin-form-grid--three">
+        <div class="admin-field">
+          <label for="product-category">Categorie</label>
+          <select id="product-category" name="category" required>
+            <option value="">Selectionner</option>
+            <option value="bebes">Bebes</option>
+            <option value="filles">Filles</option>
+            <option value="garcons">Garcons</option>
+            <option value="chaussures">Chaussures</option>
+            <option value="accessoires">Accessoires</option>
+          </select>
+        </div>
+
+        <div class="admin-field">
+          <label for="product-price">Prix</label>
+          <input id="product-price" name="price" type="number" step="0.01" placeholder="29.90" required />
+        </div>
+
+        <div class="admin-field">
+          <label for="product-stock">Stock initial</label>
+          <input id="product-stock" name="stock" type="number" placeholder="10" required />
+        </div>
+      </div>
+
+      <div class="admin-form-grid admin-form-grid--two">
+        <div class="admin-field">
+          <label for="product-size">Tailles disponibles</label>
+          <input id="product-size" name="sizes" type="text" placeholder="3A,4A,5A,6A" />
+        </div>
+
+        <div class="admin-field">
+          <label for="product-color">Couleurs disponibles</label>
+          <input id="product-color" name="colors" type="text" placeholder="Rose,Bleu,Ciel" />
+        </div>
+      </div>
+
+      <div class="admin-field">
+        <label for="product-description">Description</label>
+        <textarea
+          id="product-description"
+          name="description"
+          rows="5"
+          placeholder="Description courte et benefices produit..."
+        ></textarea>
+      </div>
+
+      <div class="admin-upload">
+        <p class="admin-upload__label">Media produit</p>
+        <div class="admin-upload__zone">
+          <i class="bx bx-image-add"></i>
+          <p>Depose les visuels du produit ou clique pour importer.</p>
+        </div>
+      </div>
+
+      <div class="admin-form-actions">
+        <button type="submit" class="admin-btn admin-btn--primary">
+          <i class="bx bx-save"></i>
+          <span>Publier le produit</span>
+        </button>
+        <a href="/admin/produits" class="admin-btn admin-btn--ghost">Annuler</a>
+      </div>
+    </form>
+  </section>
+</section>

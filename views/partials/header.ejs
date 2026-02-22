@@ -1,0 +1,67 @@
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="brand" href="/" aria-label="Rose et Bleu accueil">
+      <span class="brand__rose">Rose</span>
+      <span class="brand__amp">&amp;</span>
+      <span class="brand__bleu">Bleu</span>
+    </a>
+
+    <form class="header-search" id="site-mobile-search" data-header-search action="/shop" method="get" role="search">
+      <input
+        type="search"
+        name="q"
+        placeholder="Rechercher sur Rose&Bleu"
+        aria-label="Rechercher un produit"
+      />
+      <button class="header-search__submit" type="submit" aria-label="Lancer la recherche">
+        <i class="bx bx-search-alt-2"></i>
+      </button>
+    </form>
+
+    <div class="site-header__right">
+      <%- include("./nav", { currentPath, navClass: "main-nav main-nav--desktop", includeSearch: false }) %>
+
+      <a class="header-cart" href="/cart" aria-label="Voir le panier">
+        <i class="bx bx-cart-alt"></i>
+        <span class="header-cart__count" data-cart-count aria-live="polite" hidden>0</span>
+      </a>
+
+      <a class="header-account" href="/login">
+        <span class="header-account__icon" aria-hidden="true">
+          <i class="bx bx-user"></i>
+        </span>
+        <span class="header-account__name">connexion</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="site-header__catalog">
+    <div class="site-header__catalog-inner">
+      <a class="catalog-link catalog-link--primary" href="/shop">
+        <i class="bx bx-grid-alt"></i>
+        <span>Toutes categories</span>
+      </a>
+
+      <a class="catalog-link" href="/shop?category=bebes">Bebes</a>
+      <a class="catalog-link" href="/shop?category=filles">Filles</a>
+      <a class="catalog-link" href="/shop?category=garcons">Garcons</a>
+      <a class="catalog-link" href="/shop?category=chaussures">Chaussures</a>
+      <a class="catalog-link" href="/shop?category=accessoires">Accessoires</a>
+
+      <div class="catalog-filters">
+        <a class="catalog-filter" href="/shop?sort=new">
+          <i class="bx bx-sort-alt-2"></i>
+          <span>Nouveautes</span>
+        </a>
+        <a class="catalog-filter" href="/shop?price=low">
+          <i class="bx bx-filter-alt"></i>
+          <span>Petit prix</span>
+        </a>
+        <a class="catalog-filter" href="/shop?promo=true">
+          <i class="bx bx-purchase-tag-alt"></i>
+          <span>Promotions</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>

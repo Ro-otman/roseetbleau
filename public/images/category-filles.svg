@@ -1,0 +1,59 @@
+<svg width="1600" height="760" viewBox="0 0 1600 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGirls" x1="140" y1="40" x2="1460" y2="730" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFE4F0"/>
+      <stop offset="0.46" stop-color="#FFC6E0"/>
+      <stop offset="1" stop-color="#F89AC7"/>
+    </linearGradient>
+    <radialGradient id="lightGirls" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1240 180) rotate(128) scale(280 240)">
+      <stop stop-color="#FFF6DF"/>
+      <stop offset="1" stop-color="#FFF6DF" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="floorGirls" x1="200" y1="548" x2="1400" y2="648" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#AFC3FF"/>
+      <stop offset="1" stop-color="#8EA6F3"/>
+    </linearGradient>
+    <linearGradient id="dressGirls" x1="632" y1="282" x2="968" y2="516" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#FFE7F3"/>
+    </linearGradient>
+    <filter id="shadowGirls" x="0" y="0" width="1600" height="760" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#1E2A49" flood-opacity="0.2"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="760" fill="url(#bgGirls)"/>
+  <circle cx="1240" cy="180" r="250" fill="url(#lightGirls)"/>
+
+  <path d="M0 570C190 496 380 486 580 534C760 578 994 618 1220 586C1348 568 1460 528 1600 466V760H0V570Z" fill="url(#floorGirls)"/>
+
+  <g filter="url(#shadowGirls)">
+    <rect x="532" y="248" width="536" height="316" rx="150" fill="#FFFFFF" fill-opacity="0.35"/>
+    <path d="M788 286C748 304 726 338 722 374C714 452 672 474 644 516H956C928 474 886 452 878 374C874 338 852 304 812 286H788Z" fill="url(#dressGirls)"/>
+    <path d="M754 308C776 338 826 338 848 308" stroke="#F25599" stroke-width="12" stroke-linecap="round"/>
+    <rect x="700" y="420" width="200" height="16" rx="8" fill="#F78FC0"/>
+    <rect x="700" y="452" width="200" height="16" rx="8" fill="#F9B3D5"/>
+    <circle cx="722" cy="382" r="10" fill="#F25599"/>
+    <circle cx="878" cy="382" r="10" fill="#F25599"/>
+  </g>
+
+  <g opacity="0.9">
+    <path d="M272 228L292 266L334 272L304 302L310 344L272 324L234 344L240 302L210 272L252 266L272 228Z" fill="#FFD96E"/>
+    <path d="M368 164L380 188L408 192L388 212L392 240L368 226L344 240L348 212L328 192L356 188L368 164Z" fill="#FFE79D"/>
+    <path d="M1326 268L1342 298L1374 302L1350 326L1356 360L1326 344L1296 360L1302 326L1278 302L1310 298L1326 268Z" fill="#FFE28E"/>
+  </g>
+
+  <g opacity="0.85">
+    <ellipse cx="248" cy="528" rx="82" ry="30" fill="#FFFFFF" fill-opacity="0.48"/>
+    <ellipse cx="1338" cy="534" rx="94" ry="34" fill="#FFFFFF" fill-opacity="0.46"/>
+  </g>
+
+  <g opacity="0.96">
+    <circle cx="338" cy="438" r="42" fill="#FFFFFF" fill-opacity="0.7"/>
+    <path d="M338 396V478" stroke="#F25599" stroke-width="8" stroke-linecap="round"/>
+    <path d="M296 436H380" stroke="#F25599" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="1268" cy="428" r="36" fill="#FFFFFF" fill-opacity="0.68"/>
+    <path d="M1268 392V464" stroke="#F25599" stroke-width="7" stroke-linecap="round"/>
+    <path d="M1232 428H1304" stroke="#F25599" stroke-width="7" stroke-linecap="round"/>
+  </g>
+</svg>

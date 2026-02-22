@@ -1,0 +1,63 @@
+<svg width="1600" height="760" viewBox="0 0 1600 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgBaby" x1="160" y1="60" x2="1500" y2="720" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#DDF4FF"/>
+      <stop offset="0.5" stop-color="#B8E4FF"/>
+      <stop offset="1" stop-color="#8FD2FF"/>
+    </linearGradient>
+    <radialGradient id="sunBaby" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1360 142) rotate(126) scale(240 220)">
+      <stop stop-color="#FFF8C9"/>
+      <stop offset="1" stop-color="#FFF8C9" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="groundBaby" x1="230" y1="520" x2="1370" y2="660" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A6E1C3"/>
+      <stop offset="1" stop-color="#7DCFA8"/>
+    </linearGradient>
+    <linearGradient id="blanketBaby" x1="760" y1="326" x2="1170" y2="484" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB9D9"/>
+      <stop offset="1" stop-color="#F76AB2"/>
+    </linearGradient>
+    <filter id="shadowBaby" x="0" y="0" width="1600" height="760" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="8" stdDeviation="14" flood-color="#1B2A44" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="760" fill="url(#bgBaby)"/>
+  <circle cx="1360" cy="142" r="220" fill="url(#sunBaby)"/>
+
+  <g opacity="0.78">
+    <ellipse cx="240" cy="130" rx="88" ry="34" fill="#F9FDFF"/>
+    <ellipse cx="310" cy="130" rx="58" ry="24" fill="#F9FDFF"/>
+    <ellipse cx="278" cy="110" rx="48" ry="22" fill="#F9FDFF"/>
+  </g>
+  <g opacity="0.78">
+    <ellipse cx="1190" cy="204" rx="98" ry="37" fill="#F7FCFF"/>
+    <ellipse cx="1266" cy="204" rx="62" ry="27" fill="#F7FCFF"/>
+    <ellipse cx="1228" cy="182" rx="56" ry="24" fill="#F7FCFF"/>
+  </g>
+
+  <path d="M0 530C188 462 390 460 576 504C784 554 986 598 1232 558C1362 536 1474 492 1600 452V760H0V530Z" fill="url(#groundBaby)"/>
+
+  <g filter="url(#shadowBaby)">
+    <rect x="510" y="300" width="580" height="250" rx="124" fill="#FFFFFF" fill-opacity="0.42"/>
+    <rect x="550" y="328" width="500" height="196" rx="96" fill="url(#blanketBaby)"/>
+    <circle cx="640" cy="428" r="66" fill="#FFD7E9"/>
+    <circle cx="920" cy="424" r="54" fill="#FFCCE3"/>
+    <ellipse cx="810" cy="425" rx="120" ry="74" fill="#FFF4FA"/>
+    <circle cx="778" cy="410" r="10" fill="#F76AB2"/>
+    <circle cx="840" cy="410" r="10" fill="#F76AB2"/>
+    <path d="M776 454C793 470 826 472 844 454" stroke="#F76AB2" stroke-width="8" stroke-linecap="round"/>
+  </g>
+
+  <g opacity="0.94">
+    <rect x="180" y="404" width="86" height="86" rx="20" transform="rotate(-9 180 404)" fill="#FFE39A"/>
+    <rect x="268" y="418" width="86" height="86" rx="20" transform="rotate(7 268 418)" fill="#A9DAFF"/>
+    <rect x="357" y="406" width="86" height="86" rx="20" transform="rotate(-5 357 406)" fill="#FFC0DD"/>
+  </g>
+
+  <g opacity="0.88">
+    <circle cx="1328" cy="522" r="56" fill="#FFFFFF" fill-opacity="0.58"/>
+    <circle cx="1380" cy="560" r="38" fill="#FFFFFF" fill-opacity="0.44"/>
+    <circle cx="1260" cy="566" r="34" fill="#FFFFFF" fill-opacity="0.42"/>
+  </g>
+</svg>

@@ -1,0 +1,113 @@
+<section class="admin-page admin-dashboard">
+  <%
+    const stats = [
+      { label: "Chiffre du jour", value: "1 245 EUR", trend: "+12%" },
+      { label: "Commandes", value: "36", trend: "+8%" },
+      { label: "Nouveaux clients", value: "14", trend: "+5%" },
+      { label: "Panier moyen", value: "34,6 EUR", trend: "+2%" },
+    ];
+
+    const quickLinks = [
+      { href: "/admin/ajoutproduit", title: "Ajouter produit", text: "Creer une fiche complete en quelques minutes.", icon: "bx-plus-circle" },
+      { href: "/admin/orders", title: "Suivre commandes", text: "Verifier les commandes en attente et urgentes.", icon: "bx-receipt" },
+      { href: "/admin/users", title: "Gerer users", text: "Consulter les comptes clients et leur activite.", icon: "bx-user" },
+      { href: "/admin/produits", title: "Mettre a jour stock", text: "Ajuster les quantites et les disponibilites.", icon: "bx-package" },
+    ];
+
+    const recentOrders = [
+      { id: "RB-1021", client: "Aline M.", amount: "79,80 EUR", status: "En preparation", tone: "warn" },
+      { id: "RB-1019", client: "Rosette K.", amount: "34,90 EUR", status: "Expediee", tone: "ok" },
+      { id: "RB-1018", client: "Nadine T.", amount: "118,40 EUR", status: "A verifier", tone: "danger" },
+      { id: "RB-1015", client: "Kossi A.", amount: "27,90 EUR", status: "Expediee", tone: "ok" },
+    ];
+  %>
+
+  <section class="admin-stats-grid" aria-label="Statistiques principales">
+    <% stats.forEach((item) => { %>
+    <article class="admin-stat-card">
+      <p class="admin-stat-card__label"><%= item.label %></p>
+      <p class="admin-stat-card__value"><%= item.value %></p>
+      <p class="admin-stat-card__trend"><i class="bx bx-trending-up"></i><span><%= item.trend %></span></p>
+    </article>
+    <% }) %>
+  </section>
+
+  <section class="admin-grid-2" aria-label="Vue performance">
+    <article class="admin-panel">
+      <header class="admin-panel__head">
+        <h2>Performance hebdomadaire</h2>
+        <a href="/admin/orders">Voir details</a>
+      </header>
+      <p class="admin-panel__lead">Evolution des ventes des 7 derniers jours.</p>
+
+      <div class="admin-mini-chart" role="img" aria-label="Graphique des ventes">
+        <span style="--h: 46%"></span>
+        <span style="--h: 62%"></span>
+        <span style="--h: 58%"></span>
+        <span style="--h: 72%"></span>
+        <span style="--h: 84%"></span>
+        <span style="--h: 76%"></span>
+        <span style="--h: 90%"></span>
+      </div>
+    </article>
+
+    <article class="admin-panel">
+      <header class="admin-panel__head">
+        <h2>Repartition catalogue</h2>
+        <a href="/admin/produits">Gerer</a>
+      </header>
+      <p class="admin-panel__lead">Poids des categories dans le stock actif.</p>
+      <ul class="admin-distribution">
+        <li><span>Bebes</span><strong>22%</strong></li>
+        <li><span>Filles</span><strong>28%</strong></li>
+        <li><span>Garcons</span><strong>24%</strong></li>
+        <li><span>Chaussures</span><strong>15%</strong></li>
+        <li><span>Accessoires</span><strong>11%</strong></li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="admin-panel" aria-label="Actions rapides">
+    <header class="admin-panel__head">
+      <h2>Actions rapides</h2>
+    </header>
+    <div class="admin-quick-grid">
+      <% quickLinks.forEach((item) => { %>
+      <a class="admin-quick-card" href="<%= item.href %>">
+        <i class="bx <%= item.icon %>"></i>
+        <h3><%= item.title %></h3>
+        <p><%= item.text %></p>
+      </a>
+      <% }) %>
+    </div>
+  </section>
+
+  <section class="admin-panel" aria-label="Dernieres commandes">
+    <header class="admin-panel__head">
+      <h2>Dernieres commandes</h2>
+      <a href="/admin/orders">Tout voir</a>
+    </header>
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Commande</th>
+            <th>Client</th>
+            <th>Montant</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% recentOrders.forEach((item) => { %>
+          <tr>
+            <td data-label="Commande"><%= item.id %></td>
+            <td data-label="Client"><%= item.client %></td>
+            <td data-label="Montant"><%= item.amount %></td>
+            <td data-label="Statut"><span class="admin-badge admin-badge--<%= item.tone %>"><%= item.status %></span></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>

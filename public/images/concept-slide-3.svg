@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Concept slide 3</title>
+  <desc id="desc">Lifestyle enfant Rose et Bleu</desc>
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd8ce" />
+      <stop offset="48%" stop-color="#ffeef7" />
+      <stop offset="100%" stop-color="#d7ecff" />
+    </linearGradient>
+    <linearGradient id="sun3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd98a" />
+      <stop offset="100%" stop-color="#f1b85f" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#bg3)" />
+  <circle cx="980" cy="170" r="94" fill="url(#sun3)" opacity="0.8" />
+
+  <path d="M0 620 C180 558 350 700 530 640 C700 584 874 700 1030 636 C1086 612 1140 608 1200 620 L1200 900 L0 900 Z" fill="#fff0f5" />
+  <path d="M0 680 C180 618 350 760 530 700 C700 644 874 760 1030 696 C1086 672 1140 668 1200 680 L1200 900 L0 900 Z" fill="#e7f3ff" />
+
+  <g transform="translate(120 160)">
+    <rect x="0" y="0" width="480" height="430" rx="34" fill="#ffffff" opacity="0.92" />
+    <rect x="34" y="34" width="412" height="284" rx="24" fill="#ffeef4" />
+    <path d="M145 220 C145 144 304 144 304 220 C304 295 145 295 145 220 Z" fill="#ee73ab" />
+    <circle cx="197" cy="206" r="8" fill="#ffd0e4" />
+    <circle cx="252" cy="206" r="8" fill="#ffd0e4" />
+    <path d="M197 244 C207 256 242 256 252 244" stroke="#ffd0e4" stroke-width="7" stroke-linecap="round" fill="none" />
+    <text x="34" y="364" fill="#273a52" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="34" font-weight="800">
+      Everyday playful style
+    </text>
+  </g>
+
+  <g transform="translate(650 238)">
+    <rect x="0" y="0" width="430" height="350" rx="30" fill="#ffffff" opacity="0.9" />
+    <rect x="30" y="34" width="370" height="118" rx="20" fill="#edf7ff" />
+    <text x="54" y="84" fill="#2c425e" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="30" font-weight="700">Ludique mais pratique</text>
+    <text x="54" y="126" fill="#5b718d" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="23">
+      Pour l ecole, le jeu, les sorties.
+    </text>
+
+    <rect x="30" y="176" width="174" height="142" rx="18" fill="#fff1e8" />
+    <rect x="226" y="176" width="174" height="142" rx="18" fill="#e8f4ff" />
+    <text x="74" y="256" fill="#324a67" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="24" font-weight="700">Confort</text>
+    <text x="274" y="256" fill="#324a67" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="24" font-weight="700">Qualite</text>
+  </g>
+</svg>

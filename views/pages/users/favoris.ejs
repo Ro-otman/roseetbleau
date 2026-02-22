@@ -1,0 +1,171 @@
+<section class="user-page page-favoris">
+  <%
+    const favoriteProducts = [
+      {
+        name: "Robe Petales Soft",
+        category: "Filles 3-8 ans",
+        price: "29,90 EUR",
+        oldPrice: "39,90 EUR",
+        tag: "-25%",
+        rating: "4.8",
+        palette: "rose",
+      },
+      {
+        name: "Ensemble Mini Club",
+        category: "Garcons 4-10 ans",
+        price: "33,50 EUR",
+        oldPrice: "42,00 EUR",
+        tag: "Top vente",
+        rating: "4.7",
+        palette: "blue",
+      },
+      {
+        name: "Pyjama Nuage",
+        category: "Bebes 6-24 mois",
+        price: "22,50 EUR",
+        oldPrice: "29,00 EUR",
+        tag: "Stock limite",
+        rating: "4.9",
+        palette: "sky",
+      },
+      {
+        name: "Sac Mini School",
+        category: "Accessoires",
+        price: "19,90 EUR",
+        oldPrice: "26,00 EUR",
+        tag: "Nouveau",
+        rating: "4.7",
+        palette: "violet",
+      },
+    ];
+
+    const quickFilters = [
+      "Tous",
+      "Bebes",
+      "Filles",
+      "Garcons",
+      "Accessoires",
+      "Promotions",
+    ];
+  %>
+
+  <section class="favoris-hero" aria-label="Mes favoris">
+    <div class="favoris-hero__content">
+      <p class="favoris-hero__kicker">Wishlist Rose&amp;Bleu</p>
+      <h1 class="favoris-hero__title">Tes pieces preferees, au meme endroit</h1>
+      <p class="favoris-hero__text">
+        Retrouve rapidement les articles que tu suis, compare les prix et ajoute au panier
+        au bon moment.
+      </p>
+      <div class="favoris-hero__actions">
+        <a class="btn btn-primary" href="/shop">Continuer mes achats</a>
+        <a class="btn btn-outline" href="/shop?promo=true">Voir les promos</a>
+      </div>
+    </div>
+
+    <div class="favoris-hero__stats" aria-label="Chiffres favoris">
+      <article class="favoris-stat">
+        <p class="favoris-stat__value"><%= favoriteProducts.length %></p>
+        <p class="favoris-stat__label">Articles sauvegardes</p>
+      </article>
+      <article class="favoris-stat">
+        <p class="favoris-stat__value">3</p>
+        <p class="favoris-stat__label">Articles en reduction</p>
+      </article>
+      <article class="favoris-stat">
+        <p class="favoris-stat__value">24h</p>
+        <p class="favoris-stat__label">Alerte prix moyenne</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="favoris-filters" aria-label="Filtres favoris">
+    <% quickFilters.forEach((filter, idx) => { %>
+    <a class="favoris-pill <%= idx === 0 ? 'is-active' : '' %>" href="/favoris">
+      <span><%= filter %></span>
+    </a>
+    <% }) %>
+  </section>
+
+  <section class="favoris-grid-wrap" aria-label="Produits favoris">
+    <div class="favoris-grid">
+      <% favoriteProducts.forEach((product, index) => { %>
+      <article class="fav-card">
+        <a
+          class="fav-card__media fav-card__media--<%= product.palette %><%= product.image ? ' has-image' : '' %>"
+          href="/details"
+          aria-label="Voir <%= product.name %>"
+        >
+          <% if (product.image) { %>
+          <img
+            class="fav-card__image"
+            src="<%= product.image %>"
+            alt="<%= product.name %>"
+            loading="lazy"
+            decoding="async"
+          />
+          <% } %>
+          <span class="fav-card__tag"><%= product.tag %></span>
+          <span class="fav-card__sku">RB-FAV-<%= 200 + index %></span>
+        </a>
+
+        <button class="fav-card__wish" type="button" aria-pressed="true" aria-label="Retirer <%= product.name %> des favoris">
+          <i class="bx bxs-heart"></i>
+        </button>
+
+        <div class="fav-card__body">
+          <a class="fav-card__details" href="/details">
+            <p class="fav-card__category"><%= product.category %></p>
+            <h3 class="fav-card__name"><%= product.name %></h3>
+          </a>
+
+          <div class="fav-card__prices">
+            <span class="fav-card__price-current"><%= product.price %></span>
+            <span class="fav-card__price-old"><%= product.oldPrice %></span>
+          </div>
+
+          <div class="fav-card__footer">
+            <p class="fav-card__rating">
+              <i class="bx bxs-star"></i>
+              <span><%= product.rating %></span>
+            </p>
+            <div class="fav-card__actions">
+              <a class="fav-card__btn fav-card__btn--ghost" href="/details">Details</a>
+              <a class="fav-card__btn fav-card__btn--primary" data-add-to-cart href="/cart">
+                <i class="bx bx-cart-add"></i>
+                <span>Panier</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+      <% }) %>
+    </div>
+  </section>
+
+  <section class="favoris-helper" aria-label="Actions rapides wishlist">
+    <div class="favoris-helper__content">
+      <h2>Optimise ta wishlist</h2>
+      <ul>
+        <li><i class="bx bx-bell"></i><span>Active les alertes prix sur tes produits preferes.</span></li>
+        <li><i class="bx bx-time-five"></i><span>Ajoute vite au panier les stocks limites.</span></li>
+        <li><i class="bx bx-share-alt"></i><span>Partage ta selection avec la famille.</span></li>
+      </ul>
+    </div>
+    <div class="favoris-helper__actions">
+      <a class="favoris-helper__cta" href="/shop?sort=new">Nouveautes a decouvrir</a>
+      <a class="favoris-helper__secondary" href="/shop">Retour au catalogue</a>
+    </div>
+  </section>
+
+  <section class="favoris-empty" aria-label="Si aucun favori">
+    <div>
+      <p class="favoris-empty__kicker">Pas encore de coup de coeur ?</p>
+      <h2 class="favoris-empty__title">Explore la boutique et cree ta liste ideale</h2>
+      <p class="favoris-empty__text">
+        Tu peux ajouter des favoris depuis chaque fiche produit puis les retrouver ici en un clic.
+      </p>
+    </div>
+    <a class="btn btn-primary" href="/shop">Explorer le shop</a>
+  </section>
+</section>

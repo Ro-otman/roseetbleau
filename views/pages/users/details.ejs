@@ -1,0 +1,270 @@
+<section class="user-page page-details">
+  <%
+    const gallery = [
+      {
+        src: "/images/hero-slide-1.svg",
+        alt: "Look enfant Rose et Bleu en situation",
+        label: "Vue principale",
+      },
+      {
+        src: "/images/hero-slide-2.svg",
+        alt: "Detail coupe et matiere",
+        label: "Detail coupe",
+      },
+      {
+        src: "/images/hero-slide-3.svg",
+        alt: "Produit porte en mouvement",
+        label: "Mise en situation",
+      },
+      {
+        src: "/images/category-filles.svg",
+        alt: "Inspiration style filles",
+        label: "Inspiration",
+      },
+    ];
+
+    const characteristics = [
+      "Matiere principale: 95% coton doux, 5% elasthanne.",
+      "Coupe confortable, facile a enfiler et a assortir.",
+      "Tailles disponibles: 3 ans a 8 ans.",
+      "Lavage machine 30 degres, sechage a l air libre recommande.",
+      "Coloris stable et coutures renforcees pour le quotidien.",
+      "Concu pour ecole, sorties et moments en famille.",
+    ];
+
+    const comfortPoints = [
+      {
+        icon: "bx-body",
+        title: "Coupe souple",
+        text: "Aisance totale pour courir, jouer et bouger librement.",
+      },
+      {
+        icon: "bx-shield-quarter",
+        title: "Qualite fiable",
+        text: "Tissu resistant aux lavages frequents de la semaine.",
+      },
+      {
+        icon: "bx-palette",
+        title: "Style ludique",
+        text: "Coloris joyeux, faciles a matcher avec d autres pieces.",
+      },
+      {
+        icon: "bx-leaf",
+        title: "Doux pour la peau",
+        text: "Matiere agreable pour accompagner les peaux sensibles.",
+      },
+    ];
+
+    const deliveryInfos = [
+      {
+        icon: "bx-rocket",
+        title: "Preparation rapide",
+        text: "Commande preparee en 24-48h.",
+      },
+      {
+        icon: "bx-package",
+        title: "Suivi colis",
+        text: "Lien de suivi envoye apres expedition.",
+      },
+      {
+        icon: "bx-refresh",
+        title: "Retour 14 jours",
+        text: "Echange ou retour simplifie si besoin.",
+      },
+    ];
+
+    const reviews = [
+      {
+        author: "Aline M.",
+        score: "4.9",
+        text: "La coupe est top, ma fille est tres a l aise toute la journee. Tissu vraiment doux.",
+      },
+      {
+        author: "Rosette K.",
+        score: "4.8",
+        text: "Bonne qualite et livraison rapide. Le produit est conforme aux photos.",
+      },
+    ];
+  %>
+
+  <section class="details-layout" aria-label="Contenu detail produit">
+    <div class="details-scroll" aria-label="Photos et caracteristiques">
+      <section class="details-gallery" aria-label="Galerie produit">
+        <figure class="details-gallery__main">
+          <img src="<%= gallery[0].src %>" alt="<%= gallery[0].alt %>" />
+          <span class="details-gallery__badge">-25%</span>
+          <span class="details-gallery__sku">RB-DET-421</span>
+        </figure>
+
+        <div class="details-gallery__thumbs">
+          <% gallery.forEach((item, idx) => { %>
+          <a class="details-thumb <%= idx === 0 ? 'is-active' : '' %>" href="/details">
+            <img src="<%= item.src %>" alt="<%= item.alt %>" />
+            <span><%= item.label %></span>
+          </a>
+          <% }) %>
+        </div>
+
+        <article class="details-photo-summary" aria-label="Resume fiche produit">
+          <p class="details-photo-summary__kicker">Fiche produit</p>
+          <h1 class="details-photo-summary__title">Robe Petales Soft</h1>
+          <p class="details-photo-summary__text">
+            Une piece du quotidien, confortable et facile a porter, pensee pour les enfants actifs.
+            Cette fiche te donne les photos, caracteristiques et infos pratiques.
+          </p>
+          <div class="details-photo-summary__meta">
+            <p><i class="bx bxs-star"></i><span>4.8 / 5 avis clients</span></p>
+            <p><i class="bx bx-check-circle"></i><span>En stock</span></p>
+            <p><i class="bx bx-time-five"></i><span>Expedition 24-48h</span></p>
+          </div>
+        </article>
+      </section>
+
+      <section class="details-block" aria-label="Caracteristiques">
+        <div class="details-block__head">
+          <p class="details-block__kicker">Caracteristiques</p>
+          <h2 class="details-block__title">Composition et points techniques</h2>
+        </div>
+        <ul class="details-feature-list">
+          <% characteristics.forEach((item) => { %>
+          <li>
+            <i class="bx bx-check-circle"></i>
+            <span><%= item %></span>
+          </li>
+          <% }) %>
+        </ul>
+      </section>
+
+      <section class="details-block" aria-label="Confort produit">
+        <div class="details-block__head">
+          <p class="details-block__kicker">Confort quotidien</p>
+          <h2 class="details-block__title">Pourquoi cette piece plait autant</h2>
+        </div>
+        <div class="details-comfort-grid">
+          <% comfortPoints.forEach((point) => { %>
+          <article class="details-comfort-card">
+            <span class="details-comfort-card__icon">
+              <i class="bx <%= point.icon %>"></i>
+            </span>
+            <h3><%= point.title %></h3>
+            <p><%= point.text %></p>
+          </article>
+          <% }) %>
+        </div>
+      </section>
+
+      <section class="details-block" aria-label="Livraison et retours">
+        <div class="details-block__head">
+          <p class="details-block__kicker">Service</p>
+          <h2 class="details-block__title">Livraison, suivi et retour</h2>
+        </div>
+        <div class="details-delivery-grid">
+          <% deliveryInfos.forEach((item) => { %>
+          <article class="details-delivery-card">
+            <i class="bx <%= item.icon %>"></i>
+            <h3><%= item.title %></h3>
+            <p><%= item.text %></p>
+          </article>
+          <% }) %>
+        </div>
+      </section>
+
+      <section class="details-block" aria-label="Avis clients">
+        <div class="details-block__head">
+          <p class="details-block__kicker">Retours clients</p>
+          <h2 class="details-block__title">Avis verifies</h2>
+        </div>
+        <div class="details-review-grid">
+          <% reviews.forEach((review) => { %>
+          <article class="details-review-card">
+            <p class="details-review-card__head">
+              <span><%= review.author %></span>
+              <strong>
+                <i class="bx bxs-star"></i>
+                <span><%= review.score %></span>
+              </strong>
+            </p>
+            <p class="details-review-card__text"><%= review.text %></p>
+          </article>
+          <% }) %>
+        </div>
+      </section>
+    </div>
+
+    <aside class="details-static" aria-label="Achat produit">
+      <article class="details-buy-card">
+        <p class="details-buy-card__kicker">En stock - livraison rapide</p>
+        <h2 class="details-buy-card__title">Robe Petales Soft</h2>
+        <p class="details-buy-card__subtitle">Categorie: Filles | Age: 3-8 ans</p>
+
+        <div class="details-buy-card__prices">
+          <span class="details-buy-card__price-current">29,90 EUR</span>
+          <span class="details-buy-card__price-old">39,90 EUR</span>
+        </div>
+
+        <div class="details-buy-card__rating">
+          <i class="bx bxs-star"></i>
+          <span>4.8 note moyenne sur 124 avis</span>
+        </div>
+
+        <div class="details-buy-card__choice">
+          <p class="details-buy-card__label">Taille</p>
+          <div class="details-size-grid">
+            <button type="button" class="details-size is-active">3A</button>
+            <button type="button" class="details-size">4A</button>
+            <button type="button" class="details-size">5A</button>
+            <button type="button" class="details-size">6A</button>
+            <button type="button" class="details-size">7A</button>
+            <button type="button" class="details-size">8A</button>
+          </div>
+        </div>
+
+        <div class="details-buy-card__choice">
+          <p class="details-buy-card__label">Couleur</p>
+          <div class="details-color-list">
+            <button type="button" class="details-color details-color--rose is-active" aria-label="Rose"></button>
+            <button type="button" class="details-color details-color--blue" aria-label="Bleu"></button>
+            <button type="button" class="details-color details-color--sky" aria-label="Ciel"></button>
+          </div>
+        </div>
+
+        <div class="details-buy-card__choice">
+          <p class="details-buy-card__label">Quantite</p>
+          <div class="details-qty">
+            <button type="button" aria-label="Diminuer">-</button>
+            <span>1</span>
+            <button type="button" aria-label="Augmenter">+</button>
+          </div>
+        </div>
+
+        <div class="details-buy-card__actions">
+          <a class="details-cta details-cta--cart" data-add-to-cart href="/cart">
+            <i class="bx bx-cart-add"></i>
+            <span>Ajouter au panier</span>
+          </a>
+          <button class="details-cta details-cta--pay" type="button">
+            <i class="bx bx-credit-card-front"></i>
+            <span>Payer maintenant</span>
+          </button>
+        </div>
+
+        <a class="details-buy-card__wish" href="/favoris">
+          <i class="bx bx-heart"></i>
+          <span>Ajouter aux favoris</span>
+        </a>
+
+        <ul class="details-buy-card__notes">
+          <li><i class="bx bx-check"></i><span>Retours sous 14 jours</span></li>
+          <li><i class="bx bx-check"></i><span>Paiement securise</span></li>
+          <li><i class="bx bx-check"></i><span>Support client disponible</span></li>
+        </ul>
+      </article>
+
+      <article class="details-help-card">
+        <h3>Besoin d aide pour choisir ?</h3>
+        <p>Notre equipe peut t aider pour la taille, la livraison et les conseils look.</p>
+        <a href="/faq">Voir les questions frequentes</a>
+      </article>
+    </aside>
+  </section>
+</section>

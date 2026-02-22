@@ -1,0 +1,528 @@
+<section class="user-page page-index">
+  <%
+    const newArrivals = [
+      {
+        name: "Robe Petales",
+        category: "Filles 3-8 ans",
+        price: "29,90 EUR",
+        oldPrice: "39,90 EUR",
+        rating: "4.8",
+        palette: "rose",
+      },
+      {
+        name: "Set Cool Denim",
+        category: "Garcons 4-10 ans",
+        price: "34,90 EUR",
+        oldPrice: "44,90 EUR",
+        rating: "4.7",
+        palette: "blue",
+      },
+      {
+        name: "Pyjama Nuage",
+        category: "Bebes 6-24 mois",
+        price: "22,50 EUR",
+        oldPrice: "29,00 EUR",
+        rating: "4.9",
+        palette: "sky",
+      },
+      {
+        name: "Sneakers Mini Move",
+        category: "Chaussures 25-33",
+        price: "38,00 EUR",
+        oldPrice: "49,00 EUR",
+        rating: "4.6",
+        palette: "mint",
+      },
+      {
+        name: "Cardigan Lune",
+        category: "Mixte 2-9 ans",
+        price: "27,90 EUR",
+        oldPrice: "36,00 EUR",
+        rating: "4.8",
+        palette: "sand",
+      },
+      {
+        name: "Sac Mini School",
+        category: "Accessoires",
+        price: "19,90 EUR",
+        oldPrice: "26,00 EUR",
+        rating: "4.7",
+        palette: "violet",
+      },
+      {
+        name: "Ensemble Sporty",
+        category: "Garcons 5-12 ans",
+        price: "31,90 EUR",
+        oldPrice: "40,00 EUR",
+        rating: "4.7",
+        palette: "peach",
+      },
+      {
+        name: "Bottes Rain Pop",
+        category: "Chaussures pluie",
+        price: "24,90 EUR",
+        oldPrice: "32,00 EUR",
+        rating: "4.8",
+        palette: "aqua",
+      },
+    ];
+
+    const spotlightProducts = [
+      {
+        name: "Pack Nid Coton",
+        category: "Bebes",
+        price: "26,90 EUR",
+        oldPrice: "34,90 EUR",
+        rating: "4.8",
+        palette: "sky",
+      },
+      {
+        name: "Robe Fleurie Soft",
+        category: "Filles",
+        price: "28,50 EUR",
+        oldPrice: "36,00 EUR",
+        rating: "4.7",
+        palette: "rose",
+      },
+      {
+        name: "Jogging Mini Club",
+        category: "Garcons",
+        price: "30,90 EUR",
+        oldPrice: "39,00 EUR",
+        rating: "4.8",
+        palette: "blue",
+      },
+      {
+        name: "Sandales Sunny Pop",
+        category: "Chaussures",
+        price: "23,50 EUR",
+        oldPrice: "31,00 EUR",
+        rating: "4.6",
+        palette: "mint",
+      },
+      {
+        name: "Gilet Doux Lune",
+        category: "Mixte",
+        price: "24,90 EUR",
+        oldPrice: "32,90 EUR",
+        rating: "4.7",
+        palette: "sand",
+      },
+      {
+        name: "Sac Smart Kids",
+        category: "Accessoires",
+        price: "18,90 EUR",
+        oldPrice: "25,90 EUR",
+        rating: "4.8",
+        palette: "violet",
+      },
+      {
+        name: "Set Sport Street",
+        category: "Garcons",
+        price: "32,90 EUR",
+        oldPrice: "41,00 EUR",
+        rating: "4.7",
+        palette: "peach",
+      },
+      {
+        name: "Manteau Nuage",
+        category: "Bebes",
+        price: "34,90 EUR",
+        oldPrice: "45,00 EUR",
+        rating: "4.9",
+        palette: "aqua",
+      },
+      {
+        name: "Top Weekend Joy",
+        category: "Filles",
+        price: "21,50 EUR",
+        oldPrice: "29,00 EUR",
+        rating: "4.6",
+        palette: "rose",
+      },
+      {
+        name: "Pantalon Flex Denim",
+        category: "Garcons",
+        price: "27,90 EUR",
+        oldPrice: "35,50 EUR",
+        rating: "4.7",
+        palette: "blue",
+      },
+      {
+        name: "Lot Chaussettes Fun",
+        category: "Accessoires",
+        price: "12,90 EUR",
+        oldPrice: "16,50 EUR",
+        rating: "4.8",
+        palette: "mint",
+      },
+      {
+        name: "Basket Color Rush",
+        category: "Chaussures",
+        price: "35,90 EUR",
+        oldPrice: "44,90 EUR",
+        rating: "4.7",
+        palette: "peach",
+      },
+    ];
+
+    const spotlightGroups = [];
+    for (let i = 0; i < spotlightProducts.length; i += 4) {
+      spotlightGroups.push(spotlightProducts.slice(i, i + 4));
+    }
+
+    const getCategoryIcon = (categoryName = "") => {
+      const normalized = String(categoryName).toLowerCase();
+      if (normalized.includes("bebe")) return "bx-gift";
+      if (normalized.includes("fille")) return "bx-heart";
+      if (normalized.includes("garcon")) return "bx-package";
+      if (normalized.includes("chaussure")) return "bx-shield-quarter";
+      if (normalized.includes("accessoire")) return "bx-purchase-tag-alt";
+      if (normalized.includes("mixte")) return "bx-refresh";
+      return "bx-star";
+    };
+  %>
+
+  <section
+    class="hero-carousel"
+    data-carousel
+    data-interval="5200"
+    aria-label="Bannieres Rose et Bleu"
+  >
+    <div class="hero-carousel__viewport">
+      <div class="hero-carousel__track" data-carousel-track>
+        <article class="hero-slide hero-slide--one is-active" data-carousel-slide>
+          <img
+            src="/images/hero-slide-1.svg"
+            alt="Collection douceur enfants avec looks du quotidien"
+          />
+          <div class="hero-slide__content">
+            <p class="hero-slide__eyebrow">Nouveaute</p>
+            <h2 class="hero-slide__title">Looks doux pour petits aventuriers</h2>
+            <p class="hero-slide__text">
+              Des tenues confortables, faciles a mixer, pensees pour bouger toute la journee.
+            </p>
+            <div class="hero-slide__actions">
+              <a class="btn btn-primary" href="/shop">Voir la collection</a>
+              <a class="btn btn-outline" href="/details">Voir un look</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="hero-slide hero-slide--two" data-carousel-slide>
+          <img
+            src="/images/hero-slide-2.svg"
+            alt="Selection accessoires enfants avec touches ludiques"
+          />
+          <div class="hero-slide__content">
+            <p class="hero-slide__eyebrow">Essentiels</p>
+            <h2 class="hero-slide__title">Accessoires malins et couleurs joyeuses</h2>
+            <p class="hero-slide__text">
+              Bonnets, sacs et chaussures pour finaliser chaque outfit avec style.
+            </p>
+            <div class="hero-slide__actions">
+              <a class="btn btn-primary" href="/shop?category=accessoires">Explorer</a>
+              <a class="btn btn-outline" href="/favoris">Ajouter aux favoris</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="hero-slide hero-slide--three" data-carousel-slide>
+          <img
+            src="/images/hero-slide-3.svg"
+            alt="Offres saison enfants sur vetements et accessoires"
+          />
+          <div class="hero-slide__content">
+            <p class="hero-slide__eyebrow">Offres de saison</p>
+            <h2 class="hero-slide__title">Pieces coup de coeur a prix doux</h2>
+            <p class="hero-slide__text">
+              Une selection festive pour renouveler la garde-robe sans compromis.
+            </p>
+            <div class="hero-slide__actions">
+              <a class="btn btn-primary" href="/shop?promo=true">Voir les promos</a>
+              <a class="btn btn-outline" href="/faq">Questions livraison</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <button class="hero-carousel__control hero-carousel__control--prev" data-carousel-prev aria-label="Slide precedente">
+      <i class="bx bx-chevron-left"></i>
+    </button>
+    <button class="hero-carousel__control hero-carousel__control--next" data-carousel-next aria-label="Slide suivante">
+      <i class="bx bx-chevron-right"></i>
+    </button>
+
+    <div class="hero-carousel__dots" data-carousel-dots>
+      <button class="hero-carousel__dot is-active" data-carousel-dot="0" aria-label="Aller au slide 1" aria-current="true"></button>
+      <button class="hero-carousel__dot" data-carousel-dot="1" aria-label="Aller au slide 2" aria-current="false"></button>
+      <button class="hero-carousel__dot" data-carousel-dot="2" aria-label="Aller au slide 3" aria-current="false"></button>
+    </div>
+  </section>
+
+  <section class="market-section" aria-label="Nouveautes produits">
+    <div class="market-section__head">
+      <div>
+        <p class="market-section__kicker">Marketplace Rose&amp;Bleu</p>
+        <h2 class="market-section__title">New Arrivals</h2>
+        <p class="market-section__lead">
+          Les dernieres pieces ajoutees cette semaine, selectionnees pour leur style et leur confort.
+        </p>
+      </div>
+      <a class="market-section__cta" href="/shop?sort=new">Voir toute la selection</a>
+    </div>
+
+    <div class="market-filters" aria-label="Filtres rapides">
+      <a class="market-pill is-active" href="/shop?sort=new">Nouveautes</a>
+      <a class="market-pill" href="/shop?category=bebes">Bebes</a>
+      <a class="market-pill" href="/shop?category=filles">Filles</a>
+      <a class="market-pill" href="/shop?category=garcons">Garcons</a>
+      <a class="market-pill" href="/shop?category=accessoires">Accessoires</a>
+      <a class="market-pill" href="/shop?promo=true">Promotions</a>
+    </div>
+
+    <div class="arrivals-grid">
+      <% newArrivals.forEach((product, index) => { %>
+      <article class="arrival-card">
+        <a
+          class="arrival-card__media arrival-card__media--<%= product.palette %><%= product.image ? ' has-image' : '' %>"
+          href="/details"
+          aria-label="Voir <%= product.name %>"
+        >
+          <% if (product.image) { %>
+          <img
+            class="arrival-card__image"
+            src="<%= product.image %>"
+            alt="<%= product.name %>"
+            loading="lazy"
+            decoding="async"
+          />
+          <% } %>
+          <span class="arrival-card__badge">New</span>
+          <span class="arrival-card__sku">RB-<%= 100 + index %></span>
+        </a>
+        <button
+          class="arrival-card__wish"
+          type="button"
+          data-favorite-btn
+          aria-pressed="false"
+          aria-label="Ajouter <%= product.name %> aux favoris"
+        >
+          <i class="bx bx-heart"></i>
+        </button>
+
+        <div class="arrival-card__body">
+          <a class="arrival-card__details" href="/details" aria-label="Voir <%= product.name %>">
+            <p class="arrival-card__category"><%= product.category %></p>
+            <h3 class="arrival-card__name"><%= product.name %></h3>
+
+            <div class="arrival-card__pricing">
+              <span class="arrival-card__price-current"><%= product.price %></span>
+              <span class="arrival-card__price-old"><%= product.oldPrice %></span>
+            </div>
+          </a>
+
+          <div class="arrival-card__foot">
+            <p class="arrival-card__rating">
+              <i class="bx bxs-star"></i>
+              <span><%= product.rating %></span>
+            </p>
+            <a class="arrival-card__action" data-add-to-cart href="/cart" aria-label="Ajouter <%= product.name %> au panier">
+              <i class="bx bx-cart-add"></i>
+              <span>Panier</span>
+            </a>
+          </div>
+        </div>
+      </article>
+      <% }) %>
+    </div>
+  </section>
+
+  <section class="market-benefits" aria-label="Informations service">
+    <article class="benefit-card">
+      <i class="bx bx-package"></i>
+      <h3>Expedition rapide</h3>
+      <p>Commandes preparees sous 24 a 48h.</p>
+    </article>
+    <article class="benefit-card">
+      <i class="bx bx-refresh"></i>
+      <h3>Retours simples</h3>
+      <p>Retours sous 14 jours sans complication.</p>
+    </article>
+    <article class="benefit-card">
+      <i class="bx bx-shield-quarter"></i>
+      <h3>Paiement securise</h3>
+      <p>Transactions protegees et suivi de commande.</p>
+    </article>
+  </section>
+
+  <section class="category-triptych" aria-label="Categories mises en avant">
+    <a class="category-banner" href="/shop?category=bebes">
+      <img src="/images/category-bebes.svg" alt="Categorie bebes Rose et Bleu" />
+      <span class="category-banner__content">
+        <span class="category-banner__kicker">Categorie</span>
+        <span class="category-banner__title">Bebes</span>
+        <span class="category-banner__text">Bodies, pyjamas et essentials confort.</span>
+      </span>
+    </a>
+
+    <a class="category-banner" href="/shop?category=filles">
+      <img src="/images/category-filles.svg" alt="Categorie filles Rose et Bleu" />
+      <span class="category-banner__content">
+        <span class="category-banner__kicker">Categorie</span>
+        <span class="category-banner__title">Filles</span>
+        <span class="category-banner__text">Robes, ensembles et pieces tendance.</span>
+      </span>
+    </a>
+
+    <a class="category-banner" href="/shop?category=accessoires">
+      <img src="/images/category-accessoires.svg" alt="Categorie accessoires Rose et Bleu" />
+      <span class="category-banner__content">
+        <span class="category-banner__kicker">Categorie</span>
+        <span class="category-banner__title">Accessoires</span>
+        <span class="category-banner__text">Sacs, chaussures et details utiles.</span>
+      </span>
+    </a>
+  </section>
+
+  <section class="spotlight-products" aria-label="Produits en carrousel">
+    <div class="spotlight-products__head">
+      <p class="spotlight-products__kicker">Selection du moment</p>
+      <h2 class="spotlight-products__title">Top produits en groupe de 4</h2>
+    </div>
+
+    <section
+      class="spotlight-carousel"
+      data-carousel
+      data-interval="4600"
+      aria-label="Carrousel produits Rose et Bleu"
+    >
+      <div class="spotlight-carousel__viewport">
+        <div class="spotlight-carousel__track" data-carousel-track>
+          <% spotlightGroups.forEach((group, groupIndex) => { %>
+          <article class="spotlight-slide <%= groupIndex === 0 ? 'is-active' : '' %>" data-carousel-slide>
+            <div class="spotlight-grid">
+              <% group.forEach((product, productIndex) => { %>
+              <% const categoryIcon = getCategoryIcon(product.category); %>
+              <article class="arrival-card spotlight-card">
+                <a
+                  class="arrival-card__media arrival-card__media--<%= product.palette %><%= product.image ? ' has-image' : '' %>"
+                  href="/details"
+                  aria-label="Voir <%= product.name %>"
+                >
+                  <% if (product.image) { %>
+                  <img
+                    class="arrival-card__image"
+                    src="<%= product.image %>"
+                    alt="<%= product.name %>"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <% } %>
+                  <span class="arrival-card__badge">Hot</span>
+                  <span class="arrival-card__category-chip">
+                    <i class="bx <%= categoryIcon %>" aria-hidden="true"></i>
+                    <span><%= product.category %></span>
+                  </span>
+                  <span class="arrival-card__sku">RB-<%= 300 + (groupIndex * 4) + productIndex %></span>
+                </a>
+                <button
+                  class="arrival-card__wish"
+                  type="button"
+                  data-favorite-btn
+                  aria-pressed="false"
+                  aria-label="Ajouter <%= product.name %> aux favoris"
+                >
+                  <i class="bx bx-heart"></i>
+                </button>
+
+                <div class="arrival-card__body">
+                  <a class="arrival-card__details" href="/details" aria-label="Voir <%= product.name %>">
+                    <p class="arrival-card__category"><%= product.category %></p>
+                    <h3 class="arrival-card__name"><%= product.name %></h3>
+
+                    <div class="arrival-card__pricing">
+                      <span class="arrival-card__price-current"><%= product.price %></span>
+                      <span class="arrival-card__price-old"><%= product.oldPrice %></span>
+                    </div>
+                  </a>
+
+                  <div class="arrival-card__foot">
+                    <p class="arrival-card__rating">
+                      <i class="bx bxs-star"></i>
+                      <span><%= product.rating %></span>
+                    </p>
+                    <a class="arrival-card__action" data-add-to-cart href="/cart" aria-label="Ajouter <%= product.name %> au panier">
+                      <i class="bx bx-cart-add"></i>
+                      <span>Panier</span>
+                    </a>
+                  </div>
+                </div>
+              </article>
+              <% }) %>
+            </div>
+          </article>
+          <% }) %>
+        </div>
+      </div>
+
+      <button class="spotlight-carousel__control spotlight-carousel__control--prev" data-carousel-prev aria-label="Groupe precedent">
+        <i class="bx bx-chevron-left"></i>
+      </button>
+      <button class="spotlight-carousel__control spotlight-carousel__control--next" data-carousel-next aria-label="Groupe suivant">
+        <i class="bx bx-chevron-right"></i>
+      </button>
+
+      <div class="spotlight-carousel__dots" data-carousel-dots>
+        <% spotlightGroups.forEach((_, index) => { %>
+        <button
+          class="spotlight-carousel__dot <%= index === 0 ? 'is-active' : '' %>"
+          data-carousel-dot="<%= index %>"
+          aria-label="Aller au groupe <%= index + 1 %>"
+          aria-current="<%= index === 0 ? 'true' : 'false' %>"
+        ></button>
+        <% }) %>
+      </div>
+    </section>
+
+    <a class="spotlight-products__more" href="/shop">Voir plus</a>
+  </section>
+
+  <section class="newsletter-banner" aria-label="Abonnement newsletter">
+    <div class="newsletter-banner__content">
+      <p class="newsletter-banner__kicker">Newsletter Rose&amp;Bleu</p>
+      <h2 class="newsletter-banner__title">Recevez nos nouveautes et offres privees</h2>
+      <p class="newsletter-banner__text">
+        Un email par semaine avec les nouvelles collections enfants, les meilleures promotions et des idees looks.
+      </p>
+      <ul class="newsletter-banner__benefits">
+        <li><i class="bx bx-gift"></i> Offres exclusives abonnes</li>
+        <li><i class="bx bx-bell"></i> Alertes premieres sorties</li>
+        <li><i class="bx bx-purchase-tag-alt"></i> Bons plans toutes les semaines</li>
+      </ul>
+    </div>
+
+    <form class="newsletter-banner__form" action="#" method="post">
+      <label class="newsletter-banner__label" for="newsletter-email">Adresse email</label>
+      <div class="newsletter-banner__field">
+        <i class="bx bx-envelope"></i>
+        <input
+          id="newsletter-email"
+          name="email"
+          type="email"
+          placeholder="votre.email@exemple.com"
+          autocomplete="email"
+          required
+        />
+      </div>
+      <button type="submit">S'abonner</button>
+      <p class="newsletter-banner__legal">En vous inscrivant, vous acceptez de recevoir nos emails marketing.</p>
+    </form>
+  </section>
+
+  <a class="newsletter-catalog-btn" href="/shop">
+    <i class="bx bx-grid-alt"></i>
+    <span>Catalogue complet</span>
+  </a>
+</section>

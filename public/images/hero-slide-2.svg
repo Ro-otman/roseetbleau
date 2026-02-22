@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 720" role="img" aria-labelledby="title desc">
+  <title id="title">Hero slide accessoires</title>
+  <desc id="desc">Univers accessoires enfants avec elements ludiques</desc>
+  <defs>
+    <linearGradient id="bgB" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe9f2" />
+      <stop offset="45%" stop-color="#fffaf0" />
+      <stop offset="100%" stop-color="#dff3ff" />
+    </linearGradient>
+    <linearGradient id="cardC" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f9fbff" />
+    </linearGradient>
+    <linearGradient id="accA" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff8db3" />
+      <stop offset="100%" stop-color="#e45e98" />
+    </linearGradient>
+    <linearGradient id="accB" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#73c5ff" />
+      <stop offset="100%" stop-color="#3f9ddd" />
+    </linearGradient>
+    <filter id="shadowB" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#1f2a3b" flood-opacity="0.16" />
+    </filter>
+  </defs>
+
+  <rect width="1600" height="720" fill="url(#bgB)" />
+
+  <path
+    d="M0 0 H1600 V176 C1360 214 1115 124 880 176 C640 230 410 122 170 168 C110 180 55 190 0 200 Z"
+    fill="#ffffff"
+    opacity="0.34"
+  />
+
+  <g opacity="0.45">
+    <circle cx="210" cy="180" r="64" fill="#ffd0df" />
+    <circle cx="1430" cy="170" r="72" fill="#c9e6ff" />
+    <circle cx="320" cy="110" r="24" fill="#ffd0df" />
+    <circle cx="1315" cy="96" r="24" fill="#c9e6ff" />
+  </g>
+
+  <g transform="translate(860 102)" filter="url(#shadowB)">
+    <rect x="0" y="0" width="670" height="500" rx="34" fill="url(#cardC)" />
+    <rect x="46" y="66" width="578" height="7" rx="3.5" fill="#d4deed" />
+    <rect x="46" y="234" width="578" height="7" rx="3.5" fill="#d4deed" />
+    <rect x="46" y="402" width="578" height="7" rx="3.5" fill="#d4deed" />
+
+    <g transform="translate(90 96)">
+      <rect x="0" y="0" width="126" height="110" rx="18" fill="#ffe8f0" />
+      <path d="M36 70 L62 28 L88 70 Z" fill="url(#accA)" />
+      <rect x="48" y="70" width="28" height="18" rx="8" fill="#ffb5ce" />
+    </g>
+
+    <g transform="translate(258 96)">
+      <rect x="0" y="0" width="126" height="110" rx="18" fill="#e5f3ff" />
+      <circle cx="63" cy="56" r="36" fill="url(#accB)" />
+      <circle cx="50" cy="48" r="5" fill="#d8f0ff" />
+      <circle cx="76" cy="48" r="5" fill="#d8f0ff" />
+      <path d="M47 66 C54 74, 72 74, 79 66" fill="none" stroke="#d8f0ff" stroke-width="5" stroke-linecap="round" />
+    </g>
+
+    <g transform="translate(426 96)">
+      <rect x="0" y="0" width="126" height="110" rx="18" fill="#fff2e4" />
+      <path d="M32 74 C35 40, 92 40, 95 74 L83 74 C80 53, 47 53, 44 74 Z" fill="#f0b05d" />
+      <rect x="30" y="74" width="68" height="24" rx="12" fill="#ffd39e" />
+    </g>
+
+    <g transform="translate(90 264)">
+      <rect x="0" y="0" width="210" height="110" rx="18" fill="#fff3f8" />
+      <text x="20" y="40" fill="#344a64" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="24" font-weight="700">
+        Accessoires playtime
+      </text>
+      <text x="20" y="72" fill="#5b6f88" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="18">
+        Mix de couleurs et de textures.
+      </text>
+    </g>
+
+    <g transform="translate(334 264)">
+      <rect x="0" y="0" width="218" height="110" rx="18" fill="#edf7ff" />
+      <text x="20" y="40" fill="#344a64" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="24" font-weight="700">
+        Idees cadeaux kids
+      </text>
+      <text x="20" y="72" fill="#5b6f88" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="18">
+        Sacs, bonnets, chaussettes.
+      </text>
+    </g>
+  </g>
+
+  <path
+    d="M0 594 C230 560 404 666 634 620 C860 576 1036 676 1260 628 C1360 606 1460 614 1600 652 L1600 720 L0 720 Z"
+    fill="#ffffff"
+    opacity="0.6"
+  />
+</svg>

@@ -1,0 +1,35 @@
+<%
+  const navLinks = [
+    { href: "/", label: "Accueil", icon: "bx-home-alt-2" },
+    { href: "/about", label: "A propos", icon: "bx-info-circle" },
+    { href: "/faq", label: "FAQ", icon: "bx-help-circle" },
+    { href: "/favoris", label: "Favoris", icon: "bx-heart" },
+  ];
+%>
+<nav class="<%= navClass || 'main-nav' %>">
+  <% navLinks.forEach((link) => { %>
+  <a href="<%= link.href %>" class="main-nav__item <%= currentPath === link.href ? "is-active" : "" %>">
+    <span class="main-nav__icon" aria-hidden="true">
+      <i class="bx <%= link.icon %>"></i>
+    </span>
+    <span class="main-nav__label">
+    <%= link.label %>
+    </span>
+  </a>
+  <% }) %>
+  <% if (includeSearch) { %>
+  <button
+    type="button"
+    class="main-nav__item main-nav__item--search"
+    data-mobile-search-toggle
+    aria-controls="site-mobile-search"
+    aria-expanded="false"
+    aria-label="Ouvrir la recherche"
+  >
+    <span class="main-nav__icon" aria-hidden="true">
+      <i class="bx bx-search-alt-2"></i>
+    </span>
+    <span class="main-nav__label">Recherche</span>
+  </button>
+  <% } %>
+</nav>

@@ -1,0 +1,226 @@
+<section class="user-page page-signup">
+  <div class="signup-shell">
+    <section class="signup-card" aria-label="Formulaire d inscription">
+      <div class="signup-card__head">
+        <p class="signup-card__kicker">Nouveau compte</p>
+        <h1 class="signup-card__title">Rejoins Rose&amp;Bleu</h1>
+        <p class="signup-card__lead">
+          Cree ton compte pour enregistrer tes favoris, suivre tes commandes et
+          profiter des nouveautes en avant-premiere.
+        </p>
+      </div>
+
+      <form class="signup-form" action="/signup" method="get">
+        <div class="signup-grid signup-grid--two">
+          <div>
+            <label class="signup-label" for="signup-firstname">Prenom</label>
+            <div class="signup-field">
+              <span class="signup-field__icon" aria-hidden="true">
+                <i class="bx bx-user"></i>
+              </span>
+              <input
+                id="signup-firstname"
+                name="firstname"
+                type="text"
+                autocomplete="given-name"
+                placeholder="Rosalie"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="signup-label" for="signup-lastname">Nom</label>
+            <div class="signup-field">
+              <span class="signup-field__icon" aria-hidden="true">
+                <i class="bx bx-user-pin"></i>
+              </span>
+              <input
+                id="signup-lastname"
+                name="lastname"
+                type="text"
+                autocomplete="family-name"
+                placeholder="Mendy"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="signup-grid">
+          <label class="signup-label" for="signup-email">Adresse email</label>
+          <div class="signup-field">
+            <span class="signup-field__icon" aria-hidden="true">
+              <i class="bx bx-envelope"></i>
+            </span>
+            <input
+              id="signup-email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              placeholder="exemple@email.com"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="signup-grid">
+          <label class="signup-label" for="signup-phone">Telephone</label>
+          <div class="signup-field">
+            <span class="signup-field__icon" aria-hidden="true">
+              <i class="bx bx-phone"></i>
+            </span>
+            <input
+              id="signup-phone"
+              name="phone"
+              type="tel"
+              autocomplete="tel"
+              placeholder="+229 01 97 22 79 24"
+            />
+          </div>
+        </div>
+
+        <div class="signup-grid signup-grid--two">
+          <div>
+            <label class="signup-label" for="signup-password">Mot de passe</label>
+            <div class="signup-field">
+              <span class="signup-field__icon" aria-hidden="true">
+                <i class="bx bx-lock-alt"></i>
+              </span>
+              <input
+                id="signup-password"
+                name="password"
+                type="password"
+                autocomplete="new-password"
+                placeholder="Minimum 8 caracteres"
+                required
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="signup-label" for="signup-confirm-password"
+              >Confirmer</label
+            >
+            <div class="signup-field">
+              <span class="signup-field__icon" aria-hidden="true">
+                <i class="bx bx-check-shield"></i>
+              </span>
+              <input
+                id="signup-confirm-password"
+                name="confirmPassword"
+                type="password"
+                autocomplete="new-password"
+                placeholder="Retape le mot de passe"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <ul class="signup-rules">
+          <li><i class="bx bx-check-circle"></i> 8 caracteres minimum</li>
+          <li>
+            <i class="bx bx-check-circle"></i> Au moins une lettre et un chiffre
+          </li>
+          <li><i class="bx bx-check-circle"></i> Confirmation identique</li>
+        </ul>
+
+        <label class="signup-checkbox">
+          <input type="checkbox" name="terms" required />
+          <span
+            >J accepte les conditions d utilisation et la politique de
+            confidentialite.</span
+          >
+        </label>
+
+        <label class="signup-checkbox signup-checkbox--secondary">
+          <input type="checkbox" name="newsletter" />
+          <span>Recevoir les offres et nouveautes Rose&amp;Bleu.</span>
+        </label>
+
+        <button class="signup-submit" type="submit">
+          <i class="bx bx-user-plus" aria-hidden="true"></i>
+          <span>Creer mon compte</span>
+        </button>
+
+        <p class="signup-divider"><span>ou inscription rapide</span></p>
+
+        <div class="signup-alt">
+          <a
+            class="signup-alt__btn"
+            href="/signup"
+            aria-label="S inscrire avec Google"
+          >
+            <i class="bx bxl-google"></i>
+            <span>Google</span>
+          </a>
+          <a
+            class="signup-alt__btn"
+            href="/signup"
+            aria-label="S inscrire avec Facebook"
+          >
+            <i class="bx bxl-facebook-circle"></i>
+            <span>Facebook</span>
+          </a>
+        </div>
+      </form>
+
+      <p class="signup-login">
+        Deja un compte ? <a href="/login">Se connecter</a>
+      </p>
+    </section>
+
+    <aside class="signup-side" aria-label="Presentation Rose et Bleu">
+      <p class="signup-side__kicker">Rose et Bleu club</p>
+      <a class="signup-brand" href="/" aria-label="Retour accueil Rose et Bleu">
+        <span class="signup-brand__rose">Rose</span>
+        <span class="signup-brand__amp">&amp;</span>
+        <span class="signup-brand__bleu">Bleu</span>
+      </a>
+
+      <div class="signup-feet" aria-hidden="true">
+        <span class="signup-feet__step signup-feet__step--blue"></span>
+        <span class="signup-feet__step signup-feet__step--rose"></span>
+      </div>
+
+      <h2 class="signup-side__title">
+        Une inscription simple pour une experience shopping enfant plus fluide.
+      </h2>
+      <p class="signup-side__text">
+        Sauvegarde tes paniers, suis les promotions et retrouve tes categories
+        preferees en quelques secondes.
+      </p>
+
+      <div class="signup-stats">
+        <article class="signup-stat">
+          <p class="signup-stat__value">+450</p>
+          <p class="signup-stat__label">Produits disponibles</p>
+        </article>
+        <article class="signup-stat">
+          <p class="signup-stat__value">24-48h</p>
+          <p class="signup-stat__label">Preparation moyenne</p>
+        </article>
+        <article class="signup-stat">
+          <p class="signup-stat__value">4.8/5</p>
+          <p class="signup-stat__label">Avis parents</p>
+        </article>
+      </div>
+
+      <ul class="signup-checks">
+        <li>
+          <i class="bx bx-shield-quarter" aria-hidden="true"></i>
+          <span>Compte securise et donnees protegees.</span>
+        </li>
+        <li>
+          <i class="bx bx-bell" aria-hidden="true"></i>
+          <span>Alertes nouveautes et retours en stock.</span>
+        </li>
+        <li>
+          <i class="bx bx-heart" aria-hidden="true"></i>
+          <span>Wishlist personnelle partageable avec la famille.</span>
+        </li>
+      </ul>
+    </aside>
+  </div>
+</section>

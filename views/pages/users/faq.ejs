@@ -1,0 +1,206 @@
+<section class="user-page page-faq">
+  <%
+    const faqGroups = [
+      {
+        key: "commandes",
+        icon: "bx-package",
+        title: "Commandes et livraison",
+        lead: "Informations essentielles pour le suivi, la preparation et la reception de vos commandes.",
+        items: [
+          {
+            q: "Quels sont les delais de livraison ?",
+            a: "La preparation prend en general 24 a 48h, puis la livraison standard 2 a 5 jours ouvres selon la zone.",
+          },
+          {
+            q: "Comment suivre ma commande ?",
+            a: "Apres validation, vous recevez un email de confirmation puis un lien de suivi des que le colis est expedie.",
+          },
+          {
+            q: "Livrez-vous a l international ?",
+            a: "Oui, certaines destinations sont disponibles. Les delais et frais exacts apparaissent avant le paiement.",
+          },
+          {
+            q: "Puis-je modifier une commande deja passee ?",
+            a: "Si la commande n est pas encore preparee, notre support peut ajuster taille ou adresse rapidement.",
+          },
+        ],
+      },
+      {
+        key: "retours",
+        icon: "bx-refresh",
+        title: "Retours et echanges",
+        lead: "Notre procedure retour est simple et accompagnee pour vous faire gagner du temps.",
+        items: [
+          {
+            q: "Combien de temps ai-je pour retourner un article ?",
+            a: "Vous disposez de 14 jours apres reception, article non porte, propre et avec etiquette intacte.",
+          },
+          {
+            q: "Comment faire un echange de taille ?",
+            a: "Contactez le support avec votre numero de commande et la taille souhaitee. Nous vous guidons et reservons si possible.",
+          },
+          {
+            q: "Les frais de retour sont-ils offerts ?",
+            a: "Selon l offre en cours et la zone, une partie ou la totalite des frais peut etre prise en charge.",
+          },
+          {
+            q: "Quand suis-je rembourse apres retour ?",
+            a: "Le remboursement est effectue apres controle du colis, generalement sous 3 a 7 jours ouvres.",
+          },
+        ],
+      },
+      {
+        key: "produits",
+        icon: "bx-check-shield",
+        title: "Produits et tailles",
+        lead: "Des reponses claires pour choisir les bonnes pieces et mieux anticiper les besoins de votre enfant.",
+        items: [
+          {
+            q: "Comment choisir la bonne taille enfant ?",
+            a: "Chaque fiche produit propose un guide taille. En cas de doute entre deux tailles, privilegiez la plus grande.",
+          },
+          {
+            q: "Les couleurs sont-elles fideles aux photos ?",
+            a: "Nous soignons les visuels, mais de legeres differences peuvent exister selon l ecran utilise.",
+          },
+          {
+            q: "Comment entretenir les vetements ?",
+            a: "Les consignes sont indiquees sur chaque fiche. Nous recommandons un lavage doux pour preserver matieres et couleurs.",
+          },
+          {
+            q: "Les articles sont-ils adaptes aux peaux sensibles ?",
+            a: "Une grande partie de notre selection privilegie des matieres douces. Les details sont precises dans la description produit.",
+          },
+        ],
+      },
+      {
+        key: "paiement",
+        icon: "bx-credit-card",
+        title: "Paiement et compte",
+        lead: "Des options de paiement securisees et une gestion de compte simple sur mobile et desktop.",
+        items: [
+          {
+            q: "Quels moyens de paiement acceptez-vous ?",
+            a: "Carte bancaire et autres moyens disponibles selon votre pays. Les options apparaissent au checkout.",
+          },
+          {
+            q: "Le paiement sur votre site est-il securise ?",
+            a: "Oui, les transactions sont protegees via un environnement de paiement securise et des controles anti-fraude.",
+          },
+          {
+            q: "Dois-je creer un compte pour commander ?",
+            a: "Ce n est pas obligatoire, mais un compte facilite le suivi commande, les retours et la gestion de vos favoris.",
+          },
+          {
+            q: "Comment recuperer mon mot de passe ?",
+            a: "Depuis la page connexion, utilisez l option de reinitialisation. Un email vous est envoye en quelques instants.",
+          },
+        ],
+      },
+    ];
+
+    const quickLinks = [
+      { href: "#faq-commandes", icon: "bx-package", label: "Livraison" },
+      { href: "#faq-retours", icon: "bx-refresh", label: "Retours" },
+      { href: "#faq-produits", icon: "bx-ruler", label: "Tailles" },
+      { href: "#faq-paiement", icon: "bx-credit-card", label: "Paiement" },
+    ];
+  %>
+
+  <section class="faq-hero" aria-label="En tete FAQ">
+    <div class="faq-hero__content">
+      <p class="faq-hero__kicker">Support Rose&amp;Bleu</p>
+      <h1 class="faq-hero__title">Questions frequentes</h1>
+      <p class="faq-hero__text">
+        Retrouvez rapidement les reponses sur la livraison, les retours, les tailles et le paiement.
+        Notre objectif: une experience simple, claire et rassurante.
+      </p>
+      <div class="faq-hero__actions">
+        <a class="btn btn-primary" href="/shop">Aller au shop</a>
+        <a class="btn btn-outline" href="/about">Notre histoire</a>
+      </div>
+      <div class="faq-quick-links" aria-label="Acces rapide FAQ">
+        <% quickLinks.forEach((link) => { %>
+        <a href="<%= link.href %>" class="faq-chip">
+          <i class="bx <%= link.icon %>"></i>
+          <span><%= link.label %></span>
+        </a>
+        <% }) %>
+      </div>
+    </div>
+
+    <aside class="faq-hero__aside" aria-label="Contact rapide">
+      <h2>Besoin d une aide immediate ?</h2>
+      <p>Notre support vous repond du lundi au samedi de 8h30 a 19h00.</p>
+      <ul>
+        <li><i class="bx bx-phone"></i><span>+229 0197227924</span></li>
+        <li><i class="bx bx-envelope"></i><span>contact@roseetbleu.com</span></li>
+        <li><i class="bx bx-time-five"></i><span>Reponse moyenne: moins de 2h</span></li>
+      </ul>
+      <a href="/login" class="faq-hero__contact-btn">Contacter le support</a>
+    </aside>
+  </section>
+
+  <section class="faq-guides" aria-label="Guides pratiques">
+    <article class="faq-guide-card">
+      <i class="bx bx-map"></i>
+      <h3>Suivi de commande</h3>
+      <p>Consultez votre statut d expedition et les etapes de livraison en temps reel.</p>
+    </article>
+    <article class="faq-guide-card">
+      <i class="bx bx-transfer"></i>
+      <h3>Retour simplifie</h3>
+      <p>Procedure claire en quelques etapes, avec accompagnement du support si besoin.</p>
+    </article>
+    <article class="faq-guide-card">
+      <i class="bx bx-ruler"></i>
+      <h3>Guide de tailles</h3>
+      <p>Reperez rapidement la bonne coupe selon l age et la morphologie de l enfant.</p>
+    </article>
+  </section>
+
+  <section class="faq-groups" aria-label="Liste des questions frequentes">
+    <% faqGroups.forEach((group) => { %>
+    <article class="faq-group" id="faq-<%= group.key %>">
+      <div class="faq-group__head">
+        <span class="faq-group__icon" aria-hidden="true">
+          <i class="bx <%= group.icon %>"></i>
+        </span>
+        <div>
+          <h2><%= group.title %></h2>
+          <p><%= group.lead %></p>
+        </div>
+      </div>
+
+      <div class="faq-accordion">
+        <% group.items.forEach((item, idx) => { %>
+        <details class="faq-item" <%= idx === 0 ? "open" : "" %>>
+          <summary>
+            <span class="faq-item__question"><%= item.q %></span>
+            <span class="faq-item__symbol" aria-hidden="true">
+              <i class="bx bx-plus"></i>
+            </span>
+          </summary>
+          <p><%= item.a %></p>
+        </details>
+        <% }) %>
+      </div>
+    </article>
+    <% }) %>
+  </section>
+
+  <section class="faq-final" aria-label="Aide supplementaire">
+    <div>
+      <p class="faq-final__kicker">Toujours une question ?</p>
+      <h2 class="faq-final__title">Nous restons disponibles pour vous accompagner</h2>
+      <p class="faq-final__text">
+        Si vous ne trouvez pas la reponse dans cette page, contactez notre equipe:
+        nous vous orientons rapidement vers la meilleure solution.
+      </p>
+    </div>
+    <div class="faq-final__actions">
+      <a class="btn btn-primary" href="/login">Ecrire au support</a>
+      <a class="btn btn-outline" href="/shop">Retour au shop</a>
+    </div>
+  </section>
+</section>

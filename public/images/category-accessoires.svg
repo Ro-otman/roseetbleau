@@ -1,0 +1,63 @@
+<svg width="1600" height="760" viewBox="0 0 1600 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgAcc" x1="122" y1="40" x2="1510" y2="730" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#DDF0FF"/>
+      <stop offset="0.52" stop-color="#C2DEFF"/>
+      <stop offset="1" stop-color="#9BC6F7"/>
+    </linearGradient>
+    <radialGradient id="flareAcc" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(310 146) rotate(117) scale(240 212)">
+      <stop stop-color="#FFF9D2"/>
+      <stop offset="1" stop-color="#FFF9D2" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="floorAcc" x1="212" y1="564" x2="1376" y2="652" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#95E2DA"/>
+      <stop offset="1" stop-color="#77CFC5"/>
+    </linearGradient>
+    <linearGradient id="bagAcc" x1="618" y1="264" x2="912" y2="544" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF8CC4"/>
+      <stop offset="1" stop-color="#EB4D98"/>
+    </linearGradient>
+    <linearGradient id="shoeAcc" x1="944" y1="394" x2="1248" y2="566" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#E5F2FF"/>
+    </linearGradient>
+    <filter id="shadowAcc" x="0" y="0" width="1600" height="760" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#1D2947" flood-opacity="0.22"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="760" fill="url(#bgAcc)"/>
+  <circle cx="310" cy="146" r="232" fill="url(#flareAcc)"/>
+  <path d="M0 562C196 488 398 488 598 536C792 582 1020 618 1246 584C1368 566 1476 526 1600 466V760H0V562Z" fill="url(#floorAcc)"/>
+
+  <g filter="url(#shadowAcc)">
+    <rect x="548" y="236" width="446" height="336" rx="166" fill="#FFFFFF" fill-opacity="0.32"/>
+    <path d="M668 332C668 272 716 224 776 224H766C826 224 874 272 874 332V350H668V332Z" fill="#FFF6FB"/>
+    <rect x="644" y="334" width="256" height="206" rx="42" fill="url(#bagAcc)"/>
+    <rect x="702" y="402" width="140" height="16" rx="8" fill="#FFD3E9"/>
+    <circle cx="698" cy="470" r="14" fill="#FFD8EA"/>
+    <circle cx="846" cy="470" r="14" fill="#FFD8EA"/>
+  </g>
+
+  <g filter="url(#shadowAcc)">
+    <path d="M922 430C922 392 956 360 994 360H1142C1172 360 1198 382 1202 412L1218 516C1222 546 1198 572 1168 572H972C944 572 922 550 922 522V430Z" fill="url(#shoeAcc)"/>
+    <path d="M948 490H1192" stroke="#8AAEDA" stroke-width="10" stroke-linecap="round"/>
+    <path d="M972 454H1106" stroke="#9CC0E7" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="1210" cy="556" r="18" fill="#7BA4D8"/>
+  </g>
+
+  <g opacity="0.92">
+    <circle cx="286" cy="426" r="38" fill="#FFFFFF" fill-opacity="0.72"/>
+    <path d="M286 390V462" stroke="#3E85CB" stroke-width="7" stroke-linecap="round"/>
+    <path d="M250 426H322" stroke="#3E85CB" stroke-width="7" stroke-linecap="round"/>
+
+    <circle cx="1326" cy="404" r="34" fill="#FFFFFF" fill-opacity="0.68"/>
+    <path d="M1326 372V436" stroke="#3E85CB" stroke-width="6" stroke-linecap="round"/>
+    <path d="M1294 404H1358" stroke="#3E85CB" stroke-width="6" stroke-linecap="round"/>
+  </g>
+
+  <g opacity="0.84">
+    <ellipse cx="260" cy="536" rx="86" ry="30" fill="#FFFFFF" fill-opacity="0.42"/>
+    <ellipse cx="1318" cy="548" rx="98" ry="34" fill="#FFFFFF" fill-opacity="0.42"/>
+  </g>
+</svg>

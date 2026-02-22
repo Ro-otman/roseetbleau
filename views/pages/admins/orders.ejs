@@ -1,0 +1,65 @@
+<section class="admin-page admin-orders">
+  <%
+    const orders = [
+      { id: "RB-1021", customer: "Aline M.", date: "22/02/2026", total: "79,80 EUR", payment: "Carte", status: "En preparation", tone: "warn" },
+      { id: "RB-1019", customer: "Rosette K.", date: "22/02/2026", total: "34,90 EUR", payment: "Mobile Money", status: "Expediee", tone: "ok" },
+      { id: "RB-1018", customer: "Nadine T.", date: "21/02/2026", total: "118,40 EUR", payment: "Carte", status: "A verifier", tone: "danger" },
+      { id: "RB-1016", customer: "Kossi A.", date: "21/02/2026", total: "64,00 EUR", payment: "Mobile Money", status: "Livree", tone: "ok" },
+      { id: "RB-1015", customer: "Yasmine B.", date: "20/02/2026", total: "27,90 EUR", payment: "Carte", status: "Expediee", tone: "ok" },
+    ];
+  %>
+
+  <section class="admin-panel">
+    <header class="admin-panel__head">
+      <h2>Suivi des commandes</h2>
+      <a href="/admin/orders">Exporter CSV</a>
+    </header>
+
+    <div class="admin-toolbar">
+      <form class="admin-search" action="/admin/orders" method="get" role="search">
+        <i class="bx bx-search-alt-2"></i>
+        <input type="search" name="q" placeholder="Rechercher une commande..." />
+      </form>
+      <div class="admin-toolbar__filters">
+        <a href="/admin/orders">Toutes</a>
+        <a href="/admin/orders">A verifier</a>
+        <a href="/admin/orders">En preparation</a>
+        <a href="/admin/orders">Expediees</a>
+      </div>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Commande</th>
+            <th>Client</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Paiement</th>
+            <th>Statut</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% orders.forEach((item) => { %>
+          <tr>
+            <td data-label="Commande"><%= item.id %></td>
+            <td data-label="Client"><%= item.customer %></td>
+            <td data-label="Date"><%= item.date %></td>
+            <td data-label="Total"><%= item.total %></td>
+            <td data-label="Paiement"><%= item.payment %></td>
+            <td data-label="Statut"><span class="admin-badge admin-badge--<%= item.tone %>"><%= item.status %></span></td>
+            <td data-label="Action">
+              <div class="admin-row-actions">
+                <a href="/admin/orders">Details</a>
+                <button type="button">Mettre a jour</button>
+              </div>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>

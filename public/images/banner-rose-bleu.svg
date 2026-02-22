@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 560" role="img" aria-labelledby="title desc">
+  <title id="title">Banniere Rose et Bleu</title>
+  <desc id="desc">Banniere coloree pour boutique enfants Rose et Bleu avec style doux et moderne.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff2e5" />
+      <stop offset="55%" stop-color="#fbeaf2" />
+      <stop offset="100%" stop-color="#e7f3ff" />
+    </linearGradient>
+    <linearGradient id="cta" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#ea6a68" />
+      <stop offset="100%" stop-color="#3f87c8" />
+    </linearGradient>
+    <linearGradient id="cardA" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#fff7fb" />
+    </linearGradient>
+    <linearGradient id="cardB" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f5f9ff" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#1d2330" flood-opacity="0.12" />
+    </filter>
+  </defs>
+
+  <rect x="20" y="20" width="1400" height="520" rx="36" fill="url(#bg)" />
+
+  <circle cx="100" cy="90" r="48" fill="#ffd3c2" opacity="0.7" />
+  <circle cx="240" cy="70" r="20" fill="#ffd3c2" opacity="0.85" />
+  <circle cx="1330" cy="100" r="60" fill="#cfe7ff" opacity="0.65" />
+  <circle cx="1260" cy="70" r="24" fill="#cfe7ff" opacity="0.85" />
+
+  <path d="M20 410 C220 350, 420 470, 620 420 C820 370, 1020 490, 1220 430 C1300 405, 1365 420, 1420 450 L1420 540 L20 540 Z" fill="#ffffff" opacity="0.5" />
+
+  <g transform="translate(92 102)">
+    <text x="0" y="0" fill="#192431" font-size="20" font-family="Trebuchet MS, Segoe UI, sans-serif" font-weight="700" letter-spacing="3">NOUVELLE SAISON</text>
+    <text x="0" y="84" fill="#1c2a3a" font-size="68" font-family="Trebuchet MS, Segoe UI, sans-serif" font-weight="800">
+      Rose&amp;Bleu
+    </text>
+    <text x="0" y="130" fill="#2f4258" font-size="28" font-family="Trebuchet MS, Segoe UI, sans-serif" font-weight="600">
+      Vetements et accessoires pour enfants
+    </text>
+    <text x="0" y="182" fill="#3d4f66" font-size="22" font-family="Trebuchet MS, Segoe UI, sans-serif">
+      Pieces douces, couleurs joyeuses, confort du quotidien.
+    </text>
+
+    <g transform="translate(0 228)">
+      <rect x="0" y="0" rx="14" width="220" height="58" fill="url(#cta)" />
+      <text x="34" y="37" fill="#ffffff" font-size="22" font-family="Trebuchet MS, Segoe UI, sans-serif" font-weight="700">
+        Voir le shop
+      </text>
+    </g>
+
+    <g transform="translate(236 228)">
+      <rect x="0" y="0" rx="14" width="170" height="58" fill="#ffffff" stroke="#d7dfeb" stroke-width="2" />
+      <text x="42" y="37" fill="#2a3a4f" font-size="22" font-family="Trebuchet MS, Segoe UI, sans-serif" font-weight="700">
+        About
+      </text>
+    </g>
+  </g>
+
+  <g transform="translate(860 78)" filter="url(#shadow)">
+    <rect x="0" y="0" width="250" height="188" rx="24" fill="url(#cardA)" />
+    <rect x="36" y="30" width="178" height="132" rx="18" fill="#ffe7dc" />
+    <path d="M72 70 L94 48 L118 62 L132 52 L156 70 L168 92 L146 98 L146 146 L94 146 L94 98 L72 92 Z" fill="#ef7f7d" />
+    <path d="M98 98 H142" stroke="#ffffff" stroke-width="6" stroke-linecap="round" />
+    <text x="24" y="176" fill="#2b3f55" font-size="17" font-family="Trebuchet MS, Segoe UI, sans-serif">Look enfant</text>
+  </g>
+
+  <g transform="translate(1120 148)" filter="url(#shadow)">
+    <rect x="0" y="0" width="250" height="188" rx="24" fill="url(#cardB)" />
+    <rect x="36" y="30" width="178" height="132" rx="18" fill="#deeeff" />
+    <circle cx="125" cy="102" r="44" fill="#4d8fcb" />
+    <circle cx="107" cy="94" r="7" fill="#ffffff" />
+    <circle cx="143" cy="94" r="7" fill="#ffffff" />
+    <path d="M106 119 C116 132, 134 132, 144 119" stroke="#ffffff" stroke-width="6" fill="none" stroke-linecap="round" />
+    <text x="24" y="176" fill="#2b3f55" font-size="17" font-family="Trebuchet MS, Segoe UI, sans-serif">Accessoires</text>
+  </g>
+
+  <g transform="translate(970 320)" filter="url(#shadow)">
+    <rect x="0" y="0" width="315" height="150" rx="22" fill="#ffffff" />
+    <text x="30" y="52" fill="#314259" font-size="20" font-family="Trebuchet MS, Segoe UI, sans-serif" font-weight="700">
+      Capsule printemps
+    </text>
+    <text x="30" y="86" fill="#4a5f79" font-size="18" font-family="Trebuchet MS, Segoe UI, sans-serif">
+      Tons roses et bleus, tailles 2 a 10 ans.
+    </text>
+    <rect x="30" y="102" width="160" height="30" rx="10" fill="#eef3fb" />
+    <text x="45" y="123" fill="#32465f" font-size="15" font-family="Trebuchet MS, Segoe UI, sans-serif">
+      Nouveautes chaque semaine
+    </text>
+  </g>
+</svg>

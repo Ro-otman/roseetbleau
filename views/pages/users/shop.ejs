@@ -1,0 +1,490 @@
+<section class="user-page page-shop">
+  <%
+    const quickFilters = [
+      { label: "Tout le catalogue", href: "/shop", active: true },
+      { label: "Nouveautes", href: "/shop?sort=new" },
+      { label: "Bebes", href: "/shop?category=bebes" },
+      { label: "Filles", href: "/shop?category=filles" },
+      { label: "Garcons", href: "/shop?category=garcons" },
+      { label: "Chaussures", href: "/shop?category=chaussures" },
+      { label: "Accessoires", href: "/shop?category=accessoires" },
+      { label: "Promotions", href: "/shop?promo=true" },
+    ];
+
+    const serviceHighlights = [
+      {
+        icon: "bx-rocket",
+        title: "Expedition 24-48h",
+        text: "Preparation rapide pour toutes les commandes validees.",
+      },
+      {
+        icon: "bx-check-shield",
+        title: "Paiement securise",
+        text: "Transactions protegees et verification anti-fraude.",
+      },
+      {
+        icon: "bx-refresh",
+        title: "Retours faciles",
+        text: "14 jours pour echanger ou retourner sereinement.",
+      },
+      {
+        icon: "bx-support",
+        title: "Support disponible",
+        text: "Assistance client du lundi au samedi.",
+      },
+    ];
+
+    const categories = [
+      { label: "Tout", count: 132, href: "/shop" },
+      { label: "Bebes", count: 22, href: "/shop?category=bebes" },
+      { label: "Filles", count: 26, href: "/shop?category=filles" },
+      { label: "Garcons", count: 24, href: "/shop?category=garcons" },
+      { label: "Chaussures", count: 18, href: "/shop?category=chaussures" },
+      { label: "Accessoires", count: 20, href: "/shop?category=accessoires" },
+      { label: "Mixte", count: 22, href: "/shop?category=mixte" },
+    ];
+
+    const products = [
+      {
+        name: "Robe Petales Soft",
+        category: "Filles",
+        age: "3-8 ans",
+        price: "29,90 EUR",
+        oldPrice: "39,90 EUR",
+        rating: "4.8",
+        tag: "-25%",
+        status: "Stock limite",
+        statusTone: "limited",
+        palette: "rose",
+      },
+      {
+        name: "Ensemble Mini Club",
+        category: "Garcons",
+        age: "4-10 ans",
+        price: "33,50 EUR",
+        oldPrice: "42,00 EUR",
+        rating: "4.7",
+        tag: "Top vente",
+        status: "Disponible",
+        statusTone: "ok",
+        palette: "blue",
+      },
+      {
+        name: "Pyjama Nuage Bio",
+        category: "Bebes",
+        age: "6-24 mois",
+        price: "22,50 EUR",
+        oldPrice: "29,00 EUR",
+        rating: "4.9",
+        tag: "New",
+        status: "Stock limite",
+        statusTone: "limited",
+        palette: "sky",
+      },
+      {
+        name: "Sneakers Pop Run",
+        category: "Chaussures",
+        age: "25-33",
+        price: "38,00 EUR",
+        oldPrice: "49,00 EUR",
+        rating: "4.6",
+        tag: "Best",
+        status: "Disponible",
+        statusTone: "ok",
+        palette: "mint",
+      },
+      {
+        name: "Sac Mini School",
+        category: "Accessoires",
+        age: "Taille unique",
+        price: "19,90 EUR",
+        oldPrice: "26,00 EUR",
+        rating: "4.7",
+        tag: "Nouveau",
+        status: "Bientot rupture",
+        statusTone: "warn",
+        palette: "violet",
+      },
+      {
+        name: "Cardigan Lune Coton",
+        category: "Mixte",
+        age: "2-9 ans",
+        price: "27,90 EUR",
+        oldPrice: "36,00 EUR",
+        rating: "4.8",
+        tag: "Confort",
+        status: "Disponible",
+        statusTone: "ok",
+        palette: "sand",
+      },
+      {
+        name: "Jean Flex Motion",
+        category: "Garcons",
+        age: "5-12 ans",
+        price: "31,90 EUR",
+        oldPrice: "40,00 EUR",
+        rating: "4.7",
+        tag: "Promo",
+        status: "Stock limite",
+        statusTone: "limited",
+        palette: "peach",
+      },
+      {
+        name: "Blouse Etoile Fine",
+        category: "Filles",
+        age: "4-9 ans",
+        price: "24,90 EUR",
+        oldPrice: "31,00 EUR",
+        rating: "4.8",
+        tag: "New",
+        status: "Disponible",
+        statusTone: "ok",
+        palette: "aqua",
+      },
+      {
+        name: "Body Cocon Pack x3",
+        category: "Bebes",
+        age: "Naissance-12 mois",
+        price: "20,90 EUR",
+        oldPrice: "27,90 EUR",
+        rating: "4.9",
+        tag: "Essentiel",
+        status: "Disponible",
+        statusTone: "ok",
+        palette: "sky",
+      },
+      {
+        name: "Sandales Sunny Star",
+        category: "Chaussures",
+        age: "24-32",
+        price: "23,50 EUR",
+        oldPrice: "31,00 EUR",
+        rating: "4.6",
+        tag: "Ete",
+        status: "Bientot rupture",
+        statusTone: "warn",
+        palette: "rose",
+      },
+      {
+        name: "Casquette Color Joy",
+        category: "Accessoires",
+        age: "3-12 ans",
+        price: "14,90 EUR",
+        oldPrice: "19,00 EUR",
+        rating: "4.7",
+        tag: "Mini prix",
+        status: "Disponible",
+        statusTone: "ok",
+        palette: "mint",
+      },
+      {
+        name: "Manteau Cloud Warm",
+        category: "Mixte",
+        age: "3-10 ans",
+        price: "39,90 EUR",
+        oldPrice: "52,00 EUR",
+        rating: "4.8",
+        tag: "Saison",
+        status: "Stock limite",
+        statusTone: "limited",
+        palette: "blue",
+      },
+    ];
+
+    const featuredCategories = [
+      {
+        title: "Bebes",
+        text: "Bodies, pyjamas et pieces douces du quotidien.",
+        href: "/shop?category=bebes",
+        tone: "baby",
+      },
+      {
+        title: "Filles",
+        text: "Looks joyeux et faciles a associer toute la semaine.",
+        href: "/shop?category=filles",
+        tone: "girls",
+      },
+      {
+        title: "Garcons",
+        text: "Pieces resistantes pour bouger, jouer et explorer.",
+        href: "/shop?category=garcons",
+        tone: "boys",
+      },
+      {
+        title: "Accessoires",
+        text: "Sacs, chaussures et essentiels pour completer les tenues.",
+        href: "/shop?category=accessoires",
+        tone: "accessories",
+      },
+    ];
+
+    const getCategoryIcon = (categoryName = "") => {
+      const normalized = String(categoryName).toLowerCase();
+      if (normalized.includes("bebe")) return "bx-gift";
+      if (normalized.includes("fille")) return "bx-heart";
+      if (normalized.includes("garcon")) return "bx-package";
+      if (normalized.includes("chaussure")) return "bx-shield-quarter";
+      if (normalized.includes("accessoire")) return "bx-purchase-tag-alt";
+      if (normalized.includes("mixte")) return "bx-refresh";
+      return "bx-star";
+    };
+  %>
+
+  <section class="shop-hero" aria-label="Catalogue Rose et Bleu">
+    <div class="shop-hero__content">
+      <p class="shop-hero__kicker">Catalogue complet</p>
+      <h1 class="shop-hero__title">Tous les produits Rose&amp;Bleu en un seul espace</h1>
+      <p class="shop-hero__text">
+        Explore toutes les categories: bebes, filles, garcons, chaussures et accessoires.
+        Des pieces pensees pour le confort, la qualite et un style ludique au quotidien.
+      </p>
+      <div class="shop-hero__actions">
+        <a class="btn btn-primary" href="/shop?promo=true">Voir les promotions</a>
+        <a class="btn btn-outline" href="/favoris">Mes favoris</a>
+      </div>
+      <div class="shop-hero__chips" aria-label="Filtres rapides">
+        <% quickFilters.forEach((filter) => { %>
+        <a class="shop-chip <%= filter.active ? 'is-active' : '' %>" href="<%= filter.href %>">
+          <span><%= filter.label %></span>
+        </a>
+        <% }) %>
+      </div>
+    </div>
+
+    <aside class="shop-hero__panel" aria-label="Resume catalogue">
+      <article class="shop-hero__stat">
+        <p class="shop-hero__value">132</p>
+        <p class="shop-hero__label">references actives</p>
+      </article>
+      <article class="shop-hero__stat">
+        <p class="shop-hero__value">6</p>
+        <p class="shop-hero__label">categories principales</p>
+      </article>
+      <article class="shop-hero__stat">
+        <p class="shop-hero__value">24-48h</p>
+        <p class="shop-hero__label">preparation moyenne</p>
+      </article>
+      <a class="shop-hero__panel-cta" href="/details">Voir une fiche produit</a>
+    </aside>
+  </section>
+
+  <section class="shop-services" aria-label="Avantages boutique">
+    <% serviceHighlights.forEach((item) => { %>
+    <article class="shop-service-card">
+      <span class="shop-service-card__icon" aria-hidden="true">
+        <i class="bx <%= item.icon %>"></i>
+      </span>
+      <h2><%= item.title %></h2>
+      <p><%= item.text %></p>
+    </article>
+    <% }) %>
+  </section>
+
+  <section class="shop-sticky-filters" aria-label="Filtres rapides desktop">
+    <div class="shop-sticky-filters__inner">
+      <p class="shop-sticky-filters__label">
+        <i class="bx bx-slider-alt"></i>
+        <span>Filtres rapides</span>
+      </p>
+
+      <div class="shop-sticky-filters__list">
+        <% quickFilters.forEach((filter) => { %>
+        <a class="shop-sticky-filter <%= filter.active ? 'is-active' : '' %>" href="<%= filter.href %>">
+          <span><%= filter.label %></span>
+        </a>
+        <% }) %>
+        <a class="shop-sticky-filter shop-sticky-filter--ghost" href="/shop">Reinitialiser</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="shop-layout" aria-label="Listing produits et filtres">
+    <aside id="shop-mobile-filters" class="shop-filters" data-shop-filters aria-label="Filtres shop">
+      <div class="shop-filter-block">
+        <p class="shop-filter-block__kicker">Affiner le catalogue</p>
+        <h2 class="shop-filter-block__title">Filtres</h2>
+      </div>
+
+      <div class="shop-filter-block">
+        <h3>Categories</h3>
+        <ul class="shop-filter-list">
+          <% categories.forEach((category, index) => { %>
+          <li>
+            <a class="shop-filter-link <%= index === 0 ? 'is-active' : '' %>" href="<%= category.href %>">
+              <span><%= category.label %></span>
+              <strong><%= category.count %></strong>
+            </a>
+          </li>
+          <% }) %>
+        </ul>
+      </div>
+
+      <div class="shop-filter-block">
+        <h3>Tailles</h3>
+        <div class="shop-size-grid" aria-label="Tailles disponibles">
+          <a href="/shop?size=1-2" class="shop-size-chip">1-2A</a>
+          <a href="/shop?size=3-4" class="shop-size-chip">3-4A</a>
+          <a href="/shop?size=5-6" class="shop-size-chip">5-6A</a>
+          <a href="/shop?size=7-8" class="shop-size-chip">7-8A</a>
+          <a href="/shop?size=9-10" class="shop-size-chip">9-10A</a>
+          <a href="/shop?size=11-12" class="shop-size-chip">11-12A</a>
+        </div>
+      </div>
+
+      <div class="shop-filter-block">
+        <h3>Budget</h3>
+        <div class="shop-budget-list" aria-label="Tranches de prix">
+          <a href="/shop?price=0-15">Moins de 15 EUR</a>
+          <a href="/shop?price=15-30">15 a 30 EUR</a>
+          <a href="/shop?price=30-45">30 a 45 EUR</a>
+          <a href="/shop?price=45+">45 EUR et plus</a>
+        </div>
+      </div>
+
+      <div class="shop-filter-block">
+        <h3>Options</h3>
+        <ul class="shop-option-list">
+          <li><i class="bx bx-check-circle"></i><span>Nouveautes de la semaine</span></li>
+          <li><i class="bx bx-check-circle"></i><span>Produits en promotion</span></li>
+          <li><i class="bx bx-check-circle"></i><span>Livraison express disponible</span></li>
+          <li><i class="bx bx-check-circle"></i><span>Stock limite en priorite</span></li>
+        </ul>
+      </div>
+
+      <a class="shop-filter-cta" href="/shop">Reinitialiser les filtres</a>
+    </aside>
+
+    <div class="shop-results">
+      <header class="shop-results__head">
+        <div>
+          <p class="shop-results__kicker">Listing produits</p>
+          <h2 class="shop-results__title">Selection complete toutes categories</h2>
+          <p class="shop-results__count"><strong><%= products.length %></strong> produits visibles sur <strong>132</strong> references.</p>
+        </div>
+
+        <div class="shop-results__controls">
+          <button
+            class="shop-mobile-filter-toggle"
+            type="button"
+            data-shop-filter-toggle
+            aria-controls="shop-mobile-filters"
+            aria-expanded="false"
+          >
+            <i class="bx bx-filter-alt"></i>
+            <span>Filtres</span>
+          </button>
+
+          <div class="shop-sort-overlay">
+            <div class="shop-sort" aria-label="Tri rapide">
+              <a class="shop-sort__item is-active" href="/shop?sort=popular">Populaire</a>
+              <a class="shop-sort__item" href="/shop?sort=new">Nouveautes</a>
+              <a class="shop-sort__item" href="/shop?sort=price-low">Prix croissant</a>
+              <a class="shop-sort__item" href="/shop?sort=price-high">Prix decroissant</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="shop-grid">
+        <% products.forEach((product, index) => { %>
+        <% const categoryIcon = getCategoryIcon(product.category); %>
+        <article class="shop-product">
+          <a
+            class="shop-product__media shop-product__media--<%= product.palette %><%= product.image ? ' has-image' : '' %>"
+            href="/details"
+            aria-label="Voir <%= product.name %>"
+          >
+            <% if (product.image) { %>
+            <img
+              class="shop-product__image"
+              src="<%= product.image %>"
+              alt="<%= product.name %>"
+              loading="lazy"
+              decoding="async"
+            />
+            <% } %>
+            <span class="shop-product__tag"><%= product.tag %></span>
+            <span class="shop-product__status shop-product__status--<%= product.statusTone %>"><%= product.status %></span>
+            <span class="shop-product__sku">RB-SH-<%= 400 + index %></span>
+          </a>
+
+          <button class="shop-product__wish" type="button" data-favorite-btn aria-pressed="false" aria-label="Ajouter <%= product.name %> aux favoris">
+            <i class="bx bx-heart"></i>
+          </button>
+
+          <div class="shop-product__body">
+            <div class="shop-product__meta">
+              <span class="shop-product__category-chip">
+                <i class="bx <%= categoryIcon %>"></i>
+                <span><%= product.category %></span>
+              </span>
+              <span class="shop-product__age"><%= product.age %></span>
+            </div>
+
+            <a class="shop-product__details" href="/details">
+              <h3 class="shop-product__name"><%= product.name %></h3>
+            </a>
+
+            <div class="shop-product__prices">
+              <span class="shop-product__price-current"><%= product.price %></span>
+              <span class="shop-product__price-old"><%= product.oldPrice %></span>
+            </div>
+
+            <div class="shop-product__foot">
+              <p class="shop-product__rating">
+                <i class="bx bxs-star"></i>
+                <span><%= product.rating %></span>
+              </p>
+              <div class="shop-product__actions">
+                <a class="shop-product__btn shop-product__btn--ghost" href="/details">Details</a>
+                <a class="shop-product__btn shop-product__btn--primary" data-add-to-cart href="/cart">
+                  <i class="bx bx-cart-add"></i>
+                  <span>Panier</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </article>
+        <% }) %>
+      </div>
+
+      <div class="shop-pagination" aria-label="Pagination visuelle">
+        <a class="shop-pagination__link is-active" href="/shop?page=1">1</a>
+        <a class="shop-pagination__link" href="/shop?page=2">2</a>
+        <a class="shop-pagination__link" href="/shop?page=3">3</a>
+        <a class="shop-pagination__next" href="/shop?page=2">
+          <span>Suivant</span>
+          <i class="bx bx-chevron-right"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="shop-category-spotlight" aria-label="Categories en avant">
+    <% featuredCategories.forEach((category) => { %>
+    <a class="shop-category-card shop-category-card--<%= category.tone %>" href="<%= category.href %>">
+      <span class="shop-category-card__kicker">Categorie</span>
+      <h2><%= category.title %></h2>
+      <p><%= category.text %></p>
+      <span class="shop-category-card__cta">
+        <span>Explorer</span>
+        <i class="bx bx-right-arrow-alt"></i>
+      </span>
+    </a>
+    <% }) %>
+  </section>
+
+  <section class="shop-final-cta" aria-label="Call to action shop">
+    <div>
+      <p class="shop-final-cta__kicker">Rose&amp;Bleu marketplace</p>
+      <h2 class="shop-final-cta__title">Besoin d aller plus loin ? Explore le catalogue complet</h2>
+      <p class="shop-final-cta__text">
+        Continue la navigation par categorie, trie par prix ou garde tes coups de coeur dans ta wishlist.
+      </p>
+    </div>
+    <div class="shop-final-cta__actions">
+      <a class="btn btn-primary" href="/shop">Catalogue complet</a>
+      <a class="btn btn-outline" href="/favoris">Voir mes favoris</a>
+    </div>
+  </section>
+</section>

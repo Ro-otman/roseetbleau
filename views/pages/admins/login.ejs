@@ -1,0 +1,28 @@
+<section class="admin-login">
+  <div class="admin-login__panel">
+    <p class="admin-login__kicker">Acces securise</p>
+    <a class="admin-login__brand" href="/">
+      <span class="admin-login__rose">Rose</span>
+      <span class="admin-login__amp">&amp;</span>
+      <span class="admin-login__bleu">Bleu</span>
+    </a>
+
+    <form class="admin-login__form" action="/admin/dashboard" method="get">
+      <label for="admin-key">Cle d'acces admin</label>
+      <div class="admin-login__field">
+        <i class="bx bx-key"></i>
+        <input id="admin-key" type="password" name="key" placeholder="Entrez votre cle" required />
+      </div>
+
+      <button type="submit" class="admin-login__submit">
+        <i class="bx bx-log-in"></i>
+        <span>Entrer dans le dashboard</span>
+      </button>
+    </form>
+
+    <a class="admin-login__back" href="/">
+      <i class="bx bx-left-arrow-alt"></i>
+      <span>Retour a la boutique</span>
+    </a>
+  </div>
+</section>

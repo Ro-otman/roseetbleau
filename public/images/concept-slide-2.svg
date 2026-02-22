@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+  <title id="title">Concept slide 2</title>
+  <desc id="desc">Accessoires Rose et Bleu</desc>
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffe7f0" />
+      <stop offset="46%" stop-color="#fff8ef" />
+      <stop offset="100%" stop-color="#dff4ff" />
+    </linearGradient>
+    <filter id="sh2" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#223045" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#bg2)" />
+
+  <g transform="translate(90 110)" filter="url(#sh2)">
+    <rect x="0" y="0" width="1020" height="680" rx="42" fill="#ffffff" />
+
+    <g transform="translate(64 70)">
+      <rect x="0" y="0" width="260" height="240" rx="26" fill="#ffeaf3" />
+      <circle cx="130" cy="115" r="78" fill="#f27bb1" />
+      <path d="M88 145 L130 88 L172 145" stroke="#ffd3e7" stroke-width="11" fill="none" stroke-linecap="round" />
+      <text x="58" y="214" fill="#334961" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="24" font-weight="700">Bonnets</text>
+    </g>
+
+    <g transform="translate(380 70)">
+      <rect x="0" y="0" width="260" height="240" rx="26" fill="#e9f4ff" />
+      <rect x="70" y="78" width="120" height="94" rx="20" fill="#56a7df" />
+      <rect x="94" y="58" width="72" height="34" rx="12" fill="#91c8ed" />
+      <text x="76" y="214" fill="#334961" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="24" font-weight="700">Sacs</text>
+    </g>
+
+    <g transform="translate(696 70)">
+      <rect x="0" y="0" width="260" height="240" rx="26" fill="#fff3e7" />
+      <path d="M68 152 C68 96 192 96 192 152 L172 152 C172 118 88 118 88 152 Z" fill="#f0b166" />
+      <rect x="64" y="152" width="132" height="38" rx="16" fill="#ffd7a8" />
+      <text x="54" y="214" fill="#334961" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="24" font-weight="700">Chaussures</text>
+    </g>
+
+    <g transform="translate(64 360)">
+      <rect x="0" y="0" width="892" height="250" rx="28" fill="#f8fbff" />
+      <text x="42" y="78" fill="#203047" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="46" font-weight="800">
+        Accessories edit
+      </text>
+      <text x="42" y="132" fill="#5c708a" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="28">
+        Selection pratique pour completer chaque tenue.
+      </text>
+      <text x="42" y="184" fill="#425976" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="24">
+        Durable, utile, et pense pour les enfants actifs.
+      </text>
+    </g>
+  </g>
+</svg>

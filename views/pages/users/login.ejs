@@ -1,0 +1,138 @@
+<section class="user-page page-login">
+  <div class="login-shell">
+    <aside class="login-brand-panel" aria-label="Univers Rose et Bleu">
+      <p class="login-brand-panel__kicker">Espace client</p>
+
+      <a
+        class="login-brand"
+        href="/"
+        aria-label="Retour a l accueil Rose et Bleu"
+      >
+        <span class="login-brand__rose">Rose</span>
+        <span class="login-brand__amp">&amp;</span>
+        <span class="login-brand__bleu">Bleu</span>
+      </a>
+
+      <div class="login-brand-mark" aria-hidden="true">
+        <span class="login-step login-step--blue"></span>
+        <span class="login-step login-step--rose"></span>
+      </div>
+
+      <h1 class="login-brand-panel__title">
+        Bon retour dans la boutique qui habille l enfance avec style et confort.
+      </h1>
+      <p class="login-brand-panel__text">
+        Connecte-toi pour suivre tes commandes, retrouver tes favoris et gerer
+        ton panier en un clic.
+      </p>
+
+      <ul class="login-benefits">
+        <li>
+          <i class="bx bx-check-shield" aria-hidden="true"></i>
+          <span>Paiement securise et compte protege.</span>
+        </li>
+        <li>
+          <i class="bx bx-package" aria-hidden="true"></i>
+          <span>Suivi de livraison en temps reel.</span>
+        </li>
+        <li>
+          <i class="bx bx-heart" aria-hidden="true"></i>
+          <span>Wishlist synchronisee sur tous tes appareils.</span>
+        </li>
+      </ul>
+
+      <div class="login-trust">
+        <article class="login-trust__item">
+          <p class="login-trust__value">24-48h</p>
+          <p class="login-trust__label">Preparation moyenne</p>
+        </article>
+        <article class="login-trust__item">
+          <p class="login-trust__value">4.8/5</p>
+          <p class="login-trust__label">Satisfaction clients</p>
+        </article>
+      </div>
+    </aside>
+
+    <section class="login-card" aria-label="Formulaire de connexion">
+      <div class="login-card__head">
+        <p class="login-card__kicker">Connexion</p>
+        <h2 class="login-card__title">Accede a ton compte</h2>
+        <p class="login-card__lead">
+          Renseigne ton email et ton mot de passe pour retrouver ton espace
+          Rose&amp;Bleu.
+        </p>
+      </div>
+
+      <form class="login-form" action="/login" method="get">
+        <label class="login-label" for="login-email">Adresse email</label>
+        <div class="login-field">
+          <span class="login-field__icon" aria-hidden="true">
+            <i class="bx bx-envelope"></i>
+          </span>
+          <input
+            id="login-email"
+            name="email"
+            type="email"
+            autocomplete="email"
+            placeholder="exemple@email.com"
+            required
+          />
+        </div>
+
+        <div class="login-label-row">
+          <label class="login-label" for="login-password">Mot de passe</label>
+          <a class="login-link" href="/faq">Mot de passe oublie ?</a>
+        </div>
+        <div class="login-field">
+          <span class="login-field__icon" aria-hidden="true">
+            <i class="bx bx-lock-alt"></i>
+          </span>
+          <input
+            id="login-password"
+            name="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="********"
+            required
+          />
+        </div>
+
+        <label class="login-checkbox">
+          <input type="checkbox" name="remember" />
+          <span>Rester connecte sur cet appareil</span>
+        </label>
+
+        <button class="login-submit" type="submit">
+          <i class="bx bx-log-in" aria-hidden="true"></i>
+          <span>Se connecter</span>
+        </button>
+
+        <p class="login-divider"><span>ou continuer avec</span></p>
+
+        <div class="login-alt">
+          <a
+            class="login-alt__btn"
+            href="/login"
+            aria-label="Continuer avec Google"
+          >
+            <i class="bx bxl-google"></i>
+            <span>Google</span>
+          </a>
+          <a
+            class="login-alt__btn"
+            href="/login"
+            aria-label="Continuer avec Facebook"
+          >
+            <i class="bx bxl-facebook-circle"></i>
+            <span>Facebook</span>
+          </a>
+        </div>
+      </form>
+
+      <p class="login-register">
+        Pas encore de compte ?
+        <a href="/signup">Creer un compte</a>
+      </p>
+    </section>
+  </div>
+</section>

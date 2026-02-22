@@ -1,0 +1,306 @@
+<section class="user-page page-cart">
+  <%
+    const cartItems = [
+      {
+        name: "Robe Petales Soft",
+        category: "Filles",
+        size: "6A",
+        color: "Rose",
+        qty: 1,
+        unitPrice: "29,90 EUR",
+        oldPrice: "39,90 EUR",
+        total: "29,90 EUR",
+        badge: "-25%",
+        stock: "Stock limite",
+        palette: "rose",
+      },
+      {
+        name: "Sneakers Pop Run",
+        category: "Chaussures",
+        size: "30",
+        color: "Bleu ciel",
+        qty: 1,
+        unitPrice: "38,00 EUR",
+        oldPrice: "49,00 EUR",
+        total: "38,00 EUR",
+        badge: "Top vente",
+        stock: "Disponible",
+        palette: "blue",
+      },
+      {
+        name: "Sac Mini School",
+        category: "Accessoires",
+        size: "Unique",
+        color: "Violet",
+        qty: 1,
+        unitPrice: "19,90 EUR",
+        oldPrice: "26,00 EUR",
+        total: "19,90 EUR",
+        badge: "Nouveau",
+        stock: "Disponible",
+        palette: "violet",
+      },
+    ];
+
+    const summary = {
+      subtotal: "87,80 EUR",
+      discount: "-12,00 EUR",
+      shipping: "4,90 EUR",
+      total: "80,70 EUR",
+    };
+
+    const trustPoints = [
+      {
+        icon: "bx-check-shield",
+        title: "Paiement securise",
+        text: "Transactions protegees et verification anti-fraude.",
+      },
+      {
+        icon: "bx-time-five",
+        title: "Preparation rapide",
+        text: "Commandes preparees sous 24-48h.",
+      },
+      {
+        icon: "bx-refresh",
+        title: "Retours faciles",
+        text: "14 jours pour changer d avis sans stress.",
+      },
+    ];
+
+    const suggestions = [
+      {
+        name: "Body Cocon Pack x3",
+        category: "Bebes",
+        price: "20,90 EUR",
+        oldPrice: "27,90 EUR",
+        palette: "sky",
+      },
+      {
+        name: "Jean Flex Motion",
+        category: "Garcons",
+        price: "31,90 EUR",
+        oldPrice: "40,00 EUR",
+        palette: "peach",
+      },
+      {
+        name: "Blouse Etoile Fine",
+        category: "Filles",
+        price: "24,90 EUR",
+        oldPrice: "31,00 EUR",
+        palette: "rose",
+      },
+      {
+        name: "Casquette Color Joy",
+        category: "Accessoires",
+        price: "14,90 EUR",
+        oldPrice: "19,00 EUR",
+        palette: "mint",
+      },
+    ];
+  %>
+
+  <section class="cart-hero" aria-label="Presentation panier">
+    <div class="cart-hero__content">
+      <p class="cart-hero__kicker">Panier Rose&amp;Bleu</p>
+      <h1 class="cart-hero__title">Ton panier est presque pret</h1>
+      <p class="cart-hero__text">
+        Verifie tes articles, ajuste les quantites et valide la commande en
+        quelques clics.
+      </p>
+      <div class="cart-hero__actions">
+        <a class="btn btn-primary" href="/shop">Continuer mes achats</a>
+        <a class="btn btn-outline" href="/favoris">Voir mes favoris</a>
+      </div>
+    </div>
+
+    <div class="cart-hero__stats" aria-label="Resume panier">
+      <article class="cart-hero__stat">
+        <p class="cart-hero__value"><%= cartItems.length %></p>
+        <p class="cart-hero__label">articles dans le panier</p>
+      </article>
+      <article class="cart-hero__stat">
+        <p class="cart-hero__value"><%= summary.total %></p>
+        <p class="cart-hero__label">montant estime</p>
+      </article>
+      <article class="cart-hero__stat">
+        <p class="cart-hero__value">24-48h</p>
+        <p class="cart-hero__label">preparation moyenne</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="cart-layout" aria-label="Liste et resume panier">
+    <section class="cart-items-panel" aria-label="Articles panier">
+      <header class="cart-items-panel__head">
+        <p class="cart-items-panel__kicker">Articles selectionnes</p>
+        <h2 class="cart-items-panel__title">Verification avant paiement</h2>
+      </header>
+
+      <div class="cart-items-list">
+        <% cartItems.forEach((item, idx) => { %>
+        <article class="cart-item">
+          <a
+            class="cart-item__media cart-item__media--<%= item.palette %><%= item.image ? ' has-image' : '' %>"
+            href="/details"
+          >
+            <% if (item.image) { %>
+            <img
+              class="cart-item__image"
+              src="<%= item.image %>"
+              alt="<%= item.name %>"
+              loading="lazy"
+              decoding="async"
+            />
+            <% } %>
+            <span class="cart-item__badge"><%= item.badge %></span>
+            <span class="cart-item__sku">RB-CART-<%= 500 + idx %></span>
+          </a>
+
+          <div class="cart-item__body">
+            <div class="cart-item__top">
+              <p class="cart-item__category"><%= item.category %></p>
+              <a class="cart-item__name" href="/details"><%= item.name %></a>
+            </div>
+
+            <ul class="cart-item__meta">
+              <li><strong>Taille:</strong> <span><%= item.size %></span></li>
+              <li><strong>Couleur:</strong> <span><%= item.color %></span></li>
+              <li><strong>Etat:</strong> <span><%= item.stock %></span></li>
+            </ul>
+
+            <div class="cart-item__controls">
+              <div class="cart-qty" aria-label="Quantite <%= item.name %>">
+                <button type="button" aria-label="Diminuer la quantite">-</button>
+                <span><%= item.qty %></span>
+                <button type="button" aria-label="Augmenter la quantite">+</button>
+              </div>
+
+              <div class="cart-item__links">
+                <a href="/favoris">
+                  <i class="bx bx-heart"></i>
+                  <span>Mettre en favoris</span>
+                </a>
+                <button type="button">
+                  <i class="bx bx-trash"></i>
+                  <span>Supprimer</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="cart-item__pricing">
+            <p class="cart-item__unit">Prix: <strong><%= item.unitPrice %></strong></p>
+            <p class="cart-item__old"><%= item.oldPrice %></p>
+            <p class="cart-item__total">Total: <strong><%= item.total %></strong></p>
+          </div>
+        </article>
+        <% }) %>
+      </div>
+
+      <footer class="cart-items-panel__foot">
+        <a class="cart-items-panel__continue" href="/shop">
+          <i class="bx bx-left-arrow-alt"></i>
+          <span>Retour au catalogue</span>
+        </a>
+        <a class="cart-items-panel__clear" href="/cart">Vider le panier</a>
+      </footer>
+    </section>
+
+    <aside class="cart-summary" aria-label="Resume commande">
+      <article class="cart-summary__card">
+        <p class="cart-summary__kicker">Resume</p>
+        <h2 class="cart-summary__title">Commande</h2>
+
+        <div class="cart-summary__rows">
+          <p><span>Sous-total</span><strong><%= summary.subtotal %></strong></p>
+          <p><span>Reduction</span><strong><%= summary.discount %></strong></p>
+          <p><span>Livraison</span><strong><%= summary.shipping %></strong></p>
+        </div>
+
+        <p class="cart-summary__grand-total">
+          <span>Total estime</span>
+          <strong><%= summary.total %></strong>
+        </p>
+
+        <form class="cart-coupon" action="/cart" method="get">
+          <label for="cart-coupon-code">Code promo</label>
+          <div class="cart-coupon__field">
+            <input
+              id="cart-coupon-code"
+              name="coupon"
+              type="text"
+              placeholder="ROSEBLEU10"
+            />
+            <button type="submit">Appliquer</button>
+          </div>
+        </form>
+
+        <a class="cart-summary__checkout" href="/login">
+          <i class="bx bx-lock-alt"></i>
+          <span>Passer au paiement</span>
+        </a>
+        <a class="cart-summary__quickpay" href="/login">
+          <i class="bx bx-credit-card-front"></i>
+          <span>Payer rapidement</span>
+        </a>
+
+        <p class="cart-summary__note">
+          Le montant final peut varier selon l adresse de livraison.
+        </p>
+      </article>
+
+      <article class="cart-trust" aria-label="Garanties boutique">
+        <% trustPoints.forEach((item) => { %>
+        <div class="cart-trust__item">
+          <i class="bx <%= item.icon %>"></i>
+          <div>
+            <h3><%= item.title %></h3>
+            <p><%= item.text %></p>
+          </div>
+        </div>
+        <% }) %>
+      </article>
+    </aside>
+  </section>
+
+  <section class="cart-suggestions" aria-label="Suggestions produits">
+    <div class="cart-suggestions__head">
+      <p class="cart-suggestions__kicker">Tu peux aussi aimer</p>
+      <h2 class="cart-suggestions__title">Completer la commande</h2>
+    </div>
+
+    <div class="cart-suggestions__grid">
+      <% suggestions.forEach((item, idx) => { %>
+      <article class="cart-product">
+        <a
+          class="cart-product__media cart-product__media--<%= item.palette %><%= item.image ? ' has-image' : '' %>"
+          href="/details"
+        >
+          <% if (item.image) { %>
+          <img
+            class="cart-product__image"
+            src="<%= item.image %>"
+            alt="<%= item.name %>"
+            loading="lazy"
+            decoding="async"
+          />
+          <% } %>
+          <span class="cart-product__sku">RB-ADD-<%= 700 + idx %></span>
+        </a>
+        <div class="cart-product__body">
+          <p class="cart-product__category"><%= item.category %></p>
+          <a class="cart-product__name" href="/details"><%= item.name %></a>
+          <div class="cart-product__prices">
+            <span class="cart-product__current"><%= item.price %></span>
+            <span class="cart-product__old"><%= item.oldPrice %></span>
+          </div>
+          <a class="cart-product__cta" data-add-to-cart href="/cart">
+            <i class="bx bx-cart-add"></i>
+            <span>Ajouter</span>
+          </a>
+        </div>
+      </article>
+      <% }) %>
+    </div>
+  </section>
+</section>

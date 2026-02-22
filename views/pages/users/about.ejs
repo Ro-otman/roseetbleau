@@ -1,0 +1,165 @@
+<section class="user-page page-about">
+  <%
+    const milestones = [
+      {
+        year: "2022",
+        title: "Naissance du concept",
+        text: "Rose&Bleu demarre avec une idee simple: creer un vestiaire enfant doux, solide et facile a vivre.",
+      },
+      {
+        year: "2023",
+        title: "Premieres collections",
+        text: "Une ligne capsule bebes, filles et garcons avec des pieces comfortables et faciles a assortir.",
+      },
+      {
+        year: "2024",
+        title: "Ouverture marketplace",
+        text: "La boutique evolue avec plus de references et une navigation pensee pour les parents presses.",
+      },
+      {
+        year: "2025",
+        title: "Service client renforce",
+        text: "Livraison mieux suivie, retours simplifies et accompagnement plus proche pour chaque commande.",
+      },
+    ];
+
+    const values = [
+      {
+        icon: "bx-smile",
+        title: "Confort reel",
+        text: "Des coupes pensees pour courir, jouer, dormir et bouger sans gene.",
+      },
+      {
+        icon: "bx-check-shield",
+        title: "Qualite suivie",
+        text: "Chaque produit est selectionne pour sa tenue dans le temps et sa finition.",
+      },
+      {
+        icon: "bx-palette",
+        title: "Style ludique",
+        text: "Des couleurs joyeuses, des details fun et des looks simples a composer.",
+      },
+      {
+        icon: "bx-time-five",
+        title: "Pratique quotidien",
+        text: "Des pieces faciles a entretenir et a reutiliser de saison en saison.",
+      },
+    ];
+
+    const promises = [
+      "Un vestiaire enfant clair, sans surcharge inutile.",
+      "Des prix justes avec des offres utiles toute l annee.",
+      "Des explications simples sur les tailles et les matieres.",
+      "Un parcours d achat rapide, fluide et rassurant.",
+    ];
+  %>
+
+  <section class="about-hero" aria-label="Presentation Rose et Bleu">
+    <div class="about-hero__content">
+      <p class="about-hero__kicker">A propos de Rose&amp;Bleu</p>
+      <h1 class="about-hero__title">Une mode enfant pensee pour la vraie vie</h1>
+      <p class="about-hero__text">
+        Nous construisons une boutique ou les parents trouvent vite des vetements et accessoires fiables,
+        esthetiques et adaptes au rythme des enfants.
+      </p>
+      <div class="about-hero__actions">
+        <a class="btn btn-primary" href="/shop">Decouvrir la collection</a>
+        <a class="btn btn-outline" href="/faq">Questions frequentes</a>
+      </div>
+    </div>
+
+    <div class="about-hero__stats" aria-label="Chiffres cle">
+      <article class="about-stat-card">
+        <p class="about-stat-card__value">+450</p>
+        <p class="about-stat-card__label">Produits enfant selectionnes</p>
+      </article>
+      <article class="about-stat-card">
+        <p class="about-stat-card__value">24-48h</p>
+        <p class="about-stat-card__label">Preparation moyenne commandes</p>
+      </article>
+      <article class="about-stat-card">
+        <p class="about-stat-card__value">4.8/5</p>
+        <p class="about-stat-card__label">Satisfaction clients</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="about-block about-story" aria-label="Notre histoire">
+    <div class="about-block__head">
+      <p class="about-block__kicker">Notre evolution</p>
+      <h2 class="about-block__title">Une croissance guidee par les besoins des familles</h2>
+    </div>
+
+    <div class="about-timeline">
+      <% milestones.forEach((item) => { %>
+      <article class="about-timeline__item">
+        <p class="about-timeline__year"><%= item.year %></p>
+        <h3><%= item.title %></h3>
+        <p><%= item.text %></p>
+      </article>
+      <% }) %>
+    </div>
+  </section>
+
+  <section class="about-block about-values" aria-label="Nos valeurs">
+    <div class="about-block__head">
+      <p class="about-block__kicker">Ce qui nous guide</p>
+      <h2 class="about-block__title">Des decisions simples, utiles et orientees qualite</h2>
+    </div>
+
+    <div class="about-values__grid">
+      <% values.forEach((value) => { %>
+      <article class="about-value-card">
+        <span class="about-value-card__icon" aria-hidden="true">
+          <i class="bx <%= value.icon %>"></i>
+        </span>
+        <h3><%= value.title %></h3>
+        <p><%= value.text %></p>
+      </article>
+      <% }) %>
+    </div>
+  </section>
+
+  <section class="about-block about-commitments" aria-label="Nos engagements">
+    <div class="about-commitments__content">
+      <p class="about-block__kicker">Nos engagements</p>
+      <h2 class="about-block__title">Une experience ecommerce claire et rassurante</h2>
+      <ul class="about-promises">
+        <% promises.forEach((promise) => { %>
+        <li>
+          <i class="bx bx-check-circle"></i>
+          <span><%= promise %></span>
+        </li>
+        <% }) %>
+      </ul>
+    </div>
+
+    <aside class="about-score-card" aria-label="Points forts">
+      <h3>Pourquoi les parents reviennent</h3>
+      <div class="about-score">
+        <p><span>Confort produit</span><strong>96%</strong></p>
+        <span class="about-score__bar"><span style="width: 96%"></span></span>
+      </div>
+      <div class="about-score">
+        <p><span>Facilite de commande</span><strong>94%</strong></p>
+        <span class="about-score__bar"><span style="width: 94%"></span></span>
+      </div>
+      <div class="about-score">
+        <p><span>Rapport qualite/prix</span><strong>92%</strong></p>
+        <span class="about-score__bar"><span style="width: 92%"></span></span>
+      </div>
+      <a class="about-score-card__cta" href="/shop?sort=new">Explorer les nouveautes</a>
+    </aside>
+  </section>
+
+  <section class="about-cta" aria-label="Call to action">
+    <div>
+      <p class="about-block__kicker">Pret a explorer Rose&amp;Bleu ?</p>
+      <h2 class="about-block__title">Des looks enfants qui plaisent aux petits et simplifient la vie des grands</h2>
+    </div>
+    <div class="about-cta__actions">
+      <a class="btn btn-primary" href="/shop">Aller au shop</a>
+      <a class="btn btn-outline" href="/favoris">Voir les favoris</a>
+    </div>
+  </section>
+</section>

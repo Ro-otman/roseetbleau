@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 720" role="img" aria-labelledby="title desc">
+  <title id="title">Hero slide collection enfants</title>
+  <desc id="desc">Fond doux rose bleu avec cartes look enfant</desc>
+  <defs>
+    <linearGradient id="bgA" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd7c7" />
+      <stop offset="45%" stop-color="#ffeef6" />
+      <stop offset="100%" stop-color="#d9efff" />
+    </linearGradient>
+    <linearGradient id="cardA" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#fff8fc" />
+    </linearGradient>
+    <linearGradient id="cardB" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f5fbff" />
+    </linearGradient>
+    <filter id="shadowA" x="-30%" y="-30%" width="160%" height="180%">
+      <feDropShadow dx="0" dy="14" stdDeviation="16" flood-color="#1f2a3b" flood-opacity="0.16" />
+    </filter>
+  </defs>
+
+  <rect width="1600" height="720" fill="url(#bgA)" />
+
+  <circle cx="170" cy="120" r="120" fill="#ffd9cc" opacity="0.75" />
+  <circle cx="390" cy="100" r="46" fill="#ffd9cc" opacity="0.9" />
+  <circle cx="1510" cy="120" r="110" fill="#d0e7ff" opacity="0.72" />
+  <circle cx="1365" cy="72" r="36" fill="#d0e7ff" opacity="0.9" />
+
+  <path
+    d="M0 560 C260 520 450 630 700 585 C920 546 1135 650 1380 598 C1460 580 1520 595 1600 620 L1600 720 L0 720 Z"
+    fill="#ffffff"
+    opacity="0.5"
+  />
+
+  <g transform="translate(920 80)" filter="url(#shadowA)">
+    <rect x="0" y="0" width="280" height="250" rx="30" fill="url(#cardA)" />
+    <rect x="38" y="38" width="204" height="160" rx="22" fill="#ffe9f3" />
+    <path
+      d="M88 92 L112 70 L140 86 L160 74 L188 92 L198 120 L174 126 L174 180 L112 180 L112 126 L88 120 Z"
+      fill="#e85e9c"
+    />
+    <path d="M120 128 H166" stroke="#ffffff" stroke-width="7" stroke-linecap="round" />
+    <text x="32" y="228" fill="#30435b" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="20" font-weight="700">
+      Mini looks
+    </text>
+  </g>
+
+  <g transform="translate(1230 150)" filter="url(#shadowA)">
+    <rect x="0" y="0" width="270" height="240" rx="30" fill="url(#cardB)" />
+    <rect x="36" y="34" width="196" height="154" rx="22" fill="#e6f4ff" />
+    <path
+      d="M118 70 C88 70 80 94 84 124 C88 154 104 184 138 184 C172 184 188 154 192 124 C196 94 188 70 158 70 L150 90 L126 90 Z"
+      fill="#4f9cd8"
+    />
+    <circle cx="121" cy="101" r="5.5" fill="#d6ecff" />
+    <circle cx="154" cy="101" r="5.5" fill="#d6ecff" />
+    <text x="30" y="222" fill="#30435b" font-family="Trebuchet MS, Segoe UI, sans-serif" font-size="20" font-weight="700">
+      Confort toute la journee
+    </text>
+  </g>
+
+  <g opacity="0.5">
+    <circle cx="820" cy="110" r="10" fill="#f4a3c9" />
+    <circle cx="860" cy="140" r="7" fill="#7eb8e6" />
+    <circle cx="790" cy="170" r="6" fill="#f4a3c9" />
+    <circle cx="840" cy="190" r="5" fill="#7eb8e6" />
+  </g>
+</svg>

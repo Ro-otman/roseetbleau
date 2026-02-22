@@ -1,0 +1,57 @@
+<section class="admin-page admin-users">
+  <%
+    const users = [
+      { name: "Aline Mendy", email: "aline@email.com", orders: 9, spent: "312 EUR", status: "Actif", tone: "ok" },
+      { name: "Rosette Koffi", email: "rosette@email.com", orders: 4, spent: "148 EUR", status: "Actif", tone: "ok" },
+      { name: "Nadine Toko", email: "nadine@email.com", orders: 2, spent: "62 EUR", status: "A verifier", tone: "warn" },
+      { name: "Kossi Agossou", email: "kossi@email.com", orders: 1, spent: "29 EUR", status: "Bloque", tone: "danger" },
+      { name: "Yasmine Bado", email: "yasmine@email.com", orders: 6, spent: "204 EUR", status: "Actif", tone: "ok" },
+    ];
+  %>
+
+  <section class="admin-panel">
+    <header class="admin-panel__head">
+      <h2>Gestion utilisateurs</h2>
+      <a href="/admin/users">Exporter la liste</a>
+    </header>
+
+    <div class="admin-toolbar">
+      <form class="admin-search" action="/admin/users" method="get" role="search">
+        <i class="bx bx-search-alt-2"></i>
+        <input type="search" name="q" placeholder="Rechercher un utilisateur..." />
+      </form>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Commandes</th>
+            <th>Depenses</th>
+            <th>Statut</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach((item) => { %>
+          <tr>
+            <td data-label="Nom"><%= item.name %></td>
+            <td data-label="Email"><%= item.email %></td>
+            <td data-label="Commandes"><%= item.orders %></td>
+            <td data-label="Depenses"><%= item.spent %></td>
+            <td data-label="Statut"><span class="admin-badge admin-badge--<%= item.tone %>"><%= item.status %></span></td>
+            <td data-label="Action">
+              <div class="admin-row-actions">
+                <a href="/admin/users">Profil</a>
+                <button type="button">Suspendre</button>
+              </div>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>

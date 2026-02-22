@@ -1,0 +1,162 @@
+<section class="admin-page admin-products">
+  <%
+    const products = [
+      {
+        name: "Robe Petales Soft",
+        category: "Filles",
+        sku: "RB-FIL-021",
+        price: "29,90 EUR",
+        oldPrice: "39,90 EUR",
+        stock: 12,
+        status: "Actif",
+        tone: "ok",
+        image: "/images/category-filles.svg",
+        updated: "Maj il y a 2h",
+      },
+      {
+        name: "Set Mini Club",
+        category: "Garcons",
+        sku: "RB-GAR-114",
+        price: "33,50 EUR",
+        oldPrice: "42,00 EUR",
+        stock: 6,
+        status: "Stock limite",
+        tone: "warn",
+        image: "/images/hero-slide-1.svg",
+        updated: "Maj il y a 4h",
+      },
+      {
+        name: "Pyjama Nuage",
+        category: "Bebes",
+        sku: "RB-BEB-007",
+        price: "22,50 EUR",
+        oldPrice: "29,00 EUR",
+        stock: 24,
+        status: "Actif",
+        tone: "ok",
+        image: "/images/category-bebes.svg",
+        updated: "Maj aujourd hui",
+      },
+      {
+        name: "Sneakers Pop Run",
+        category: "Chaussures",
+        sku: "RB-CHS-030",
+        price: "38,00 EUR",
+        oldPrice: "49,00 EUR",
+        stock: 4,
+        status: "Stock limite",
+        tone: "warn",
+        image: "/images/hero-slide-2.svg",
+        updated: "Maj il y a 1h",
+      },
+      {
+        name: "Sac Mini School",
+        category: "Accessoires",
+        sku: "RB-ACC-056",
+        price: "19,90 EUR",
+        oldPrice: "26,00 EUR",
+        stock: 0,
+        status: "Rupture",
+        tone: "danger",
+        image: "/images/category-accessoires.svg",
+        updated: "Maj hier",
+      },
+      {
+        name: "Cardigan Lune",
+        category: "Mixte",
+        sku: "RB-MIX-208",
+        price: "27,90 EUR",
+        oldPrice: "36,00 EUR",
+        stock: 11,
+        status: "Actif",
+        tone: "ok",
+        image: "/images/hero-slide-3.svg",
+        updated: "Maj il y a 3h",
+      },
+    ];
+
+    const activeCount = products.filter((item) => item.tone === "ok").length;
+    const lowStockCount = products.filter((item) => item.tone === "warn").length;
+    const breakCount = products.filter((item) => item.tone === "danger").length;
+  %>
+
+  <section class="admin-panel admin-products-hero" aria-label="Vue produits">
+    <div class="admin-products-hero__content">
+      <p class="admin-products-hero__kicker">Catalogue visuel</p>
+      <h2 class="admin-products-hero__title">
+        Gere tes produits avec un apercu photo direct
+      </h2>
+      <p class="admin-products-hero__lead">
+        Chaque fiche affiche l image, le stock et les infos cles pour modifier
+        rapidement le bon produit sans confusion.
+      </p>
+    </div>
+
+    <div class="admin-products-hero__stats">
+      <article class="admin-products-stat">
+        <p class="admin-products-stat__value"><%= products.length %></p>
+        <p class="admin-products-stat__label">Produits total</p>
+      </article>
+      <article class="admin-products-stat">
+        <p class="admin-products-stat__value"><%= activeCount %></p>
+        <p class="admin-products-stat__label">Produits actifs</p>
+      </article>
+      <article class="admin-products-stat">
+        <p class="admin-products-stat__value"><%= lowStockCount + breakCount %></p>
+        <p class="admin-products-stat__label">A surveiller</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="admin-panel">
+    <header class="admin-panel__head">
+      <h2>Catalogue produits</h2>
+      <a href="/admin/ajoutproduit">Ajouter un produit</a>
+    </header>
+
+    <div class="admin-toolbar">
+      <form class="admin-search" action="/admin/produits" method="get" role="search">
+        <i class="bx bx-search-alt-2"></i>
+        <input type="search" name="q" placeholder="Rechercher un produit..." />
+      </form>
+      <div class="admin-toolbar__filters">
+        <a href="/admin/produits">Tous</a>
+        <a href="/admin/produits">Actifs</a>
+        <a href="/admin/produits">Stock limite</a>
+        <a href="/admin/produits">Rupture</a>
+      </div>
+    </div>
+
+    <div class="admin-product-grid" aria-label="Liste produits visuelle">
+      <% products.forEach((item) => { %>
+      <article class="admin-product-card">
+        <a class="admin-product-card__media" href="/admin/produits" aria-label="Modifier <%= item.name %>">
+          <img src="<%= item.image %>" alt="<%= item.name %>" />
+          <span class="admin-badge admin-badge--<%= item.tone %>"><%= item.status %></span>
+          <span class="admin-product-card__sku"><%= item.sku %></span>
+        </a>
+
+        <div class="admin-product-card__body">
+          <p class="admin-product-card__category"><%= item.category %></p>
+          <h3 class="admin-product-card__name"><%= item.name %></h3>
+
+          <div class="admin-product-card__prices">
+            <span class="admin-product-card__price-current"><%= item.price %></span>
+            <span class="admin-product-card__price-old"><%= item.oldPrice %></span>
+          </div>
+
+          <div class="admin-product-card__stock">
+            <span><strong><%= item.stock %></strong> en stock</span>
+            <span><%= item.updated %></span>
+          </div>
+
+          <div class="admin-product-card__actions">
+            <a href="/admin/produits"><i class="bx bx-edit"></i><span>Modifier</span></a>
+            <button type="button"><i class="bx bx-trash"></i><span>Supprimer</span></button>
+          </div>
+        </div>
+      </article>
+      <% }) %>
+    </div>
+  </section>
+</section>
