@@ -67,6 +67,53 @@
   max-width: 58ch;
 }
 
+.auth-feedback {
+  margin-top: 14px;
+  border-radius: 12px;
+  border: 1px solid #d4dfec;
+  background: #f4f7fb;
+  color: #29425d;
+  padding: 11px 12px;
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 8px;
+}
+
+.auth-feedback .bx {
+  margin-top: 1px;
+  font-size: 1.15rem;
+}
+
+.auth-feedback__title {
+  margin: 0;
+  font-size: 0.87rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.auth-feedback__message {
+  margin: 2px 0 0;
+  font-size: 0.83rem;
+  line-height: 1.45;
+}
+
+.auth-feedback--success {
+  border-color: #a7d9bf;
+  background: linear-gradient(96deg, #edf9f2 0%, #e5f4ec 100%);
+  color: #1f5a3d;
+}
+
+.auth-feedback--error {
+  border-color: #efb7b7;
+  background: linear-gradient(96deg, #fff1f1 0%, #ffe8e8 100%);
+  color: #7a2828;
+}
+
+.auth-feedback--info {
+  border-color: #b8d5ed;
+  background: linear-gradient(96deg, #eff7ff 0%, #e8f2ff 100%);
+  color: #25527a;
+}
 .signup-form {
   margin-top: 16px;
   display: grid;
@@ -538,6 +585,17 @@
   }
 }
 
+@media (max-width: 900px) {
+  .signup-side {
+    display: none;
+  }
+
+  .signup-shell {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .signup-card,
   .signup-side,
@@ -549,3 +607,4 @@
     transition: none;
   }
 }
+

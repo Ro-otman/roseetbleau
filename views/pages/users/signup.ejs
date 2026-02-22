@@ -4,13 +4,22 @@
       <div class="signup-card__head">
         <p class="signup-card__kicker">Nouveau compte</p>
         <h1 class="signup-card__title">Rejoins Rose&amp;Bleu</h1>
-        <p class="signup-card__lead">
-          Cree ton compte pour enregistrer tes favoris, suivre tes commandes et
-          profiter des nouveautes en avant-premiere.
-        </p>
       </div>
 
-      <form class="signup-form" action="/signup" method="get">
+      <% if (authFeedback) { %>
+        <div class="auth-feedback auth-feedback--<%= authFeedback.tone %>" role="status" aria-live="polite">
+          <i
+            class="bx <%= authFeedback.tone === 'success' ? 'bx-check-circle' : authFeedback.tone === 'error' ? 'bx-error-circle' : 'bx-info-circle' %>"
+            aria-hidden="true"
+          ></i>
+          <div class="auth-feedback__body">
+            <p class="auth-feedback__title"><%= authFeedback.title %></p>
+            <p class="auth-feedback__message"><%= authFeedback.message %></p>
+          </div>
+        </div>
+      <% } %>
+
+      <form class="signup-form" action="/signup" method="post">
         <div class="signup-grid signup-grid--two">
           <div>
             <label class="signup-label" for="signup-firstname">Prenom</label>
@@ -24,6 +33,7 @@
                 type="text"
                 autocomplete="given-name"
                 placeholder="Rosalie"
+                value="<%= formData && formData.firstname ? formData.firstname : '' %>"
                 required
               />
             </div>
@@ -41,6 +51,7 @@
                 type="text"
                 autocomplete="family-name"
                 placeholder="Mendy"
+                value="<%= formData && formData.lastname ? formData.lastname : '' %>"
                 required
               />
             </div>
@@ -59,6 +70,7 @@
               type="email"
               autocomplete="email"
               placeholder="exemple@email.com"
+              value="<%= formData && formData.email ? formData.email : '' %>"
               required
             />
           </div>
@@ -76,6 +88,8 @@
               type="tel"
               autocomplete="tel"
               placeholder="+229 01 97 22 79 24"
+              value="<%= formData && formData.phone ? formData.phone : '' %>"
+              required
             />
           </div>
         </div>
@@ -92,7 +106,7 @@
                 name="password"
                 type="password"
                 autocomplete="new-password"
-                placeholder="Minimum 8 caracteres"
+                placeholder="Mot de passe"
                 required
               />
             </div>
@@ -118,52 +132,10 @@
           </div>
         </div>
 
-        <ul class="signup-rules">
-          <li><i class="bx bx-check-circle"></i> 8 caracteres minimum</li>
-          <li>
-            <i class="bx bx-check-circle"></i> Au moins une lettre et un chiffre
-          </li>
-          <li><i class="bx bx-check-circle"></i> Confirmation identique</li>
-        </ul>
-
-        <label class="signup-checkbox">
-          <input type="checkbox" name="terms" required />
-          <span
-            >J accepte les conditions d utilisation et la politique de
-            confidentialite.</span
-          >
-        </label>
-
-        <label class="signup-checkbox signup-checkbox--secondary">
-          <input type="checkbox" name="newsletter" />
-          <span>Recevoir les offres et nouveautes Rose&amp;Bleu.</span>
-        </label>
-
         <button class="signup-submit" type="submit">
           <i class="bx bx-user-plus" aria-hidden="true"></i>
           <span>Creer mon compte</span>
         </button>
-
-        <p class="signup-divider"><span>ou inscription rapide</span></p>
-
-        <div class="signup-alt">
-          <a
-            class="signup-alt__btn"
-            href="/signup"
-            aria-label="S inscrire avec Google"
-          >
-            <i class="bx bxl-google"></i>
-            <span>Google</span>
-          </a>
-          <a
-            class="signup-alt__btn"
-            href="/signup"
-            aria-label="S inscrire avec Facebook"
-          >
-            <i class="bx bxl-facebook-circle"></i>
-            <span>Facebook</span>
-          </a>
-        </div>
       </form>
 
       <p class="signup-login">

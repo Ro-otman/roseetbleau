@@ -26,12 +26,42 @@
         <span class="header-cart__count" data-cart-count aria-live="polite" hidden>0</span>
       </a>
 
+      <% if (authUser) { %>
+      <div class="header-user" data-user-menu>
+        <button
+          class="header-account header-account--menu"
+          type="button"
+          data-user-menu-toggle
+          aria-expanded="false"
+          aria-haspopup="menu"
+          aria-controls="header-user-menu"
+        >
+          <span class="header-account__icon" aria-hidden="true">
+            <i class="bx bx-user"></i>
+          </span>
+          <span class="header-account__name"><%= authUser.firstName %></span>
+          <span class="header-account__chevron" aria-hidden="true">
+            <i class="bx bx-chevron-down"></i>
+          </span>
+        </button>
+        <div id="header-user-menu" class="header-user__menu" data-user-menu-panel role="menu">
+          <p class="header-user__label">Connecte: <strong><%= authUser.firstName %></strong></p>
+          <form action="/logout" method="post">
+            <button class="header-user__logout" type="submit" role="menuitem">
+              <i class="bx bx-log-out"></i>
+              <span>deconnexion</span>
+            </button>
+          </form>
+        </div>
+      </div>
+      <% } else { %>
       <a class="header-account" href="/login">
         <span class="header-account__icon" aria-hidden="true">
           <i class="bx bx-user"></i>
         </span>
         <span class="header-account__name">connexion</span>
       </a>
+      <% } %>
     </div>
   </div>
 

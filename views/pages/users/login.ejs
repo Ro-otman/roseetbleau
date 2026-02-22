@@ -57,13 +57,22 @@
       <div class="login-card__head">
         <p class="login-card__kicker">Connexion</p>
         <h2 class="login-card__title">Accede a ton compte</h2>
-        <p class="login-card__lead">
-          Renseigne ton email et ton mot de passe pour retrouver ton espace
-          Rose&amp;Bleu.
-        </p>
       </div>
 
-      <form class="login-form" action="/login" method="get">
+      <% if (authFeedback) { %>
+        <div class="auth-feedback auth-feedback--<%= authFeedback.tone %>" role="status" aria-live="polite">
+          <i
+            class="bx <%= authFeedback.tone === 'success' ? 'bx-check-circle' : authFeedback.tone === 'error' ? 'bx-error-circle' : 'bx-info-circle' %>"
+            aria-hidden="true"
+          ></i>
+          <div class="auth-feedback__body">
+            <p class="auth-feedback__title"><%= authFeedback.title %></p>
+            <p class="auth-feedback__message"><%= authFeedback.message %></p>
+          </div>
+        </div>
+      <% } %>
+
+      <form class="login-form" action="/login" method="post">
         <label class="login-label" for="login-email">Adresse email</label>
         <div class="login-field">
           <span class="login-field__icon" aria-hidden="true">
@@ -75,6 +84,7 @@
             type="email"
             autocomplete="email"
             placeholder="exemple@email.com"
+            value="<%= formData && formData.email ? formData.email : '' %>"
             required
           />
         </div>
@@ -98,7 +108,11 @@
         </div>
 
         <label class="login-checkbox">
-          <input type="checkbox" name="remember" />
+          <input
+            type="checkbox"
+            name="remember"
+            <%= formData && formData.remember ? "checked" : "" %>
+          />
           <span>Rester connecte sur cet appareil</span>
         </label>
 
@@ -106,27 +120,6 @@
           <i class="bx bx-log-in" aria-hidden="true"></i>
           <span>Se connecter</span>
         </button>
-
-        <p class="login-divider"><span>ou continuer avec</span></p>
-
-        <div class="login-alt">
-          <a
-            class="login-alt__btn"
-            href="/login"
-            aria-label="Continuer avec Google"
-          >
-            <i class="bx bxl-google"></i>
-            <span>Google</span>
-          </a>
-          <a
-            class="login-alt__btn"
-            href="/login"
-            aria-label="Continuer avec Facebook"
-          >
-            <i class="bx bxl-facebook-circle"></i>
-            <span>Facebook</span>
-          </a>
-        </div>
       </form>
 
       <p class="login-register">

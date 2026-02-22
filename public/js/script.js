@@ -31,6 +31,45 @@
     }
   };
 
+  const setupUserMenu = () => {
+    const userMenu = document.querySelector("[data-user-menu]");
+    if (!userMenu) {
+      return;
+    }
+
+    const toggle = userMenu.querySelector("[data-user-menu-toggle]");
+    const panel = userMenu.querySelector("[data-user-menu-panel]");
+    if (!toggle || !panel) {
+      return;
+    }
+
+    const setOpen = (open) => {
+      userMenu.classList.toggle("is-open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+    };
+
+    toggle.addEventListener("click", (event) => {
+      event.preventDefault();
+      setOpen(!userMenu.classList.contains("is-open"));
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!userMenu.classList.contains("is-open")) {
+        return;
+      }
+
+      if (!userMenu.contains(event.target)) {
+        setOpen(false);
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && userMenu.classList.contains("is-open")) {
+        setOpen(false);
+      }
+    });
+  };
+
   const setupSiteLoader = () => {
     const loader = document.querySelector("[data-site-loader]");
 
@@ -445,6 +484,7 @@
   setupCartCounter();
   setupMobileSearchToggle();
   setupShopMobileFilters();
+  setupUserMenu();
   setupHeaderOffset();
   setupSiteLoader();
 })();

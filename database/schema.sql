@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS carts;
 DROP TABLE IF EXISTS wishlist_items;
 DROP TABLE IF EXISTS wishlists;
 DROP TABLE IF EXISTS user_addresses;
+DROP TABLE IF EXISTS auth_refresh_tokens;
 DROP TABLE IF EXISTS product_variants;
 DROP TABLE IF EXISTS product_images;
 DROP TABLE IF EXISTS products;
@@ -32,6 +33,7 @@ DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
   id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid CHAR(36) NOT NULL,
   first_name VARCHAR(100) NOT NULL,
   last_name VARCHAR(100) NOT NULL,
   email VARCHAR(190) NOT NULL,
@@ -44,12 +46,30 @@ CREATE TABLE users (
   last_login_at DATETIME NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_users_uuid (uuid),
   UNIQUE KEY uq_users_email (email),
   KEY idx_users_role_status (role, status),
   KEY idx_users_created_at (created_at),
   CONSTRAINT chk_users_admin_key CHECK (
     role <> 'admin' OR admin_access_key_hash IS NOT NULL
   )
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE auth_refresh_tokens (
+  id CHAR(36) PRIMARY KEY,
+  user_id BIGINT UNSIGNED NOT NULL,
+  token_hash CHAR(64) NOT NULL,
+  expires_at DATETIME NOT NULL,
+  revoked_at DATETIME NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_auth_refresh_tokens_hash (token_hash),
+  KEY idx_auth_refresh_tokens_user (user_id),
+  KEY idx_auth_refresh_tokens_expires (expires_at),
+  CONSTRAINT fk_auth_refresh_tokens_user
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE categories (
