@@ -1,0 +1,134 @@
+<section class="admin-page admin-user-details admin-users">
+  <%
+    const detail = adminUserDetail || null;
+    const feedback = userDetailFeedback || null;
+    const recentOrders = Array.isArray(detail?.recentOrders) ? detail.recentOrders : [];
+  %>
+
+  <% if (!detail) { %>
+  <section class="admin-panel">
+    <header class="admin-panel__head">
+      <h2>Utilisateur introuvable</h2>
+      <a href="/admin/users">Retour utilisateurs</a>
+    </header>
+  </section>
+  <% } else { %>
+  <section class="admin-panel">
+    <header class="admin-panel__head">
+      <h2><%= detail.name %></h2>
+      <a href="/admin/users">Retour utilisateurs</a>
+    </header>
+
+    <% if (feedback) { %>
+    <div class="admin-feedback admin-feedback--<%= feedback.tone || "info" %>" role="status">
+      <p class="admin-feedback__title"><%= feedback.title %></p>
+      <p class="admin-feedback__message"><%= feedback.message %></p>
+    </div>
+    <% } %>
+
+    <form class="admin-form" action="/admin/users/<%= Number(detail.id || 0) %>/status" method="post">
+      <div class="admin-form-grid admin-form-grid--three">
+        <div class="admin-field">
+          <label for="user-status">Statut compte</label>
+          <select id="user-status" name="status" required>
+            <% (detail.statusOptions || []).forEach((item) => { %>
+            <option value="<%= item.value %>" <%= item.selected ? "selected" : "" %>><%= item.label %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="admin-field">
+          <label>Commandes</label>
+          <input type="text" value="<%= detail.ordersCount %>" readonly />
+        </div>
+
+        <div class="admin-field">
+          <label>Depenses</label>
+          <input type="text" value="<%= detail.spentTotal %>" readonly />
+        </div>
+      </div>
+
+      <input type="hidden" name="returnTo" value="/admin/users/<%= Number(detail.id || 0) %>" />
+
+      <div class="admin-form-actions">
+        <button type="submit" class="admin-btn admin-btn--primary">
+          <i class="bx bx-save"></i>
+          <span>Mettre a jour le statut</span>
+        </button>
+      </div>
+    </form>
+
+    <div class="admin-form-grid admin-form-grid--two">
+      <div class="admin-field">
+        <label>Prenom</label>
+        <input type="text" value="<%= detail.firstName %>" readonly />
+      </div>
+      <div class="admin-field">
+        <label>Nom</label>
+        <input type="text" value="<%= detail.lastName %>" readonly />
+      </div>
+    </div>
+
+    <div class="admin-form-grid admin-form-grid--two">
+      <div class="admin-field">
+        <label>Email</label>
+        <input type="text" value="<%= detail.email %>" readonly />
+      </div>
+      <div class="admin-field">
+        <label>Telephone</label>
+        <input type="text" value="<%= detail.phone %>" readonly />
+      </div>
+    </div>
+
+    <div class="admin-form-grid admin-form-grid--three">
+      <div class="admin-field">
+        <label>Inscription</label>
+        <input type="text" value="<%= detail.createdAt %>" readonly />
+      </div>
+      <div class="admin-field">
+        <label>Derniere connexion</label>
+        <input type="text" value="<%= detail.lastLoginAt %>" readonly />
+      </div>
+      <div class="admin-field">
+        <label>Email verifie</label>
+        <input type="text" value="<%= detail.emailVerifiedAt %>" readonly />
+      </div>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Commande</th>
+            <th>Date</th>
+            <th>Total</th>
+            <th>Statut</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (!recentOrders.length) { %>
+          <tr>
+            <td colspan="5">Aucune commande recente pour cet utilisateur.</td>
+          </tr>
+          <% } %>
+
+          <% recentOrders.forEach((item) => { %>
+          <tr>
+            <td data-label="Commande"><%= item.orderNumber %></td>
+            <td data-label="Date"><%= item.placedAt %></td>
+            <td data-label="Total"><%= item.total %></td>
+            <td data-label="Statut"><span class="admin-badge admin-badge--<%= item.tone %>"><%= item.status %></span></td>
+            <td data-label="Action">
+              <div class="admin-row-actions">
+                <a href="<%= item.href || '/admin/orders' %>">Voir commande</a>
+              </div>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <% } %>
+</section>

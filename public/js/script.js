@@ -606,8 +606,17 @@
 
   const CART_STORAGE_KEY = "rosebleu_cart_state_v1";
   const CART_STORAGE_VERSION = 1;
+  const ORDER_HISTORY_STORAGE_KEY = "rosebleu_orders_history_v1";
   const CART_SHIPPING_FLAT_AMOUNT = 4.9;
   const CART_FREE_SHIPPING_THRESHOLD = 120;
+  const CHECKOUT_PAYMENT_METHODS = new Set([
+    "card",
+    "mobile_money",
+    "bank_transfer",
+    "cash_on_delivery",
+  ]);
+  const CHECKOUT_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const CHECKOUT_COUNTRY_CODE_PATTERN = /^[A-Z]{2}$/;
 
   const normalizeCount = (value) => {
     const numeric = Number(value);
@@ -673,6 +682,53 @@
     } catch (_error) {
       // Ignore storage errors.
     }
+  };
+
+  const readOrderHistory = () => {
+    try {
+      const raw = window.localStorage.getItem(ORDER_HISTORY_STORAGE_KEY);
+      if (!raw) {
+        return [];
+      }
+
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (_error) {
+      return [];
+    }
+  };
+
+  const writeOrderHistory = (history) => {
+    try {
+      const safeHistory = Array.isArray(history) ? history.slice(0, 15) : [];
+      window.localStorage.setItem(
+        ORDER_HISTORY_STORAGE_KEY,
+        JSON.stringify(safeHistory),
+      );
+    } catch (_error) {
+      // Ignore storage errors.
+    }
+  };
+
+  const rememberPlacedOrder = (order) => {
+    const safeOrder = order && typeof order === "object" ? order : null;
+    if (!safeOrder) {
+      return;
+    }
+
+    const entry = {
+      id: String(safeOrder.id || "").trim(),
+      number: String(safeOrder.number || "").trim(),
+      total: String(safeOrder.total || "").trim(),
+      itemCount: normalizeCount(safeOrder.itemCount || 0),
+      paymentMethod: String(safeOrder.paymentMethod || "").trim(),
+      createdAt: Date.now(),
+    };
+
+    const previous = readOrderHistory().filter(
+      (item) => String(item?.number || "").trim() !== entry.number,
+    );
+    writeOrderHistory([entry, ...previous]);
   };
 
   const renderCartCountBadges = (count) => {
@@ -931,10 +987,169 @@
     const totalAmountNodes = Array.from(
       cartPage.querySelectorAll("[data-cart-total-amount]"),
     );
+    const checkoutForm = cartPage.querySelector("[data-checkout-form]");
+    const checkoutSubmitButton = cartPage.querySelector("[data-checkout-submit]");
+    const checkoutFeedbackNode = cartPage.querySelector("[data-checkout-feedback]");
+    const checkoutSuccessNode = cartPage.querySelector("[data-checkout-success]");
+    const checkoutSuccessNumberNode = cartPage.querySelector(
+      "[data-checkout-success-number]",
+    );
+    const checkoutSuccessTotalNode = cartPage.querySelector(
+      "[data-checkout-success-total]",
+    );
 
     if (!cartListNode) {
       return;
     }
+
+    const setCheckoutFieldValidity = (fieldName, valid) => {
+      if (!checkoutForm) {
+        return;
+      }
+
+      const field = checkoutForm.querySelector(
+        `[data-checkout-field="${fieldName}"]`,
+      );
+      if (!field) {
+        return;
+      }
+
+      if (valid) {
+        field.removeAttribute("aria-invalid");
+      } else {
+        field.setAttribute("aria-invalid", "true");
+      }
+    };
+
+    const clearCheckoutValidationState = () => {
+      if (!checkoutForm) {
+        return;
+      }
+
+      checkoutForm
+        .querySelectorAll("[data-checkout-field]")
+        .forEach((field) => field.removeAttribute("aria-invalid"));
+    };
+
+    const hideCheckoutFeedback = () => {
+      if (!checkoutFeedbackNode) {
+        return;
+      }
+
+      checkoutFeedbackNode.hidden = true;
+      checkoutFeedbackNode.classList.remove("is-error", "is-success", "is-info");
+      checkoutFeedbackNode.innerHTML = "";
+    };
+
+    const showCheckoutFeedback = ({ tone = "info", title = "", message = "" } = {}) => {
+      if (!checkoutFeedbackNode) {
+        return;
+      }
+
+      const normalizedTone = ["error", "success"].includes(tone) ? tone : "info";
+      checkoutFeedbackNode.classList.remove("is-error", "is-success", "is-info");
+      checkoutFeedbackNode.classList.add(`is-${normalizedTone}`);
+      checkoutFeedbackNode.innerHTML = `
+        <strong>${escapeHtml(title || "Information")}</strong>
+        <p>${escapeHtml(message || "")}</p>
+      `;
+      checkoutFeedbackNode.hidden = false;
+    };
+
+    const showCheckoutSuccess = (order) => {
+      if (!checkoutSuccessNode) {
+        return;
+      }
+
+      if (checkoutSuccessNumberNode) {
+        checkoutSuccessNumberNode.textContent = String(order?.number || "-");
+      }
+
+      if (checkoutSuccessTotalNode) {
+        checkoutSuccessTotalNode.textContent = String(order?.total || "-");
+      }
+
+      checkoutSuccessNode.hidden = false;
+    };
+
+    const setCheckoutBusy = (busy) => {
+      if (!checkoutSubmitButton) {
+        return;
+      }
+
+      checkoutSubmitButton.disabled = Boolean(busy);
+      checkoutSubmitButton.dataset.checkoutBusy = busy ? "true" : "false";
+    };
+
+    const readCheckoutPayload = () => {
+      if (!checkoutForm) {
+        return null;
+      }
+
+      const formData = new FormData(checkoutForm);
+      const payload = {
+        fullName: String(formData.get("fullName") || "").trim(),
+        email: String(formData.get("email") || "").trim(),
+        phone: String(formData.get("phone") || "").trim(),
+        line1: String(formData.get("line1") || "").trim(),
+        line2: String(formData.get("line2") || "").trim(),
+        city: String(formData.get("city") || "").trim(),
+        stateRegion: String(formData.get("stateRegion") || "").trim(),
+        postalCode: String(formData.get("postalCode") || "").trim(),
+        countryCode: String(formData.get("countryCode") || "").trim().toUpperCase(),
+        paymentMethod: String(formData.get("paymentMethod") || "").trim().toLowerCase(),
+        note: String(formData.get("note") || "").trim(),
+      };
+
+      return payload;
+    };
+
+    const validateCheckoutPayload = (payload) => {
+      const fieldErrors = {};
+      const phoneDigits = String(payload?.phone || "").replace(/[^\d]/g, "");
+
+      if (String(payload?.fullName || "").length < 2) {
+        fieldErrors.fullName = "Nom complet requis.";
+      }
+      if (!CHECKOUT_EMAIL_PATTERN.test(String(payload?.email || ""))) {
+        fieldErrors.email = "Email invalide.";
+      }
+      if (phoneDigits.length < 6) {
+        fieldErrors.phone = "Telephone invalide.";
+      }
+      if (String(payload?.line1 || "").length < 4) {
+        fieldErrors.line1 = "Adresse de livraison requise.";
+      }
+      if (String(payload?.city || "").length < 2) {
+        fieldErrors.city = "Ville requise.";
+      }
+      if (!CHECKOUT_COUNTRY_CODE_PATTERN.test(String(payload?.countryCode || ""))) {
+        fieldErrors.countryCode = "Code pays invalide.";
+      }
+      if (!CHECKOUT_PAYMENT_METHODS.has(String(payload?.paymentMethod || ""))) {
+        fieldErrors.paymentMethod = "Paiement invalide.";
+      }
+
+      return {
+        ok: Object.keys(fieldErrors).length === 0,
+        fieldErrors,
+      };
+    };
+
+    const syncPlaceOrder = async (payload) => {
+      const response = await fetch("/orders/place", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        credentials: "same-origin",
+        body: JSON.stringify(payload),
+      });
+
+      const body = await response.json().catch(() => null);
+      return { response, body };
+    };
 
     const parseItemsFromDom = () => {
       return Array.from(cartListNode.querySelectorAll("[data-cart-item]")).map(
@@ -1096,6 +1311,18 @@
         clearButton.hidden = !items.length;
       }
 
+      if (checkoutForm) {
+        checkoutForm.classList.toggle("is-disabled", !items.length);
+      }
+
+      if (checkoutSubmitButton && checkoutSubmitButton.dataset.checkoutBusy !== "true") {
+        checkoutSubmitButton.disabled = !items.length;
+      }
+
+      if (checkoutSuccessNode && items.length > 0) {
+        checkoutSuccessNode.hidden = true;
+      }
+
       renderCartCountBadges(totalQuantity);
       writeCartState({
         items,
@@ -1203,6 +1430,107 @@
         throw new Error("clear_failed");
       }
     };
+
+    if (checkoutForm) {
+      checkoutForm.addEventListener("input", (event) => {
+        const field = event.target.closest("[data-checkout-field]");
+        if (!field) {
+          return;
+        }
+
+        field.removeAttribute("aria-invalid");
+      });
+
+      checkoutForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        if (checkoutSubmitButton?.dataset.checkoutBusy === "true") {
+          return;
+        }
+
+        hideCheckoutFeedback();
+        clearCheckoutValidationState();
+
+        if (!Array.isArray(cartState.items) || cartState.items.length === 0) {
+          showCheckoutFeedback({
+            tone: "error",
+            title: "Panier vide",
+            message: "Ajoute au moins un article avant de confirmer la commande.",
+          });
+          return;
+        }
+
+        const checkoutPayload = readCheckoutPayload();
+        const checkoutValidation = validateCheckoutPayload(checkoutPayload);
+
+        if (!checkoutValidation.ok) {
+          Object.keys(checkoutValidation.fieldErrors).forEach((fieldName) => {
+            setCheckoutFieldValidity(fieldName, false);
+          });
+
+          showCheckoutFeedback({
+            tone: "error",
+            title: "Champs invalides",
+            message: "Verifie les informations de livraison et de paiement.",
+          });
+          return;
+        }
+
+        setCheckoutBusy(true);
+
+        try {
+          const { response, body } = await syncPlaceOrder(checkoutPayload);
+
+          if (!response.ok || !body?.ok) {
+            const serverFieldErrors =
+              body?.fieldErrors && typeof body.fieldErrors === "object"
+                ? body.fieldErrors
+                : {};
+
+            Object.keys(serverFieldErrors).forEach((fieldName) => {
+              setCheckoutFieldValidity(fieldName, false);
+            });
+
+            showCheckoutFeedback({
+              tone: "error",
+              title: "Commande non validee",
+              message:
+                String(body?.message || "").trim() ||
+                "Impossible de finaliser la commande.",
+            });
+            return;
+          }
+
+          const order = body.order || {};
+          rememberPlacedOrder(order);
+
+          cartState = { items: [] };
+          renderState(cartState);
+          showCheckoutSuccess(order);
+
+          showCheckoutFeedback({
+            tone: "success",
+            title: "Commande enregistree",
+            message: `Commande ${String(order.number || "").trim()} creee avec succes.`,
+          });
+
+          window.dispatchEvent(new CustomEvent("rosebleu:cart-mutated"));
+        } catch (error) {
+          console.error("[CHECKOUT] place order error:", error);
+          showCheckoutFeedback({
+            tone: "error",
+            title: "Erreur serveur",
+            message: "Une erreur est survenue. Reessaie dans un instant.",
+          });
+        } finally {
+          setCheckoutBusy(false);
+
+          if (checkoutSubmitButton && (!cartState.items || !cartState.items.length)) {
+            checkoutSubmitButton.disabled = true;
+          }
+        }
+      });
+    }
 
     cartPage.addEventListener("click", async (event) => {
       const clearTrigger = event.target.closest("[data-cart-clear]");

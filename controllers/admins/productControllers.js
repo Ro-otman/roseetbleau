@@ -23,12 +23,34 @@ const ACCEPTED_IMAGE_MIME_TYPES = new Set([
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PRODUCT_UPLOAD_DIR = path.resolve(__dirname, "../../public/uploads/products");
+const PRODUCT_STATUSES = new Set(["draft", "active", "archived"]);
+const PRODUCT_VISIBILITIES = new Set(["public", "private"]);
+const DEFAULT_CATEGORY_OPTIONS = [
+  { slug: "bebes", name: "Bebes" },
+  { slug: "filles", name: "Filles" },
+  { slug: "garcons", name: "Garcons" },
+  { slug: "chaussures", name: "Chaussures" },
+  { slug: "accessoires", name: "Accessoires" },
+];
+
+const buildAdminIdentity = (adminAuth) => {
+  if (!adminAuth) {
+    return null;
+  }
+
+  return {
+    name: normalizeText(adminAuth.fullName || adminAuth.firstName, 180),
+    email: normalizeText(adminAuth.email, 190),
+  };
+};
 
 const renderAddProductPage = ({
+  req = null,
   res,
   status = 200,
   feedback = null,
   formData = {},
+  categoryOptions = DEFAULT_CATEGORY_OPTIONS,
 }) => {
   return res.status(status).render("pages/admins/ajoutproduit", {
     layout: "layouts/admin",
@@ -37,9 +59,45 @@ const renderAddProductPage = ({
     currentAdminPath: "/admin/ajoutproduit",
     adminPageTitle: "Ajouter un produit",
     adminPageLead: "Cree une nouvelle fiche produit complete.",
-    adminIdentity: null,
+    adminIdentity: buildAdminIdentity(req?.adminAuth),
     productFeedback: feedback,
     formData,
+    categoryOptions,
+  });
+};
+
+const renderEditProductPage = ({
+  req = null,
+  res,
+  productId,
+  status = 200,
+  feedback = null,
+  formData = {},
+  categoryOptions = DEFAULT_CATEGORY_OPTIONS,
+}) => {
+  return res.status(status).render("pages/admins/editproduit", {
+    layout: "layouts/admin",
+    pageTitle: "Admin Modifier Produit | Rose&Bleu",
+    pageStylesheet: "/css/pages/admin.css",
+    currentAdminPath: "/admin/produits",
+    adminPageTitle: "Modifier un produit",
+    adminPageLead: "Mets a jour les informations produit rapidement.",
+    adminIdentity: buildAdminIdentity(req?.adminAuth),
+    productFeedback: feedback,
+    formData,
+    categoryOptions,
+    productId: Number(productId),
+  });
+};
+
+const emitAdminRealtimeEvent = (req, eventName, payload = {}) => {
+  if (!req.io || typeof req.io.to !== "function") {
+    return;
+  }
+
+  req.io.to("admins").emit(eventName, {
+    ...payload,
+    at: new Date().toISOString(),
   });
 };
 
@@ -61,6 +119,21 @@ const normalizeDecimal = (value) => {
 const normalizeInteger = (value) => {
   const parsed = Number.parseInt(String(value ?? "").trim(), 10);
   return Number.isInteger(parsed) ? parsed : Number.NaN;
+};
+
+const normalizeProductStatus = (value) => {
+  const candidate = normalizeText(value, 20).toLowerCase();
+  return PRODUCT_STATUSES.has(candidate) ? candidate : "active";
+};
+
+const normalizeProductVisibility = (value) => {
+  const candidate = normalizeText(value, 20).toLowerCase();
+  return PRODUCT_VISIBILITIES.has(candidate) ? candidate : "public";
+};
+
+const normalizeProductId = (value) => {
+  const parsed = Number.parseInt(String(value ?? "").trim(), 10);
+  return Number.isInteger(parsed) && parsed > 0 ? parsed : Number.NaN;
 };
 
 const parseList = (value, maxItemLength = 60) => {
@@ -112,6 +185,58 @@ const toFormData = (body = {}) => {
     colors: normalizeText(body.colors, 300),
     description: normalizeText(body.description, 4000),
   };
+};
+
+const toEditFormData = (body = {}) => {
+  return {
+    name: normalizeText(body.name, 180),
+    sku: normalizeSku(body.sku),
+    category: normalizeText(body.category, 140),
+    price: normalizeText(body.price, 20),
+    stock: normalizeText(body.stock, 20),
+    description: normalizeText(body.description, 4000),
+    status: normalizeProductStatus(body.status),
+    visibility: normalizeProductVisibility(body.visibility),
+  };
+};
+
+const toEditFormDataFromProduct = (productRow = {}) => {
+  const basePrice = Number(productRow.base_price);
+  const stockTotal = Number(productRow.stock_total);
+
+  return {
+    name: normalizeText(productRow.name, 180),
+    sku: normalizeSku(productRow.sku),
+    category: normalizeText(productRow.category_slug, 140),
+    price: Number.isFinite(basePrice) ? String(basePrice) : "",
+    stock: Number.isFinite(stockTotal) ? String(Math.max(0, Math.floor(stockTotal))) : "0",
+    description: normalizeText(productRow.description, 4000),
+    status: normalizeProductStatus(productRow.status),
+    visibility: normalizeProductVisibility(productRow.visibility),
+  };
+};
+
+const toCategoryOptions = (rows = []) => {
+  const mapped = rows
+    .map((row) => ({
+      slug: normalizeText(row.slug, 140),
+      name: normalizeText(row.name, 120),
+    }))
+    .filter((row) => row.slug && row.name);
+
+  if (mapped.length) {
+    return mapped;
+  }
+
+  return DEFAULT_CATEGORY_OPTIONS;
+};
+
+const loadCategoryOptions = async () => {
+  const rows = await productModel.listAdminCategories({
+    includeInactive: true,
+  });
+
+  return toCategoryOptions(rows);
 };
 
 const buildVariants = ({ sku, price, stock, sizes, colors }) => {
@@ -182,6 +307,21 @@ const cleanupFiles = async (absolutePaths) => {
   await Promise.allSettled(absolutePaths.map((filePath) => fs.unlink(filePath)));
 };
 
+const toLocalProductImagePath = (imageUrl) => {
+  const normalizedUrl = normalizeText(imageUrl, 800);
+  if (!normalizedUrl.startsWith("/uploads/products/")) {
+    return null;
+  }
+
+  const relativePath = normalizedUrl.replace(/^\/+/, "");
+  const absolutePath = path.resolve(__dirname, "../../public", relativePath);
+  if (!absolutePath.startsWith(PRODUCT_UPLOAD_DIR)) {
+    return null;
+  }
+
+  return absolutePath;
+};
+
 const processAndSaveImages = async (files, productSlug, productName) => {
   await fs.mkdir(PRODUCT_UPLOAD_DIR, { recursive: true });
 
@@ -247,6 +387,7 @@ const uploadProductImages = (req, res, next) => {
     }
 
     return renderAddProductPage({
+      req,
       res,
       status: 400,
       feedback: {
@@ -261,6 +402,13 @@ const uploadProductImages = (req, res, next) => {
 
 const createProduct = async (req, res) => {
   const formData = toFormData(req.body);
+  let categoryOptions = DEFAULT_CATEGORY_OPTIONS;
+
+  try {
+    categoryOptions = await loadCategoryOptions();
+  } catch (_error) {
+    categoryOptions = DEFAULT_CATEGORY_OPTIONS;
+  }
 
   try {
     const name = formData.name;
@@ -274,6 +422,7 @@ const createProduct = async (req, res) => {
 
     if (!name || !sku || !categorySlug) {
       return renderAddProductPage({
+        req,
         res,
         status: 400,
         feedback: {
@@ -282,11 +431,13 @@ const createProduct = async (req, res) => {
           message: "Nom, SKU et categorie sont obligatoires.",
         },
         formData,
+        categoryOptions,
       });
     }
 
     if (!Number.isFinite(price) || price <= 0) {
       return renderAddProductPage({
+        req,
         res,
         status: 400,
         feedback: {
@@ -295,11 +446,13 @@ const createProduct = async (req, res) => {
           message: "Le prix doit etre un nombre superieur a 0.",
         },
         formData,
+        categoryOptions,
       });
     }
 
     if (!Number.isInteger(stock) || stock < 0) {
       return renderAddProductPage({
+        req,
         res,
         status: 400,
         feedback: {
@@ -308,11 +461,13 @@ const createProduct = async (req, res) => {
           message: "Le stock doit etre un nombre entier positif ou nul.",
         },
         formData,
+        categoryOptions,
       });
     }
 
     if (!Array.isArray(req.files) || req.files.length === 0) {
       return renderAddProductPage({
+        req,
         res,
         status: 400,
         feedback: {
@@ -321,12 +476,14 @@ const createProduct = async (req, res) => {
           message: "Ajoute au moins une image produit.",
         },
         formData,
+        categoryOptions,
       });
     }
 
     const category = await productModel.getCategoryBySlug(categorySlug);
     if (!category) {
       return renderAddProductPage({
+        req,
         res,
         status: 400,
         feedback: {
@@ -335,12 +492,14 @@ const createProduct = async (req, res) => {
           message: "La categorie selectionnee n existe pas en base.",
         },
         formData,
+        categoryOptions,
       });
     }
 
     const skuExists = await productModel.hasProductSku(sku);
     if (skuExists) {
       return renderAddProductPage({
+        req,
         res,
         status: 409,
         feedback: {
@@ -349,6 +508,7 @@ const createProduct = async (req, res) => {
           message: "Ce SKU existe deja. Utilise une autre reference.",
         },
         formData,
+        categoryOptions,
       });
     }
 
@@ -383,7 +543,14 @@ const createProduct = async (req, res) => {
         images: imageRecords,
       });
 
+      emitAdminRealtimeEvent(req, "admin:products:created", {
+        productId: Number(createdProductId),
+        slug: uniqueSlug,
+        name,
+      });
+
       return renderAddProductPage({
+        req,
         res,
         status: 201,
         feedback: {
@@ -392,6 +559,7 @@ const createProduct = async (req, res) => {
           message: `Produit #${createdProductId} ajoute avec ${processedImages.length} image(s) optimisee(s) en WebP.`,
         },
         formData: {},
+        categoryOptions,
       });
     } catch (error) {
       await cleanupFiles(processedImages.map((image) => image.absolutePath));
@@ -400,6 +568,7 @@ const createProduct = async (req, res) => {
   } catch (error) {
     console.error("[ADMIN PRODUCTS] createProduct error:", error);
     return renderAddProductPage({
+      req,
       res,
       status: 500,
       feedback: {
@@ -408,23 +577,299 @@ const createProduct = async (req, res) => {
         message: "Impossible d ajouter le produit pour le moment.",
       },
       formData,
+      categoryOptions,
     });
   }
 };
 
-const showAddProductPage = (_req, res) => {
+const showAddProductPage = async (req, res) => {
+  let categoryOptions = DEFAULT_CATEGORY_OPTIONS;
+  try {
+    categoryOptions = await loadCategoryOptions();
+  } catch (_error) {
+    categoryOptions = DEFAULT_CATEGORY_OPTIONS;
+  }
+
   return renderAddProductPage({
+    req,
     res,
     status: 200,
     feedback: null,
     formData: {},
+    categoryOptions,
   });
+};
+
+const showEditProductPage = async (req, res) => {
+  const productId = normalizeProductId(req.params.productId);
+  if (!Number.isInteger(productId)) {
+    return res.redirect(303, "/admin/produits");
+  }
+
+  let categoryOptions = DEFAULT_CATEGORY_OPTIONS;
+  try {
+    categoryOptions = await loadCategoryOptions();
+  } catch (_error) {
+    categoryOptions = DEFAULT_CATEGORY_OPTIONS;
+  }
+
+  try {
+    const product = await productModel.getAdminProductById(productId);
+    if (!product) {
+      return res.redirect(303, "/admin/produits");
+    }
+
+    return renderEditProductPage({
+      req,
+      res,
+      productId,
+      status: 200,
+      feedback: null,
+      formData: toEditFormDataFromProduct(product),
+      categoryOptions,
+    });
+  } catch (error) {
+    console.error("[ADMIN PRODUCTS] showEditProductPage error:", error);
+    return renderEditProductPage({
+      req,
+      res,
+      productId,
+      status: 500,
+      feedback: {
+        tone: "error",
+        title: "Erreur serveur",
+        message: "Impossible de charger ce produit pour le moment.",
+      },
+      formData: {},
+      categoryOptions,
+    });
+  }
+};
+
+const updateProduct = async (req, res) => {
+  const productId = normalizeProductId(req.params.productId);
+  if (!Number.isInteger(productId)) {
+    return res.redirect(303, "/admin/produits");
+  }
+
+  const formData = toEditFormData(req.body);
+  let categoryOptions = DEFAULT_CATEGORY_OPTIONS;
+
+  try {
+    categoryOptions = await loadCategoryOptions();
+  } catch (_error) {
+    categoryOptions = DEFAULT_CATEGORY_OPTIONS;
+  }
+
+  try {
+    const name = formData.name;
+    const sku = formData.sku;
+    const categorySlug = formData.category;
+    const description = formData.description || null;
+    const status = normalizeProductStatus(formData.status);
+    const visibility = normalizeProductVisibility(formData.visibility);
+    const price = normalizeDecimal(formData.price);
+    const stock = normalizeInteger(formData.stock);
+
+    if (!name || !sku || !categorySlug) {
+      return renderEditProductPage({
+        req,
+        res,
+        productId,
+        status: 400,
+        feedback: {
+          tone: "error",
+          title: "Champs obligatoires manquants",
+          message: "Nom, SKU et categorie sont obligatoires.",
+        },
+        formData,
+        categoryOptions,
+      });
+    }
+
+    if (!Number.isFinite(price) || price <= 0) {
+      return renderEditProductPage({
+        req,
+        res,
+        productId,
+        status: 400,
+        feedback: {
+          tone: "error",
+          title: "Prix invalide",
+          message: "Le prix doit etre un nombre superieur a 0.",
+        },
+        formData,
+        categoryOptions,
+      });
+    }
+
+    if (!Number.isInteger(stock) || stock < 0) {
+      return renderEditProductPage({
+        req,
+        res,
+        productId,
+        status: 400,
+        feedback: {
+          tone: "error",
+          title: "Stock invalide",
+          message: "Le stock doit etre un nombre entier positif ou nul.",
+        },
+        formData,
+        categoryOptions,
+      });
+    }
+
+    const product = await productModel.getAdminProductById(productId);
+    if (!product) {
+      return res.redirect(303, "/admin/produits");
+    }
+
+    const category = await productModel.getCategoryBySlug(categorySlug);
+    if (!category) {
+      return renderEditProductPage({
+        req,
+        res,
+        productId,
+        status: 400,
+        feedback: {
+          tone: "error",
+          title: "Categorie inconnue",
+          message: "La categorie selectionnee n existe pas en base.",
+        },
+        formData,
+        categoryOptions,
+      });
+    }
+
+    const skuExists = await productModel.hasProductSkuForOtherProduct({
+      sku,
+      productId,
+    });
+    if (skuExists) {
+      return renderEditProductPage({
+        req,
+        res,
+        productId,
+        status: 409,
+        feedback: {
+          tone: "error",
+          title: "SKU deja utilise",
+          message: "Ce SKU existe deja. Utilise une autre reference.",
+        },
+        formData,
+        categoryOptions,
+      });
+    }
+
+    const updateResult = await productModel.updateAdminProductById({
+      productId,
+      categoryId: Number(category.id),
+      name,
+      sku,
+      description,
+      status,
+      visibility,
+      basePrice: price,
+      stockTotal: stock,
+    });
+
+    if (!updateResult.updated) {
+      return res.redirect(303, "/admin/produits");
+    }
+
+    emitAdminRealtimeEvent(req, "admin:products:updated", {
+      productId,
+      name,
+    });
+
+    return renderEditProductPage({
+      req,
+      res,
+      productId,
+      status: 200,
+      feedback: {
+        tone: "success",
+        title: "Produit mis a jour",
+        message: "Les modifications ont ete enregistrees.",
+      },
+      formData,
+      categoryOptions,
+    });
+  } catch (error) {
+    console.error("[ADMIN PRODUCTS] updateProduct error:", error);
+    return renderEditProductPage({
+      req,
+      res,
+      productId,
+      status: 500,
+      feedback: {
+        tone: "error",
+        title: "Erreur serveur",
+        message: "Impossible de mettre a jour ce produit pour le moment.",
+      },
+      formData,
+      categoryOptions,
+    });
+  }
+};
+
+const deleteProduct = async (req, res) => {
+  const productId = normalizeProductId(req.params.productId);
+  if (!Number.isInteger(productId)) {
+    return res.redirect(303, "/admin/produits");
+  }
+
+  const acceptsJson = String(req.get("accept") || "")
+    .toLowerCase()
+    .includes("application/json");
+
+  try {
+    const deletedData = await productModel.deleteAdminProductById(productId);
+    if (!deletedData.deleted) {
+      if (acceptsJson) {
+        return res.status(404).json({
+          ok: false,
+          message: "Produit introuvable.",
+        });
+      }
+      return res.redirect(303, "/admin/produits");
+    }
+
+    const imagePaths = deletedData.imageUrls
+      .map((imageUrl) => toLocalProductImagePath(imageUrl))
+      .filter(Boolean);
+    await cleanupFiles(imagePaths);
+
+    emitAdminRealtimeEvent(req, "admin:products:deleted", {
+      productId,
+      name: deletedData.name,
+    });
+
+    if (acceptsJson) {
+      return res.status(200).json({ ok: true });
+    }
+
+    return res.redirect(303, "/admin/produits");
+  } catch (error) {
+    console.error("[ADMIN PRODUCTS] deleteProduct error:", error);
+    if (acceptsJson) {
+      return res.status(500).json({
+        ok: false,
+        message: "Impossible de supprimer ce produit pour le moment.",
+      });
+    }
+
+    return res.redirect(303, "/admin/produits");
+  }
 };
 
 const productControllers = {
   showAddProductPage,
+  showEditProductPage,
   uploadProductImages,
   createProduct,
+  updateProduct,
+  deleteProduct,
 };
 
 export default productControllers;

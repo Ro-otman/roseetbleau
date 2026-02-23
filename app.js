@@ -1,5 +1,6 @@
 import path from "node:path";
 import crypto from "node:crypto";
+import { createServer } from "node:http";
 import { fileURLToPath } from "node:url";
 
 import cookieParser from "cookie-parser";
@@ -9,12 +10,19 @@ import expressLayouts from "express-ejs-layouts";
 import helmet from "helmet";
 import hpp from "hpp";
 import jwt from "jsonwebtoken";
+import { Server as SocketIOServer } from "socket.io";
+import {
+  ADMIN_ACCESS_COOKIE_NAME,
+  verifyAdminAccessToken,
+} from "./config/adminAuth.js";
 import config, { logDbConnectionStatus } from "./config/config.js";
+import dashboardModel from "./models/admins/dashboardModel.js";
 import authModel from "./models/users/authModel.js";
 import adminsRouter from "./routes/admins/adminsRoutes.js";
 import usersRouter from "./routes/users/usersRoutes.js";
 
 const app = express();
+const httpServer = createServer(app);
 const PORT = config.port;
 const ACCESS_COOKIE_NAME = "rb_access_token";
 const REFRESH_COOKIE_NAME = "rb_refresh_token";
@@ -50,6 +58,133 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+
+const normalizeSearchQuery = (value) => {
+  return String(value ?? "")
+    .trim()
+    .slice(0, 120);
+};
+
+app.use((req, res, next) => {
+  res.locals.searchQuery = normalizeSearchQuery(req.query?.q);
+  return next();
+});
+
+const io = new SocketIOServer(httpServer, {
+  cors: {
+    origin: true,
+    credentials: true,
+  },
+});
+const ADMIN_DASHBOARD_REALTIME_INTERVAL_MS =
+  Number(process.env.ADMIN_DASHBOARD_REALTIME_INTERVAL_MS) || 10000;
+
+const parseCookieHeader = (cookieHeader = "") => {
+  return String(cookieHeader ?? "")
+    .split(";")
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .reduce((acc, part) => {
+      const separatorIndex = part.indexOf("=");
+      if (separatorIndex <= 0) {
+        return acc;
+      }
+
+      const key = part.slice(0, separatorIndex).trim();
+      const rawValue = part.slice(separatorIndex + 1).trim();
+      if (!key) {
+        return acc;
+      }
+
+      try {
+        acc[key] = decodeURIComponent(rawValue);
+      } catch (_error) {
+        acc[key] = rawValue;
+      }
+
+      return acc;
+    }, {});
+};
+
+io.use((socket, next) => {
+  try {
+    const tokenFromAuth = String(socket.handshake.auth?.token ?? "").trim();
+    const cookies = parseCookieHeader(socket.handshake.headers?.cookie);
+    const tokenFromCookie = String(cookies[ADMIN_ACCESS_COOKIE_NAME] ?? "").trim();
+    const token = tokenFromAuth || tokenFromCookie;
+
+    if (!token) {
+      return next();
+    }
+
+    const payload = verifyAdminAccessToken(token);
+    if (
+      payload?.type === "admin_access" &&
+      payload?.role === "admin" &&
+      payload?.sub
+    ) {
+      socket.data.admin = {
+        id: String(payload.sub),
+        firstName: String(payload.firstName ?? "").trim(),
+        email: String(payload.email ?? "").trim(),
+      };
+    }
+
+    return next();
+  } catch (_error) {
+    return next();
+  }
+});
+
+io.on("connection", (socket) => {
+  if (socket.data.admin?.id) {
+    socket.join("admins");
+    socket.emit("admin:realtime:ready", {
+      ok: true,
+      room: "admins",
+      connectedAt: new Date().toISOString(),
+    });
+
+    void (async () => {
+      try {
+        const snapshot = await dashboardModel.getRealtimeDashboardSnapshot();
+        socket.emit("admin:stats:update", snapshot);
+      } catch (error) {
+        console.error("[ADMIN DASHBOARD] socket initial snapshot error:", error);
+      }
+    })();
+  }
+});
+
+const broadcastAdminDashboardStats = async () => {
+  const adminsRoom = io.sockets.adapter.rooms.get("admins");
+  if (!adminsRoom || adminsRoom.size === 0) {
+    return;
+  }
+
+  try {
+    const snapshot = await dashboardModel.getRealtimeDashboardSnapshot();
+    io.to("admins").emit("admin:stats:update", snapshot);
+  } catch (error) {
+    console.error("[ADMIN DASHBOARD] realtime broadcast error:", error);
+  }
+};
+
+if (ADMIN_DASHBOARD_REALTIME_INTERVAL_MS > 0) {
+  const adminDashboardInterval = setInterval(() => {
+    void broadcastAdminDashboardStats();
+  }, ADMIN_DASHBOARD_REALTIME_INTERVAL_MS);
+
+  if (typeof adminDashboardInterval.unref === "function") {
+    adminDashboardInterval.unref();
+  }
+}
+
+app.set("io", io);
+app.use((req, _res, next) => {
+  req.io = io;
+  return next();
+});
 
 const hashToken = (token) => {
   return crypto.createHash("sha256").update(token).digest("hex");
@@ -236,7 +371,7 @@ app.use((err, _req, res, _next) => {
   res.status(500).json({ error: "Erreur interne du serveur." });
 });
 
-app.listen(PORT, async () => {
+httpServer.listen(PORT, async () => {
   console.log(`Rose&Bleu demarre sur http://localhost:${PORT}`);
   await logDbConnectionStatus();
 });

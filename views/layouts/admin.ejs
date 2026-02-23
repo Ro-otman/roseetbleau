@@ -37,7 +37,11 @@
 
         <div class="admin-sidebar__foot">
           <a class="admin-side-btn" href="/">Voir la boutique</a>
-          <a class="admin-side-btn admin-side-btn--ghost" href="/admin/login">Se deconnecter</a>
+          <form action="/admin/logout" method="post">
+            <button class="admin-side-btn admin-side-btn--ghost" type="submit">
+              Se deconnecter
+            </button>
+          </form>
         </div>
       </aside>
 
@@ -58,7 +62,10 @@
 
           <div class="admin-topbar__actions">
             <a href="/admin/orders"><i class="bx bx-bell"></i><span>Commandes</span></a>
-            <a href="/admin/users"><i class="bx bx-user-circle"></i><span>Admin</span></a>
+            <a href="/admin/users">
+              <i class="bx bx-user-circle"></i>
+              <span><%= adminIdentity?.name || "Admin" %></span>
+            </a>
           </div>
         </header>
 
@@ -67,5 +74,8 @@
         </main>
       </div>
     </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/adminRealtime.js" defer></script>
   </body>
 </html>

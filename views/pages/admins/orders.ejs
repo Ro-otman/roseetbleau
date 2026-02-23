@@ -1,30 +1,86 @@
-<section class="admin-page admin-orders">
-  <%
-    const orders = [
-      { id: "RB-1021", customer: "Aline M.", date: "22/02/2026", total: "79,80 EUR", payment: "Carte", status: "En preparation", tone: "warn" },
-      { id: "RB-1019", customer: "Rosette K.", date: "22/02/2026", total: "34,90 EUR", payment: "Mobile Money", status: "Expediee", tone: "ok" },
-      { id: "RB-1018", customer: "Nadine T.", date: "21/02/2026", total: "118,40 EUR", payment: "Carte", status: "A verifier", tone: "danger" },
-      { id: "RB-1016", customer: "Kossi A.", date: "21/02/2026", total: "64,00 EUR", payment: "Mobile Money", status: "Livree", tone: "ok" },
-      { id: "RB-1015", customer: "Yasmine B.", date: "20/02/2026", total: "27,90 EUR", payment: "Carte", status: "Expediee", tone: "ok" },
-    ];
-  %>
+<%
+  const overview = adminOrdersOverview || {};
+  const feedback = ordersFeedback || null;
+  const filters = overview.filters || {};
+  const summary = overview.summary || {};
+  const orders = Array.isArray(overview.orders) ? overview.orders : [];
+  const qValue = String(filters.q || "");
+  const statusValue = String(filters.status || "all");
+  const generatedLabel = String(overview.generatedLabel || "");
+  const filteredOrders = Number(summary.filteredOrders || orders.length || 0);
+  const orderFilters = [
+    { key: "all", label: "Toutes" },
+    { key: "review", label: "A verifier" },
+    { key: "processing", label: "En preparation" },
+    { key: "shipped", label: "Expediees" },
+  ];
 
+  const buildFilterHref = (statusKey) => {
+    const params = [];
+    if (qValue) {
+      params.push(`q=${encodeURIComponent(qValue)}`);
+    }
+    if (statusKey && statusKey !== "all") {
+      params.push(`status=${encodeURIComponent(statusKey)}`);
+    }
+    return params.length ? `/admin/orders?${params.join("&")}` : "/admin/orders";
+  };
+
+  const currentListPath = buildFilterHref(statusValue);
+%>
+
+<section
+  class="admin-page admin-orders"
+  data-admin-orders
+  data-orders-api="/admin/api/orders-overview"
+  data-orders-filter-q="<%= qValue %>"
+  data-orders-filter-status="<%= statusValue %>"
+>
   <section class="admin-panel">
     <header class="admin-panel__head">
-      <h2>Suivi des commandes</h2>
+      <h2>
+        Suivi des commandes
+        (<span data-orders-filtered-count><%= filteredOrders %></span>)
+      </h2>
       <a href="/admin/orders">Exporter CSV</a>
     </header>
+
+    <% if (feedback) { %>
+    <div class="admin-feedback admin-feedback--<%= feedback.tone || "info" %>" role="status">
+      <p class="admin-feedback__title"><%= feedback.title %></p>
+      <p class="admin-feedback__message"><%= feedback.message %></p>
+    </div>
+    <% } %>
+
+    <p class="admin-panel__lead" data-orders-updated-at>
+      <%= generatedLabel ? `Mise a jour: ${generatedLabel}` : "" %>
+    </p>
 
     <div class="admin-toolbar">
       <form class="admin-search" action="/admin/orders" method="get" role="search">
         <i class="bx bx-search-alt-2"></i>
-        <input type="search" name="q" placeholder="Rechercher une commande..." />
+        <input
+          type="search"
+          name="q"
+          placeholder="Rechercher une commande..."
+          value="<%= qValue %>"
+          data-orders-search-input
+        />
+        <% if (statusValue !== "all") { %>
+        <input type="hidden" name="status" value="<%= statusValue %>" />
+        <% } %>
       </form>
       <div class="admin-toolbar__filters">
-        <a href="/admin/orders">Toutes</a>
-        <a href="/admin/orders">A verifier</a>
-        <a href="/admin/orders">En preparation</a>
-        <a href="/admin/orders">Expediees</a>
+        <% orderFilters.forEach((item) => { %>
+        <a
+          href="<%= buildFilterHref(item.key) %>"
+          class="<%= statusValue === item.key ? 'is-active' : '' %>"
+          data-orders-filter-link="<%= item.key %>"
+          <% if (statusValue === item.key) { %>aria-current="page"<% } %>
+        >
+          <%= item.label %>
+        </a>
+        <% }) %>
       </div>
     </div>
 
@@ -41,10 +97,16 @@
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody data-orders-table-body>
+          <% if (!orders.length) { %>
+          <tr>
+            <td colspan="7">Aucune commande pour ce filtre.</td>
+          </tr>
+          <% } %>
+
           <% orders.forEach((item) => { %>
           <tr>
-            <td data-label="Commande"><%= item.id %></td>
+            <td data-label="Commande"><%= item.orderNumber %></td>
             <td data-label="Client"><%= item.customer %></td>
             <td data-label="Date"><%= item.date %></td>
             <td data-label="Total"><%= item.total %></td>
@@ -52,8 +114,16 @@
             <td data-label="Statut"><span class="admin-badge admin-badge--<%= item.tone %>"><%= item.status %></span></td>
             <td data-label="Action">
               <div class="admin-row-actions">
-                <a href="/admin/orders">Details</a>
-                <button type="button">Mettre a jour</button>
+                <a href="<%= item.href || '/admin/orders' %>">Details</a>
+                <% if (item.canUpdate && item.nextStatus) { %>
+                <form action="/admin/orders/<%= Number(item.id || 0) %>/status" method="post">
+                  <input type="hidden" name="status" value="<%= item.nextStatus %>" />
+                  <input type="hidden" name="returnTo" value="<%= currentListPath %>" />
+                  <button type="submit"><%= item.nextStatusLabel ? `Passer ${item.nextStatusLabel}` : "Mettre a jour" %></button>
+                </form>
+                <% } else { %>
+                <button type="button" disabled>Finalisee</button>
+                <% } %>
               </div>
             </td>
           </tr>

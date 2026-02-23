@@ -1,0 +1,140 @@
+<section class="admin-page admin-order-details admin-orders">
+  <%
+    const detail = adminOrderDetail || null;
+    const feedback = orderDetailFeedback || null;
+    const items = Array.isArray(detail?.items) ? detail.items : [];
+  %>
+
+  <% if (!detail) { %>
+  <section class="admin-panel">
+    <header class="admin-panel__head">
+      <h2>Commande introuvable</h2>
+      <a href="/admin/orders">Retour commandes</a>
+    </header>
+  </section>
+  <% } else { %>
+  <section class="admin-panel">
+    <header class="admin-panel__head">
+      <h2>Commande <%= detail.orderNumber %></h2>
+      <a href="/admin/orders">Retour commandes</a>
+    </header>
+
+    <% if (feedback) { %>
+    <div class="admin-feedback admin-feedback--<%= feedback.tone || "info" %>" role="status">
+      <p class="admin-feedback__title"><%= feedback.title %></p>
+      <p class="admin-feedback__message"><%= feedback.message %></p>
+    </div>
+    <% } %>
+
+    <form class="admin-form" action="/admin/orders/<%= Number(detail.id || 0) %>/status" method="post">
+      <div class="admin-form-grid admin-form-grid--three">
+        <div class="admin-field">
+          <label for="order-status">Statut commande</label>
+          <select id="order-status" name="status" required>
+            <% (detail.statusOptions || []).forEach((item) => { %>
+            <option value="<%= item.value %>" <%= item.selected ? "selected" : "" %>><%= item.label %></option>
+            <% }) %>
+          </select>
+        </div>
+
+        <div class="admin-field">
+          <label>Statut paiement</label>
+          <input type="text" value="<%= detail.paymentStatus %>" readonly />
+        </div>
+
+        <div class="admin-field">
+          <label>Mode paiement</label>
+          <input type="text" value="<%= detail.paymentMethod %>" readonly />
+        </div>
+      </div>
+
+      <input type="hidden" name="returnTo" value="/admin/orders/<%= Number(detail.id || 0) %>" />
+
+      <div class="admin-form-actions">
+        <button type="submit" class="admin-btn admin-btn--primary">
+          <i class="bx bx-save"></i>
+          <span>Mettre a jour le statut</span>
+        </button>
+      </div>
+    </form>
+
+    <div class="admin-form-grid admin-form-grid--three">
+      <div class="admin-field">
+        <label>Sous-total</label>
+        <input type="text" value="<%= detail.subtotal %>" readonly />
+      </div>
+      <div class="admin-field">
+        <label>Livraison</label>
+        <input type="text" value="<%= detail.shippingTotal %>" readonly />
+      </div>
+      <div class="admin-field">
+        <label>Total</label>
+        <input type="text" value="<%= detail.grandTotal %>" readonly />
+      </div>
+    </div>
+
+    <div class="admin-form-grid admin-form-grid--two">
+      <div class="admin-field">
+        <label>Client</label>
+        <input type="text" value="<%= detail.customerName %>" readonly />
+      </div>
+      <div class="admin-field">
+        <label>Email client</label>
+        <input type="text" value="<%= detail.customerEmail %>" readonly />
+      </div>
+    </div>
+
+    <div class="admin-form-grid admin-form-grid--three">
+      <div class="admin-field">
+        <label>Date commande</label>
+        <input type="text" value="<%= detail.placedAt %>" readonly />
+      </div>
+      <div class="admin-field">
+        <label>Date expedition</label>
+        <input type="text" value="<%= detail.shippedAt %>" readonly />
+      </div>
+      <div class="admin-field">
+        <label>Date livraison</label>
+        <input type="text" value="<%= detail.deliveredAt %>" readonly />
+      </div>
+    </div>
+
+    <% if (detail.note) { %>
+    <p class="admin-panel__lead"><strong>Note client:</strong> <%= detail.note %></p>
+    <% } %>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Produit</th>
+            <th>SKU</th>
+            <th>Variante</th>
+            <th>Prix unitaire</th>
+            <th>Quantite</th>
+            <th>Total ligne</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (!items.length) { %>
+          <tr>
+            <td colspan="6">Aucun article trouve pour cette commande.</td>
+          </tr>
+          <% } %>
+
+          <% items.forEach((item) => { %>
+          <tr>
+            <td data-label="Produit"><%= item.productName %></td>
+            <td data-label="SKU"><%= item.sku %></td>
+            <td data-label="Variante"><%= item.variant %></td>
+            <td data-label="Prix"><%= item.unitPrice %></td>
+            <td data-label="Quantite"><%= item.quantity %></td>
+            <td data-label="Total"><%= item.lineTotal %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <% } %>
+</section>

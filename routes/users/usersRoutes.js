@@ -21,6 +21,7 @@ usersRouter.post("/cart/add", usersControllers.addToCart);
 usersRouter.post("/cart/item/update", usersControllers.updateCartItemQuantity);
 usersRouter.post("/cart/item/remove", usersControllers.removeCartItem);
 usersRouter.post("/cart/clear", usersControllers.clearCart);
+usersRouter.post("/orders/place", usersControllers.placeOrder);
 usersRouter.post("/signup", authControllers.signup);
 usersRouter.post("/login", authControllers.login);
 usersRouter.post("/logout", authControllers.logout);

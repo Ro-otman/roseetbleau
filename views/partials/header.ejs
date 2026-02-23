@@ -1,5 +1,14 @@
 <header class="site-header">
   <div class="site-header__inner">
+    <%
+      const normalizedHeaderSearch = String(searchQuery || "").trim();
+      const encodedHeaderSearch = normalizedHeaderSearch
+        ? encodeURIComponent(normalizedHeaderSearch)
+        : "";
+      const headerQueryPrefix = encodedHeaderSearch ? `?q=${encodedHeaderSearch}` : "";
+      const headerQuerySuffix = encodedHeaderSearch ? `&q=${encodedHeaderSearch}` : "";
+    %>
+
     <a class="brand" href="/" aria-label="Rose et Bleu accueil">
       <span class="brand__rose">Rose</span>
       <span class="brand__amp">&amp;</span>
@@ -12,6 +21,7 @@
         name="q"
         placeholder="Rechercher sur Rose&Bleu"
         aria-label="Rechercher un produit"
+        value="<%= searchQuery || '' %>"
       />
       <button class="header-search__submit" type="submit" aria-label="Lancer la recherche">
         <i class="bx bx-search-alt-2"></i>
@@ -67,27 +77,27 @@
 
   <div class="site-header__catalog">
     <div class="site-header__catalog-inner">
-      <a class="catalog-link catalog-link--primary" href="/shop">
+      <a class="catalog-link catalog-link--primary" href="/shop<%= headerQueryPrefix %>">
         <i class="bx bx-grid-alt"></i>
         <span>Toutes categories</span>
       </a>
 
-      <a class="catalog-link" href="/shop?category=bebes">Bebes</a>
-      <a class="catalog-link" href="/shop?category=filles">Filles</a>
-      <a class="catalog-link" href="/shop?category=garcons">Garcons</a>
-      <a class="catalog-link" href="/shop?category=chaussures">Chaussures</a>
-      <a class="catalog-link" href="/shop?category=accessoires">Accessoires</a>
+      <a class="catalog-link" href="/shop?category=bebes<%= headerQuerySuffix %>">Bebes</a>
+      <a class="catalog-link" href="/shop?category=filles<%= headerQuerySuffix %>">Filles</a>
+      <a class="catalog-link" href="/shop?category=garcons<%= headerQuerySuffix %>">Garcons</a>
+      <a class="catalog-link" href="/shop?category=chaussures<%= headerQuerySuffix %>">Chaussures</a>
+      <a class="catalog-link" href="/shop?category=accessoires<%= headerQuerySuffix %>">Accessoires</a>
 
       <div class="catalog-filters">
-        <a class="catalog-filter" href="/shop?sort=new">
+        <a class="catalog-filter" href="/shop?sort=new<%= headerQuerySuffix %>">
           <i class="bx bx-sort-alt-2"></i>
           <span>Nouveautes</span>
         </a>
-        <a class="catalog-filter" href="/shop?price=low">
+        <a class="catalog-filter" href="/shop?price=0-15<%= headerQuerySuffix %>">
           <i class="bx bx-filter-alt"></i>
           <span>Petit prix</span>
         </a>
-        <a class="catalog-filter" href="/shop?promo=true">
+        <a class="catalog-filter" href="/shop?promo=true<%= headerQuerySuffix %>">
           <i class="bx bx-purchase-tag-alt"></i>
           <span>Promotions</span>
         </a>

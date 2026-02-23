@@ -1,25 +1,87 @@
-<section class="admin-page admin-users">
-  <%
-    const users = [
-      { name: "Aline Mendy", email: "aline@email.com", orders: 9, spent: "312 EUR", status: "Actif", tone: "ok" },
-      { name: "Rosette Koffi", email: "rosette@email.com", orders: 4, spent: "148 EUR", status: "Actif", tone: "ok" },
-      { name: "Nadine Toko", email: "nadine@email.com", orders: 2, spent: "62 EUR", status: "A verifier", tone: "warn" },
-      { name: "Kossi Agossou", email: "kossi@email.com", orders: 1, spent: "29 EUR", status: "Bloque", tone: "danger" },
-      { name: "Yasmine Bado", email: "yasmine@email.com", orders: 6, spent: "204 EUR", status: "Actif", tone: "ok" },
-    ];
-  %>
+<%
+  const overview = adminUsersOverview || {};
+  const feedback = usersFeedback || null;
+  const filters = overview.filters || {};
+  const summary = overview.summary || {};
+  const users = Array.isArray(overview.users) ? overview.users : [];
+  const qValue = String(filters.q || "");
+  const statusValue = String(filters.status || "all");
+  const generatedLabel = String(overview.generatedLabel || "");
+  const filteredUsers = Number(summary.filteredUsers || users.length || 0);
+  const userFilters = [
+    { key: "all", label: "Tous" },
+    { key: "active", label: "Actifs" },
+    { key: "watch", label: "A verifier" },
+    { key: "blocked", label: "Bloques" },
+  ];
 
+  const buildFilterHref = (statusKey) => {
+    const params = [];
+    if (qValue) {
+      params.push(`q=${encodeURIComponent(qValue)}`);
+    }
+    if (statusKey && statusKey !== "all") {
+      params.push(`status=${encodeURIComponent(statusKey)}`);
+    }
+    return params.length ? `/admin/users?${params.join("&")}` : "/admin/users";
+  };
+
+  const currentListPath = buildFilterHref(statusValue);
+%>
+
+<section
+  class="admin-page admin-users"
+  data-admin-users
+  data-users-api="/admin/api/users-overview"
+  data-users-filter-q="<%= qValue %>"
+  data-users-filter-status="<%= statusValue %>"
+>
   <section class="admin-panel">
     <header class="admin-panel__head">
-      <h2>Gestion utilisateurs</h2>
+      <h2>
+        Gestion utilisateurs
+        (<span data-users-filtered-count><%= filteredUsers %></span>)
+      </h2>
       <a href="/admin/users">Exporter la liste</a>
     </header>
+
+    <% if (feedback) { %>
+    <div class="admin-feedback admin-feedback--<%= feedback.tone || "info" %>" role="status">
+      <p class="admin-feedback__title"><%= feedback.title %></p>
+      <p class="admin-feedback__message"><%= feedback.message %></p>
+    </div>
+    <% } %>
+
+    <p class="admin-panel__lead" data-users-updated-at>
+      <%= generatedLabel ? `Mise a jour: ${generatedLabel}` : "" %>
+    </p>
 
     <div class="admin-toolbar">
       <form class="admin-search" action="/admin/users" method="get" role="search">
         <i class="bx bx-search-alt-2"></i>
-        <input type="search" name="q" placeholder="Rechercher un utilisateur..." />
+        <input
+          type="search"
+          name="q"
+          placeholder="Rechercher un utilisateur..."
+          value="<%= qValue %>"
+          data-users-search-input
+        />
+        <% if (statusValue !== "all") { %>
+        <input type="hidden" name="status" value="<%= statusValue %>" />
+        <% } %>
       </form>
+      <div class="admin-toolbar__filters">
+        <% userFilters.forEach((item) => { %>
+        <a
+          href="<%= buildFilterHref(item.key) %>"
+          class="<%= statusValue === item.key ? 'is-active' : '' %>"
+          data-users-filter-link="<%= item.key %>"
+          <% if (statusValue === item.key) { %>aria-current="page"<% } %>
+        >
+          <%= item.label %>
+        </a>
+        <% }) %>
+      </div>
     </div>
 
     <div class="admin-table-wrap">
@@ -34,7 +96,13 @@
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody data-users-table-body>
+          <% if (!users.length) { %>
+          <tr>
+            <td colspan="6">Aucun utilisateur pour ce filtre.</td>
+          </tr>
+          <% } %>
+
           <% users.forEach((item) => { %>
           <tr>
             <td data-label="Nom"><%= item.name %></td>
@@ -44,8 +112,16 @@
             <td data-label="Statut"><span class="admin-badge admin-badge--<%= item.tone %>"><%= item.status %></span></td>
             <td data-label="Action">
               <div class="admin-row-actions">
-                <a href="/admin/users">Profil</a>
-                <button type="button">Suspendre</button>
+                <a href="<%= item.href || '/admin/users' %>">Profil</a>
+                <% if (item.canUpdate && item.nextStatus) { %>
+                <form action="/admin/users/<%= Number(item.id || 0) %>/status" method="post">
+                  <input type="hidden" name="status" value="<%= item.nextStatus %>" />
+                  <input type="hidden" name="returnTo" value="<%= currentListPath %>" />
+                  <button type="submit"><%= item.nextStatusLabel || "Mettre a jour" %></button>
+                </form>
+                <% } else { %>
+                <button type="button" disabled>Bloque</button>
+                <% } %>
               </div>
             </td>
           </tr>

@@ -1,14 +1,16 @@
-<section class="admin-page admin-add-product">
+<section class="admin-page admin-edit-product">
   <section class="admin-panel">
     <%
       const values = formData || {};
       const feedback = productFeedback || null;
-      const selectedCategory = values.category || "";
       const categories = Array.isArray(categoryOptions) ? categoryOptions : [];
+      const selectedCategory = values.category || "";
+      const selectedStatus = values.status || "active";
+      const selectedVisibility = values.visibility || "public";
     %>
 
     <header class="admin-panel__head">
-      <h2>Nouvelle fiche produit</h2>
+      <h2>Modifier produit #<%= Number(productId || 0) %></h2>
       <a href="/admin/produits">Retour catalogue</a>
     </header>
 
@@ -19,7 +21,7 @@
     </div>
     <% } %>
 
-    <form class="admin-form" action="/admin/ajoutproduit" method="post" enctype="multipart/form-data">
+    <form class="admin-form" action="/admin/produits/<%= Number(productId || 0) %>/edit" method="post">
       <div class="admin-form-grid admin-form-grid--two">
         <div class="admin-field">
           <label for="product-name">Nom produit</label>
@@ -73,7 +75,7 @@
         </div>
 
         <div class="admin-field">
-          <label for="product-stock">Stock initial</label>
+          <label for="product-stock">Stock total</label>
           <input
             id="product-stock"
             name="stock"
@@ -87,25 +89,20 @@
 
       <div class="admin-form-grid admin-form-grid--two">
         <div class="admin-field">
-          <label for="product-size">Tailles disponibles</label>
-          <input
-            id="product-size"
-            name="sizes"
-            type="text"
-            placeholder="3A,4A,5A,6A"
-            value="<%= values.sizes || "" %>"
-          />
+          <label for="product-status">Statut</label>
+          <select id="product-status" name="status" required>
+            <option value="active" <%= selectedStatus === "active" ? "selected" : "" %>>Actif</option>
+            <option value="draft" <%= selectedStatus === "draft" ? "selected" : "" %>>Brouillon</option>
+            <option value="archived" <%= selectedStatus === "archived" ? "selected" : "" %>>Archive</option>
+          </select>
         </div>
 
         <div class="admin-field">
-          <label for="product-color">Couleurs disponibles</label>
-          <input
-            id="product-color"
-            name="colors"
-            type="text"
-            placeholder="Rose,Bleu,Ciel"
-            value="<%= values.colors || "" %>"
-          />
+          <label for="product-visibility">Visibilite</label>
+          <select id="product-visibility" name="visibility" required>
+            <option value="public" <%= selectedVisibility === "public" ? "selected" : "" %>>Public</option>
+            <option value="private" <%= selectedVisibility === "private" ? "selected" : "" %>>Prive</option>
+          </select>
         </div>
       </div>
 
@@ -119,33 +116,25 @@
         ><%= values.description || "" %></textarea>
       </div>
 
-      <div class="admin-upload">
-        <p class="admin-upload__label">Media produit</p>
-        <label class="admin-upload__zone" for="product-images">
-          <i class="bx bx-image-add"></i>
-          <p>Depose les visuels du produit ou clique pour importer (max 6 images).</p>
-        </label>
-        <input
-          id="product-images"
-          class="admin-upload__input"
-          name="images"
-          type="file"
-          accept="image/jpeg,image/png,image/webp,image/avif"
-          multiple
-          required
-        />
-        <p class="admin-upload__hint">
-          Les images seront redimensionnees, compressees et converties en WebP automatiquement.
-        </p>
-      </div>
-
       <div class="admin-form-actions">
         <button type="submit" class="admin-btn admin-btn--primary">
           <i class="bx bx-save"></i>
-          <span>Publier le produit</span>
+          <span>Enregistrer</span>
         </button>
-        <a href="/admin/produits" class="admin-btn admin-btn--ghost">Annuler</a>
+        <a href="/admin/produits" class="admin-btn admin-btn--ghost">Retour</a>
       </div>
+    </form>
+
+    <form
+      class="admin-form-actions"
+      action="/admin/produits/<%= Number(productId || 0) %>/delete"
+      method="post"
+      onsubmit="return window.confirm('Supprimer ce produit ? Cette action est irreversible.');"
+    >
+      <button type="submit" class="admin-btn admin-btn--ghost">
+        <i class="bx bx-trash"></i>
+        <span>Supprimer ce produit</span>
+      </button>
     </form>
   </section>
 </section>

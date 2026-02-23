@@ -7,11 +7,17 @@
       <span class="admin-login__bleu">Bleu</span>
     </a>
 
-    <form class="admin-login__form" action="/admin/dashboard" method="get">
+    <form class="admin-login__form" action="/admin/login" method="post">
       <label for="admin-key">Cle d'acces admin</label>
       <div class="admin-login__field">
         <i class="bx bx-key"></i>
-        <input id="admin-key" type="password" name="key" placeholder="Entrez votre cle" required />
+        <input
+          id="admin-key"
+          type="password"
+          name="key"
+          placeholder="Entrez votre cle"
+          required
+        />
       </div>
 
       <button type="submit" class="admin-login__submit">

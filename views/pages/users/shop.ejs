@@ -1,6 +1,7 @@
 <section class="user-page page-shop">
   <%
     const filters = shopFilters || {};
+    const selectedQuery = String(filters.q || "");
     const selectedCategory = String(filters.category || "");
     const selectedSort = String(filters.sort || "popular");
     const selectedSize = String(filters.size || "");
@@ -18,12 +19,14 @@
     const buildShopHref = (overrides = {}) => {
       const params = new URLSearchParams();
 
+      const nextQuery = overrides.q !== undefined ? String(overrides.q || "") : selectedQuery;
       const nextCategory = overrides.category !== undefined ? String(overrides.category || "") : selectedCategory;
       const nextSort = overrides.sort !== undefined ? String(overrides.sort || "") : selectedSort;
       const nextPromo = overrides.promo !== undefined ? Boolean(overrides.promo) : promoOnly;
       const nextSize = overrides.size !== undefined ? String(overrides.size || "") : selectedSize;
       const nextPrice = overrides.price !== undefined ? String(overrides.price || "") : selectedPrice;
 
+      if (nextQuery) params.set("q", nextQuery);
       if (nextCategory) params.set("category", nextCategory);
       if (nextSort && nextSort !== "popular") params.set("sort", nextSort);
       if (nextPromo) params.set("promo", "true");
@@ -37,8 +40,14 @@
     const quickFilters = [
       {
         label: "Tout le catalogue",
-        href: buildShopHref({ category: "", sort: "popular", promo: false, size: "", price: "" }),
-        active: !selectedCategory && !promoOnly && !selectedSize && !selectedPrice && selectedSort === "popular",
+        href: buildShopHref({ q: "", category: "", sort: "popular", promo: false, size: "", price: "" }),
+        active:
+          !selectedQuery &&
+          !selectedCategory &&
+          !promoOnly &&
+          !selectedSize &&
+          !selectedPrice &&
+          selectedSort === "popular",
       },
       { label: "Nouveautes", href: buildShopHref({ sort: "new" }), active: selectedSort === "new" },
       { label: "Bebes", href: buildShopHref({ category: "bebes", promo: false }), active: selectedCategory === "bebes" },
@@ -162,7 +171,7 @@
           <span><%= filter.label %></span>
         </a>
         <% }) %>
-        <a class="shop-sticky-filter shop-sticky-filter--ghost" href="/shop">Reinitialiser</a>
+        <a class="shop-sticky-filter shop-sticky-filter--ghost" href="<%= buildShopHref({ q: '', category: '', sort: 'popular', promo: false, size: '', price: '' }) %>">Reinitialiser</a>
       </div>
     </div>
   </section>
@@ -223,15 +232,57 @@
         </ul>
       </div>
 
-      <a class="shop-filter-cta" href="<%= buildShopHref({ category: '', sort: 'popular', promo: false, size: '', price: '' }) %>">Reinitialiser les filtres</a>
+      <a class="shop-filter-cta" href="<%= buildShopHref({ q: '', category: '', sort: 'popular', promo: false, size: '', price: '' }) %>">Reinitialiser les filtres</a>
     </aside>
 
     <div class="shop-results">
       <header class="shop-results__head">
-        <div>
+        <div class="shop-results__intro">
           <p class="shop-results__kicker">Listing produits</p>
           <h2 class="shop-results__title">Selection complete toutes categories</h2>
           <p class="shop-results__count"><strong><%= filteredProducts %></strong> produits visibles sur <strong><%= totalProducts %></strong> references.</p>
+
+          <% if (selectedQuery) { %>
+          <p class="shop-results__query-badge">
+            <i class="bx bx-search-alt-2"></i>
+            <span>Recherche: "<%= selectedQuery %>"</span>
+          </p>
+          <% } %>
+
+          <form class="shop-results__search" action="/shop" method="get" role="search">
+            <% if (selectedCategory) { %>
+            <input type="hidden" name="category" value="<%= selectedCategory %>" />
+            <% } %>
+            <% if (selectedSort && selectedSort !== 'popular') { %>
+            <input type="hidden" name="sort" value="<%= selectedSort %>" />
+            <% } %>
+            <% if (promoOnly) { %>
+            <input type="hidden" name="promo" value="true" />
+            <% } %>
+            <% if (selectedSize) { %>
+            <input type="hidden" name="size" value="<%= selectedSize %>" />
+            <% } %>
+            <% if (selectedPrice) { %>
+            <input type="hidden" name="price" value="<%= selectedPrice %>" />
+            <% } %>
+
+            <div class="shop-results__search-field">
+              <i class="bx bx-search-alt-2" aria-hidden="true"></i>
+              <input
+                id="shop-search-input"
+                type="search"
+                name="q"
+                value="<%= selectedQuery %>"
+                placeholder="Rechercher un produit, une categorie, un SKU..."
+                maxlength="120"
+                aria-label="Rechercher un produit"
+              />
+              <button type="submit">Rechercher</button>
+            </div>
+            <% if (selectedQuery) { %>
+            <a class="shop-results__search-reset" href="<%= buildShopHref({ q: '' }) %>">Effacer la recherche</a>
+            <% } %>
+          </form>
         </div>
 
         <div class="shop-results__controls">
@@ -261,7 +312,7 @@
         <% if (!products.length) { %>
         <article class="shop-grid__empty">
           <p>Aucun produit ne correspond aux filtres actuels.</p>
-          <a href="<%= buildShopHref({ category: '', sort: 'popular', promo: false, size: '', price: '' }) %>">Voir tout le catalogue</a>
+          <a href="<%= buildShopHref({ q: '', category: '', sort: 'popular', promo: false, size: '', price: '' }) %>">Voir tout le catalogue</a>
         </article>
         <% } %>
 

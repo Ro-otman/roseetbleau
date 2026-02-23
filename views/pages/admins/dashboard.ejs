@@ -1,11 +1,19 @@
-<section class="admin-page admin-dashboard">
+<section
+  class="admin-page admin-dashboard"
+  data-admin-dashboard
+  data-dashboard-api="/admin/api/dashboard-stats"
+>
   <%
-    const stats = [
-      { label: "Chiffre du jour", value: "1 245 EUR", trend: "+12%" },
-      { label: "Commandes", value: "36", trend: "+8%" },
-      { label: "Nouveaux clients", value: "14", trend: "+5%" },
-      { label: "Panier moyen", value: "34,6 EUR", trend: "+2%" },
-    ];
+    const dashboard = adminDashboard || {};
+    const stats = Array.isArray(dashboard.stats) ? dashboard.stats : [];
+    const weeklyPerformance = Array.isArray(dashboard.weeklyPerformance)
+      ? dashboard.weeklyPerformance
+      : [];
+    const categoryDistribution = Array.isArray(dashboard.categoryDistribution)
+      ? dashboard.categoryDistribution
+      : [];
+    const recentOrders = Array.isArray(dashboard.recentOrders) ? dashboard.recentOrders : [];
+    const dashboardUpdatedAt = String(dashboard.generatedLabel || "");
 
     const quickLinks = [
       { href: "/admin/ajoutproduit", title: "Ajouter produit", text: "Creer une fiche complete en quelques minutes.", icon: "bx-plus-circle" },
@@ -13,21 +21,20 @@
       { href: "/admin/users", title: "Gerer users", text: "Consulter les comptes clients et leur activite.", icon: "bx-user" },
       { href: "/admin/produits", title: "Mettre a jour stock", text: "Ajuster les quantites et les disponibilites.", icon: "bx-package" },
     ];
-
-    const recentOrders = [
-      { id: "RB-1021", client: "Aline M.", amount: "79,80 EUR", status: "En preparation", tone: "warn" },
-      { id: "RB-1019", client: "Rosette K.", amount: "34,90 EUR", status: "Expediee", tone: "ok" },
-      { id: "RB-1018", client: "Nadine T.", amount: "118,40 EUR", status: "A verifier", tone: "danger" },
-      { id: "RB-1015", client: "Kossi A.", amount: "27,90 EUR", status: "Expediee", tone: "ok" },
-    ];
   %>
 
   <section class="admin-stats-grid" aria-label="Statistiques principales">
     <% stats.forEach((item) => { %>
-    <article class="admin-stat-card">
+    <article class="admin-stat-card" data-dashboard-kpi="<%= item.id %>">
       <p class="admin-stat-card__label"><%= item.label %></p>
-      <p class="admin-stat-card__value"><%= item.value %></p>
-      <p class="admin-stat-card__trend"><i class="bx bx-trending-up"></i><span><%= item.trend %></span></p>
+      <p class="admin-stat-card__value" data-dashboard-kpi-value="<%= item.id %>"><%= item.value %></p>
+      <p class="admin-stat-card__trend <%= item.trendTone === 'down' ? 'is-down' : 'is-up' %>">
+        <i
+          class="bx <%= item.trendIcon || (item.trendTone === 'down' ? 'bx-trending-down' : 'bx-trending-up') %>"
+          data-dashboard-kpi-trend-icon="<%= item.id %>"
+        ></i>
+        <span data-dashboard-kpi-trend="<%= item.id %>"><%= item.trend %></span>
+      </p>
     </article>
     <% }) %>
   </section>
@@ -38,16 +45,24 @@
         <h2>Performance hebdomadaire</h2>
         <a href="/admin/orders">Voir details</a>
       </header>
-      <p class="admin-panel__lead">Evolution des ventes des 7 derniers jours.</p>
+      <p class="admin-panel__lead">
+        Evolution des ventes des 7 derniers jours.
+        <% if (dashboardUpdatedAt) { %>
+        <span class="admin-dashboard__updated-at" data-dashboard-updated-at>
+          Mise a jour: <%= dashboardUpdatedAt %>
+        </span>
+        <% } else { %>
+        <span class="admin-dashboard__updated-at" data-dashboard-updated-at></span>
+        <% } %>
+      </p>
 
-      <div class="admin-mini-chart" role="img" aria-label="Graphique des ventes">
-        <span style="--h: 46%"></span>
-        <span style="--h: 62%"></span>
-        <span style="--h: 58%"></span>
-        <span style="--h: 72%"></span>
-        <span style="--h: 84%"></span>
-        <span style="--h: 76%"></span>
-        <span style="--h: 90%"></span>
+      <div class="admin-mini-chart" role="img" aria-label="Graphique des ventes" data-dashboard-weekly-chart>
+        <% weeklyPerformance.forEach((item) => { %>
+        <span
+          style="--h: <%= item.height %>%"
+          title="<%= item.label %> - <%= item.valueLabel || '' %>"
+        ></span>
+        <% }) %>
       </div>
     </article>
 
@@ -57,12 +72,13 @@
         <a href="/admin/produits">Gerer</a>
       </header>
       <p class="admin-panel__lead">Poids des categories dans le stock actif.</p>
-      <ul class="admin-distribution">
-        <li><span>Bebes</span><strong>22%</strong></li>
-        <li><span>Filles</span><strong>28%</strong></li>
-        <li><span>Garcons</span><strong>24%</strong></li>
-        <li><span>Chaussures</span><strong>15%</strong></li>
-        <li><span>Accessoires</span><strong>11%</strong></li>
+      <ul class="admin-distribution" data-dashboard-distribution>
+        <% categoryDistribution.forEach((item) => { %>
+        <li>
+          <span><%= item.name %></span>
+          <strong><%= item.percent %>%</strong>
+        </li>
+        <% }) %>
       </ul>
     </article>
   </section>
@@ -97,7 +113,13 @@
             <th>Statut</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody data-dashboard-recent-orders>
+          <% if (!recentOrders.length) { %>
+          <tr>
+            <td colspan="4">Aucune commande recente pour le moment.</td>
+          </tr>
+          <% } %>
+
           <% recentOrders.forEach((item) => { %>
           <tr>
             <td data-label="Commande"><%= item.id %></td>

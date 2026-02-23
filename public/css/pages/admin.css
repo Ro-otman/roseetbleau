@@ -144,6 +144,17 @@ a {
   gap: 7px;
 }
 
+.admin-sidebar__foot form {
+  margin: 0;
+}
+
+.admin-sidebar__foot form .admin-side-btn {
+  width: 100%;
+  border: 1px solid transparent;
+  font-family: inherit;
+  cursor: pointer;
+}
+
 .admin-side-btn {
   min-height: 36px;
   border-radius: 11px;
@@ -296,6 +307,14 @@ a {
   gap: 4px;
 }
 
+.admin-stat-card__trend.is-down {
+  color: #9a2e49;
+}
+
+.admin-stat-card__trend.is-up {
+  color: #2f79b5;
+}
+
 .admin-grid-2 {
   display: grid;
   gap: 10px;
@@ -344,6 +363,14 @@ a {
   margin: 8px 0 0;
   color: #556c88;
   font-size: 0.88rem;
+}
+
+.admin-dashboard__updated-at {
+  display: inline-flex;
+  margin-left: 8px;
+  color: #6d839d;
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
 .admin-mini-chart {
@@ -499,6 +526,10 @@ a {
   gap: 6px;
 }
 
+.admin-row-actions form {
+  margin: 0;
+}
+
 .admin-row-actions a,
 .admin-row-actions button {
   min-height: 28px;
@@ -518,6 +549,11 @@ a {
 .admin-row-actions button:hover {
   border-color: #bfd0e6;
   background: #f8fbff;
+}
+
+.admin-row-actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .admin-toolbar {
@@ -577,6 +613,14 @@ a {
   color: #244a70;
 }
 
+.admin-toolbar__filters a.is-active,
+.admin-toolbar__filters a[aria-current="page"] {
+  border-color: #2f79b5;
+  background: #e9f3fc;
+  color: #1f557f;
+  box-shadow: inset 0 0 0 1px rgba(47, 121, 181, 0.12);
+}
+
 .admin-orders .admin-toolbar__filters {
   flex-wrap: nowrap;
   overflow-x: auto;
@@ -609,6 +653,10 @@ a {
   display: grid;
   grid-template-columns: 1.2fr 0.9fr;
   gap: 12px;
+}
+
+.admin-products__updated {
+  margin: 0 0 10px;
 }
 
 .admin-products-hero__kicker {
@@ -782,6 +830,11 @@ a {
   gap: 7px;
 }
 
+.admin-product-card__actions form {
+  margin: 0;
+  flex: 1 1 0;
+}
+
 .admin-product-card__actions a,
 .admin-product-card__actions button {
   min-height: 32px;
@@ -807,6 +860,18 @@ a {
 
 .admin-product-card__actions .bx {
   font-size: 0.96rem;
+}
+
+.admin-products-empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  border: 1px dashed #cddbeb;
+  border-radius: 14px;
+  background: #f8fbff;
+  color: #5a7390;
+  font-size: 0.84rem;
+  text-align: center;
+  padding: 20px 14px;
 }
 
 .admin-form {
@@ -1608,6 +1673,11 @@ a {
   .admin-users .admin-row-actions a,
   .admin-users .admin-row-actions button {
     justify-content: center;
+    width: 100%;
+  }
+
+  .admin-orders .admin-row-actions form,
+  .admin-users .admin-row-actions form {
     width: 100%;
   }
 }

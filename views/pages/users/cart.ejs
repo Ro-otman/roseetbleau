@@ -176,31 +176,165 @@
           <strong data-cart-summary-total><%= summary.total %></strong>
         </p>
 
-        <form class="cart-coupon" action="/cart" method="get">
-          <label for="cart-coupon-code">Code promo</label>
-          <div class="cart-coupon__field">
+        <form
+          class="cart-checkout"
+          action="/orders/place"
+          method="post"
+          data-checkout-form
+          novalidate
+        >
+          <div class="cart-checkout__head">
+            <h3>Informations de commande</h3>
+            <p>Renseigne la livraison et confirme ta commande.</p>
+          </div>
+
+          <div class="cart-checkout__field">
+            <label for="checkout-full-name">Nom complet</label>
             <input
-              id="cart-coupon-code"
-              name="coupon"
+              id="checkout-full-name"
+              name="fullName"
               type="text"
-              placeholder="ROSEBLEU10"
+              autocomplete="name"
+              placeholder="Ex: Jules Rosario"
+              data-checkout-field="fullName"
+              required
             />
-            <button type="submit">Appliquer</button>
+          </div>
+
+          <div class="cart-checkout__row">
+            <div class="cart-checkout__field">
+              <label for="checkout-email">Email</label>
+              <input
+                id="checkout-email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                placeholder="email@domaine.com"
+                data-checkout-field="email"
+                required
+              />
+            </div>
+            <div class="cart-checkout__field">
+              <label for="checkout-phone">Telephone</label>
+              <input
+                id="checkout-phone"
+                name="phone"
+                type="tel"
+                autocomplete="tel"
+                placeholder="Ex: 22990000000"
+                data-checkout-field="phone"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="cart-checkout__field">
+            <label for="checkout-line1">Adresse</label>
+            <input
+              id="checkout-line1"
+              name="line1"
+              type="text"
+              autocomplete="street-address"
+              placeholder="Rue, quartier, repere"
+              data-checkout-field="line1"
+              required
+            />
+          </div>
+
+          <div class="cart-checkout__row">
+            <div class="cart-checkout__field">
+              <label for="checkout-city">Ville</label>
+              <input
+                id="checkout-city"
+                name="city"
+                type="text"
+                autocomplete="address-level2"
+                placeholder="Ex: Cotonou"
+                data-checkout-field="city"
+                required
+              />
+            </div>
+            <div class="cart-checkout__field">
+              <label for="checkout-postal-code">Code postal</label>
+              <input
+                id="checkout-postal-code"
+                name="postalCode"
+                type="text"
+                autocomplete="postal-code"
+                placeholder="Optionnel"
+                data-checkout-field="postalCode"
+              />
+            </div>
+          </div>
+
+          <div class="cart-checkout__row">
+            <div class="cart-checkout__field">
+              <label for="checkout-country">Pays</label>
+              <select
+                id="checkout-country"
+                name="countryCode"
+                data-checkout-field="countryCode"
+              >
+                <option value="BJ" selected>Benin (BJ)</option>
+                <option value="FR">France (FR)</option>
+                <option value="US">United States (US)</option>
+              </select>
+            </div>
+            <div class="cart-checkout__field">
+              <label for="checkout-payment-method">Paiement</label>
+              <select
+                id="checkout-payment-method"
+                name="paymentMethod"
+                data-checkout-field="paymentMethod"
+                required
+              >
+                <option value="card" selected>Carte bancaire</option>
+                <option value="mobile_money">Mobile Money</option>
+                <option value="bank_transfer">Virement bancaire</option>
+                <option value="cash_on_delivery">Paiement a la livraison</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="cart-checkout__field">
+            <label for="checkout-note">Note (optionnel)</label>
+            <textarea
+              id="checkout-note"
+              name="note"
+              rows="3"
+              placeholder="Instructions de livraison"
+              data-checkout-field="note"
+            ></textarea>
+          </div>
+
+          <div class="cart-checkout__actions">
+            <button class="cart-checkout__submit" type="submit" data-checkout-submit>
+              <i class="bx bx-check-shield"></i>
+              <span>Confirmer la commande</span>
+            </button>
+            <p class="cart-checkout__hint">
+              Le montant final peut varier selon l adresse de livraison.
+            </p>
           </div>
         </form>
 
-        <a class="cart-summary__checkout" href="/login">
-          <i class="bx bx-lock-alt"></i>
-          <span>Passer au paiement</span>
-        </a>
-        <a class="cart-summary__quickpay" href="/login">
-          <i class="bx bx-credit-card-front"></i>
-          <span>Payer rapidement</span>
-        </a>
+        <article class="cart-checkout-feedback" data-checkout-feedback hidden></article>
 
-        <p class="cart-summary__note">
-          Le montant final peut varier selon l adresse de livraison.
-        </p>
+        <article class="cart-order-success" data-checkout-success hidden>
+          <div class="cart-order-success__icon" aria-hidden="true">
+            <i class="bx bx-check-circle"></i>
+          </div>
+          <div class="cart-order-success__body">
+            <h3>Commande enregistree</h3>
+            <p>
+              Numero: <strong data-checkout-success-number>-</strong>
+            </p>
+            <p>
+              Total: <strong data-checkout-success-total>-</strong>
+            </p>
+            <a href="/shop">Continuer mes achats</a>
+          </div>
+        </article>
       </article>
 
       <article class="cart-trust" aria-label="Garanties boutique">

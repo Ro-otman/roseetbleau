@@ -7,6 +7,50 @@ const pool = mysql.createPool({
   connectionLimit: Number(process.env.DB_POOL_SIZE) || 10,
 });
 
+const RETRYABLE_DB_ERROR_CODES = new Set([
+  "ECONNRESET",
+  "PROTOCOL_CONNECTION_LOST",
+  "ETIMEDOUT",
+  "EPIPE",
+  "ECONNREFUSED",
+]);
+
+const waitMs = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const isRetryableDbError = (error) => {
+  const code = String(error?.code ?? "");
+  if (RETRYABLE_DB_ERROR_CODES.has(code)) {
+    return true;
+  }
+
+  const message = String(error?.message ?? "");
+  return (
+    message.includes("ECONNRESET") ||
+    message.includes("PROTOCOL_CONNECTION_LOST")
+  );
+};
+
+const queryWithRetry = async (
+  sql,
+  params = [],
+  { retries = 2, delayMs = 120 } = {},
+) => {
+  let attempt = 0;
+
+  while (true) {
+    try {
+      return await pool.query(sql, params);
+    } catch (error) {
+      if (!isRetryableDbError(error) || attempt >= retries) {
+        throw error;
+      }
+
+      attempt += 1;
+      await waitMs(delayMs * attempt);
+    }
+  }
+};
+
 const ORDER_BY_SQL = {
   popular: "p.created_at DESC, p.id DESC",
   new: "p.created_at DESC, p.id DESC",
@@ -34,6 +78,7 @@ const normalizeFavoritesSort = (sortValue) => {
 const listPublicProducts = async ({
   limit = null,
   offset = 0,
+  searchTerm = "",
   categorySlug = "",
   promoOnly = false,
   sizeFilter = "",
@@ -43,6 +88,23 @@ const listPublicProducts = async ({
 } = {}) => {
   const where = ["p.status = 'active'", "p.visibility = 'public'"];
   const params = [];
+  const normalizedSearchTerm = String(searchTerm ?? "").trim().slice(0, 120);
+
+  if (normalizedSearchTerm) {
+    const searchValue = `%${normalizedSearchTerm}%`;
+    where.push(
+      `
+      (
+        p.name LIKE ?
+        OR p.slug LIKE ?
+        OR p.sku LIKE ?
+        OR COALESCE(p.short_description, '') LIKE ?
+        OR COALESCE(c.name, '') LIKE ?
+      )
+      `,
+    );
+    params.push(searchValue, searchValue, searchValue, searchValue, searchValue);
+  }
 
   if (categorySlug) {
     where.push("c.slug = ?");
@@ -140,7 +202,7 @@ const listPublicProducts = async ({
     }
   }
 
-  const [rows] = await pool.query(sql, params);
+  const [rows] = await queryWithRetry(sql, params);
   return rows;
 };
 
@@ -225,11 +287,12 @@ const mergeCartItems = async ({ sourceCartId, targetCartId }) => {
       UPDATE cart_items AS target
       INNER JOIN cart_items AS source
         ON source.cart_id = ?
+       AND target.cart_id = ?
        AND source.product_variant_id = target.product_variant_id
       SET
         target.quantity = target.quantity + source.quantity,
         target.unit_price = source.unit_price,
-        updated_at = CURRENT_TIMESTAMP
+        target.updated_at = CURRENT_TIMESTAMP
     `,
     [sourceCartId, targetCartId],
   );
@@ -907,7 +970,7 @@ const listFavoriteProductsByUserUuid = async ({
 
   const orderByClause = FAVORITES_ORDER_BY_SQL[normalizeFavoritesSort(sort)];
 
-  const [rows] = await pool.query(
+  const [rows] = await queryWithRetry(
     `
       SELECT
         p.id,
@@ -963,7 +1026,7 @@ const listFavoriteProductsByUserUuid = async ({
 };
 
 const getPublicProductBySlug = async (slug) => {
-  const [rows] = await pool.query(
+  const [rows] = await queryWithRetry(
     `
       SELECT
         p.id,
@@ -1015,7 +1078,7 @@ const getPublicProductBySlug = async (slug) => {
 };
 
 const getLatestPublicProduct = async () => {
-  const [rows] = await pool.query(
+  const [rows] = await queryWithRetry(
     `
       SELECT
         p.id,
@@ -1066,7 +1129,7 @@ const getLatestPublicProduct = async () => {
 };
 
 const listPublicProductImages = async (productId) => {
-  const [rows] = await pool.query(
+  const [rows] = await queryWithRetry(
     `
       SELECT
         id,
@@ -1085,7 +1148,7 @@ const listPublicProductImages = async (productId) => {
 };
 
 const listPublicProductVariants = async (productId) => {
-  const [rows] = await pool.query(
+  const [rows] = await queryWithRetry(
     `
       SELECT
         id,
@@ -1111,7 +1174,7 @@ const listPublicProductReviews = async (productId, { limit = 6 } = {}) => {
   const safeLimit =
     Number.isInteger(limit) && limit > 0 && limit <= 50 ? limit : 6;
 
-  const [rows] = await pool.query(
+  const [rows] = await queryWithRetry(
     `
       SELECT
         id,

@@ -3,9 +3,11 @@ Base MySQL Rose&Bleu
 Ce dossier contient le premier schema SQL pour le backend du projet.
 
 Fichiers
+
 - `database/schema.sql` : schema relationnel complet + index principaux + categories initiales.
 
 Creation de la base
+
 1. Verifie que MySQL 8+ est demarre.
 2. Execute :
 
@@ -14,6 +16,7 @@ mysql -u root -p < database/schema.sql
 ```
 
 Notes
+
 - Nom de base utilise dans le script : `roseetbleu`.
 - Charset/collation : `utf8mb4` / `utf8mb4_unicode_ci`.
 - L'auth admin est geree dans `users` :
@@ -24,18 +27,35 @@ Notes
 - Le stock est gere par variante (`product_variants.stock_qty`) avec historique dans `inventory_movements`.
 
 Insertion manuelle d'un admin (exemple)
-```sql
-INSERT INTO users (
-  first_name, last_name, email, password_hash, admin_access_key_hash, role, status
+
+```INSERT INTO users (
+  uuid,
+  first_name,
+  last_name,
+  email,
+  phone,
+  password_hash,
+  admin_access_key_hash,
+  role,
+  status,
+  email_verified_at
 ) VALUES (
-  'Admin', 'RoseBleu', 'admin@roseetbleu.com',
-  '$2b$12$replace_with_password_hash',
-  '$2b$12$replace_with_admin_key_hash',
-  'admin', 'active'
+  UUID(),
+  'Admin',
+  'RoseBleu',
+  'admin@roseetbleu.com',
+  NULL,
+  '$2b$12$K1QmSHaO0p9b8Geb59mPxeCi93pzEzOsB47suxIZhQTd3igbl2Kya',
+  '$2b$12$K1QmSHaO0p9b8Geb59mPxeCi93pzEzOsB47suxIZhQTd3igbl2Kya',
+  'admin',
+  'active',
+  UTC_TIMESTAMP()
 );
+
 ```
 
 Prochaine etape backend recommandee
+
 - Creer un pool MySQL dans Node (`mysql2/promise`) puis ajouter les fonctions repository pour :
   - inscription/connexion users
   - listing/details produits

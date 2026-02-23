@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import config from "../../config/config.js";
 import catalogModel from "../../models/users/catalogModel.js";
+import orderModel from "../../models/users/orderModel.js";
 
 const CARD_PALETTES = [
   "rose",
@@ -29,6 +30,14 @@ const CART_SESSION_COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000;
 const CART_SHIPPING_FLAT_AMOUNT = 4.9;
 const CART_FREE_SHIPPING_THRESHOLD = 120;
 const CART_MAX_QTY_PER_ITEM = 99;
+const CHECKOUT_PAYMENT_METHOD_VALUES = new Set([
+  "card",
+  "mobile_money",
+  "bank_transfer",
+  "cash_on_delivery",
+]);
+const CHECKOUT_EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const CHECKOUT_COUNTRY_CODE_PATTERN = /^[A-Z]{2}$/;
 const COOKIE_SECURE =
   process.env.COOKIE_SECURE != null
     ? process.env.COOKIE_SECURE === "true"
@@ -204,6 +213,7 @@ const parseShopFilters = (query = {}) => {
   const priceRange = parsePriceRange(query.price);
 
   return {
+    q: normalizeText(query.q, 120),
     category: normalizeCategorySlug(query.category),
     sort: normalizeSort(query.sort),
     promo: parseBooleanQuery(query.promo),
@@ -293,6 +303,91 @@ const resolveCartError = (reason) => {
       return { status: 404, message: "Panier introuvable." };
     default:
       return { status: 400, message: "Operation panier impossible." };
+  }
+};
+
+const parseCheckoutPayload = (body = {}) => {
+  return {
+    fullName: normalizeText(body.fullName, 160),
+    email: normalizeText(body.email, 190),
+    phone: normalizeText(body.phone, 30),
+    line1: normalizeText(body.line1, 220),
+    line2: normalizeText(body.line2, 220),
+    city: normalizeText(body.city, 120),
+    stateRegion: normalizeText(body.stateRegion, 120),
+    postalCode: normalizeText(body.postalCode, 40),
+    countryCode: normalizeText(body.countryCode || "BJ", 2).toUpperCase(),
+    paymentMethod: normalizeText(body.paymentMethod, 40).toLowerCase(),
+    note: normalizeText(body.note, 500),
+  };
+};
+
+const validateCheckoutPayload = (payload = {}) => {
+  const fieldErrors = {};
+  const numericPhone = String(payload.phone || "").replace(/[^\d]/g, "");
+
+  if (String(payload.fullName || "").length < 2) {
+    fieldErrors.fullName = "Nom complet requis.";
+  }
+
+  if (!CHECKOUT_EMAIL_PATTERN.test(String(payload.email || ""))) {
+    fieldErrors.email = "Adresse email invalide.";
+  }
+
+  if (numericPhone.length < 6) {
+    fieldErrors.phone = "Numero de telephone invalide.";
+  }
+
+  if (String(payload.line1 || "").length < 4) {
+    fieldErrors.line1 = "Adresse de livraison requise.";
+  }
+
+  if (String(payload.city || "").length < 2) {
+    fieldErrors.city = "Ville requise.";
+  }
+
+  if (!CHECKOUT_COUNTRY_CODE_PATTERN.test(String(payload.countryCode || ""))) {
+    fieldErrors.countryCode = "Code pays invalide.";
+  }
+
+  if (!CHECKOUT_PAYMENT_METHOD_VALUES.has(String(payload.paymentMethod || ""))) {
+    fieldErrors.paymentMethod = "Mode de paiement invalide.";
+  }
+
+  return {
+    ok: Object.keys(fieldErrors).length === 0,
+    fieldErrors,
+  };
+};
+
+const resolveCheckoutError = (reason) => {
+  switch (reason) {
+    case "cart_not_found":
+    case "cart_empty":
+      return {
+        status: 400,
+        message: "Ton panier est vide ou indisponible.",
+      };
+    case "product_unavailable":
+      return {
+        status: 409,
+        message: "Un produit de ton panier n est plus disponible.",
+      };
+    case "stock_exceeded":
+      return {
+        status: 409,
+        message: "Stock insuffisant pour finaliser la commande.",
+      };
+    case "invalid_payment_method":
+      return {
+        status: 400,
+        message: "Mode de paiement invalide.",
+      };
+    default:
+      return {
+        status: 500,
+        message: "Impossible de finaliser la commande pour le moment.",
+      };
   }
 };
 
@@ -833,6 +928,7 @@ const usersControllers = {
     try {
       const [productsRows, categoryRows, summary, favoriteRows] = await Promise.all([
         catalogModel.listPublicProducts({
+          searchTerm: shopFilters.q,
           categorySlug: shopFilters.category,
           promoOnly: shopFilters.promo,
           sizeFilter: shopFilters.size,
@@ -1209,12 +1305,37 @@ const usersControllers = {
         });
       }
 
+      const safeDetailQuery = async (label, promiseFactory, fallback = []) => {
+        try {
+          return await promiseFactory();
+        } catch (error) {
+          console.error(`[SHOP] showDetailsPage ${label} error:`, error);
+          return fallback;
+        }
+      };
+
       const [imageRows, variantRows, reviewRows, favoriteRows] = await Promise.all([
-        catalogModel.listPublicProductImages(productRow.id),
-        catalogModel.listPublicProductVariants(productRow.id),
-        catalogModel.listPublicProductReviews(productRow.id, { limit: 8 }),
+        safeDetailQuery(
+          "images",
+          () => catalogModel.listPublicProductImages(productRow.id),
+          [],
+        ),
+        safeDetailQuery(
+          "variants",
+          () => catalogModel.listPublicProductVariants(productRow.id),
+          [],
+        ),
+        safeDetailQuery(
+          "reviews",
+          () => catalogModel.listPublicProductReviews(productRow.id, { limit: 8 }),
+          [],
+        ),
         req.authUser?.id
-          ? catalogModel.listFavoriteProductIdsByUserUuid(req.authUser.id)
+          ? safeDetailQuery(
+              "favorites",
+              () => catalogModel.listFavoriteProductIdsByUserUuid(req.authUser.id),
+              [],
+            )
           : Promise.resolve([]),
       ]);
 
@@ -1574,6 +1695,95 @@ const usersControllers = {
         return res.status(500).json({
           ok: false,
           message: "Erreur serveur panier.",
+        });
+      }
+
+      return res.redirect(303, "/cart");
+    }
+  },
+  placeOrder: async (req, res) => {
+    const wantsJson = isJsonRequest(req);
+    const checkoutPayload = parseCheckoutPayload(req.body);
+    const validation = validateCheckoutPayload(checkoutPayload);
+
+    if (!validation.ok) {
+      if (wantsJson) {
+        return res.status(400).json({
+          ok: false,
+          message: "Certains champs de livraison sont invalides.",
+          fieldErrors: validation.fieldErrors,
+        });
+      }
+
+      return res.redirect(303, "/cart");
+    }
+
+    const cartContext = resolveCartContext(req, res, {
+      createGuestSession: false,
+    });
+
+    try {
+      const cartRows = await catalogModel.listCartRowsByContext(cartContext);
+      const cartId = Number(cartRows[0]?.cart_id) || 0;
+      if (!cartId) {
+        if (wantsJson) {
+          return res.status(400).json({
+            ok: false,
+            message: "Ton panier est vide.",
+          });
+        }
+
+        return res.redirect(303, "/cart");
+      }
+
+      const result = await orderModel.createOrderFromCart({
+        cartId,
+        userUuid: cartContext.userUuid,
+        checkout: checkoutPayload,
+        shippingFlatAmount: CART_SHIPPING_FLAT_AMOUNT,
+        freeShippingThreshold: CART_FREE_SHIPPING_THRESHOLD,
+      });
+
+      if (!result.ok) {
+        const checkoutError = resolveCheckoutError(result.reason);
+        if (wantsJson) {
+          return res.status(checkoutError.status).json({
+            ok: false,
+            message: checkoutError.message,
+            reason: result.reason,
+          });
+        }
+
+        return res.redirect(303, "/cart");
+      }
+
+      if (wantsJson) {
+        return res.status(201).json({
+          ok: true,
+          message: "Commande enregistree avec succes.",
+          cartCount: 0,
+          order: {
+            id: result.orderId,
+            number: result.orderNumber,
+            itemCount: result.itemCount,
+            paymentMethod: result.paymentMethod,
+            subtotal: formatPrice(result.subtotal),
+            discount: result.discountTotal > 0 ? formatPrice(result.discountTotal) : "0,00 EUR",
+            shipping: result.shippingTotal > 0 ? formatPrice(result.shippingTotal) : "Offerte",
+            total: formatPrice(result.grandTotal),
+            currency: result.currency,
+          },
+        });
+      }
+
+      return res.redirect(303, "/cart");
+    } catch (error) {
+      console.error("[ORDER] placeOrder error:", error);
+
+      if (wantsJson) {
+        return res.status(500).json({
+          ok: false,
+          message: "Erreur serveur lors de la creation de commande.",
         });
       }
 
